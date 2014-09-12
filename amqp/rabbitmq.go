@@ -1,5 +1,5 @@
 /*
-** Copyright [2012-2013] [Megam Systems]
+** Copyright [2012-2014] [Megam Systems]
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -16,78 +16,55 @@
 package amqp
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
+	"log"
+	"sync"
+
 	"github.com/streadway/amqp"
 	"github.com/tsuru/config"
-	"log"
-	"regexp"
-	"sync"
-	"time"
 )
-
-type Consumer struct {
-	conn    *amqp.Connection
-	channel *amqp.Channel
-	queue   *amqp.Queue
-	tag     string
-	done    chan error
-}
 
 type rabbitmqQ struct {
-	name string
+	name    string
+	prefix  string
+	factory *rabbitmqQFactory
+	psc     *amqp.Channel
 }
 
-const (
-	DefaultAMQPURL      = "amqp://localhost:5672/"
-	DefaultQueue        = "megam_node_stale"
-	DefaultExchange     = "megam_node_exchange_stale"
-	DefaultExchangeType = "fanout"
-	DefaultRoutingKey   = "megam_key"
-	DefaultConsumerTag  = "megam_node_consumer_stale"
-)
-
-var (
-	mut            sync.Mutex // for conn access
-	timeoutRegexp  = regexp.MustCompile(`(TIMED_OUT|timeout)$`)
-	notFoundRegexp = regexp.MustCompile(`not found$`)
-)
-
-func (b *rabbitmqQ) Get(timeout time.Duration) (*Message, error) {
-	return nil, errors.New("Get: Not supported, Handler.start(), subscribe for RabbitMQ.")
-
+func (r *rabbitmqQ) exchname() string {
+	return r.prefix + "_" + r.name + "_exchange"
 }
 
-func (b *rabbitmqQ) Put(m *Message, delay time.Duration) error {
-	cons, err := connection()
+func (r *rabbitmqQ) qname() string {
+	return r.prefix + "_" + r.name + "_queue"
+}
+
+func (r *rabbitmqQ) tag() string {
+	return r.prefix + "_" + r.name + "_tag"
+}
+
+func (r *rabbitmqQ) key() string {
+	return r.prefix + "_" + r.name + "_key"
+}
+
+func (r *rabbitmqQ) Pub(msg []byte) error {
+	chnl, err := r.factory.dial(r.exchname()) // return amqp.Channel
 	if err != nil {
 		return err
 	}
 
-	//convert Message to "body" bytes
-	var body = m.Args
-	log.Printf("Publishing %dB message (%q).", len(body), body)
+	log.Printf(" [x] Publishing (%s, %s) message (%q).", r.exchname(), r.key() , msg)
 
-	exchange_conf, _ := config.GetString("amqp:exchange")
-	if exchange_conf == "" {
-		exchange_conf = DefaultExchange
-	}
-	routingkey_conf, _ := config.GetString("amqp:routingkey")
-	if routingkey_conf == "" {
-		routingkey_conf = DefaultRoutingKey
-	}
-
-	if err = cons.channel.Publish(
-		exchange_conf,   // publish to an exchange
-		routingkey_conf, // routing to 0 or more queues
-		false,           // mandatory
-		false,           // immediate
+	if err = chnl.Publish(
+		r.exchname(), // publish to an exchange
+		r.key(),      // routing to 0 or more queues
+		false,        // mandatory
+		false,        // immediate
 		amqp.Publishing{
 			Headers:         amqp.Table{},
 			ContentType:     "text/plain",
 			ContentEncoding: "",
-			Body:            []byte(body),
+			Body:            msg,
 			DeliveryMode:    amqp.Transient, // 1=non-persistent, 2=persistent
 			Priority:        0,              // 0-9
 			// a bunch of application/implementation-specific fields
@@ -98,214 +75,133 @@ func (b *rabbitmqQ) Put(m *Message, delay time.Duration) error {
 	return err
 }
 
-func (b *rabbitmqQ) Delete(m *Message, tag uint64, multiple bool) error {
-	log.Printf("%-6s:%s [%v][%d]", "WARN", "Acknowledge not Implemented yet.", m, tag)
-	return nil
-
-}
-
-func (b *rabbitmqQ) Release(m *Message, tag uint64, multiple bool, requeue bool) error {
-	log.Printf("%-6s:%s [%v][%d]", "WARN", "NAcknowledge not Implemented yet.", m, tag)
-	return nil
-}
-
-type rabbitmqFactory struct{}
-
-func (b rabbitmqFactory) Get(name string) (Q, error) {
-	return &rabbitmqQ{name: name}, nil
-}
-
-func (b rabbitmqFactory) Handler(f func(*Message), name ...string) (Handler, error) {
-	log.Printf("Attaching handler for RabbitMQ.")
-	return &executor{
-		inner: func() {
-			log.Printf("Waiting for deliveries from consumers.")
-
-			if deliveries, err := consume(5e9); err == nil {
-				for d := range deliveries {
-					log.Printf("%dB : [%v] %q", len(d.Body), d.DeliveryTag, d.Body)
-					var message Message
-					err := json.Unmarshal(d.Body, &message)
-					if err != nil {
-						fmt.Println("error:", err)
-					}
-					log.Printf("%+v", message)
-
-					go func(m *Message, tag uint64) {
-						f(m)
-						q := rabbitmqQ{}
-						if m.delete {
-							q.Delete(m, tag, false)
-						} else {
-							q.Release(m, tag, false, false) //don't requeue it.
-						}
-					}(&message, d.DeliveryTag)
-				}
-				log.Printf("TO-DO: Deliveries channel closed")
-				//done <- nil
-			} else {
-				log.Println(fmt.Errorf("Dial: %s", err))
-				time.Sleep(5e9)
-			}
-		},
-	}, nil
-}
-
-func connection() (*Consumer, error) {
-	var (
-		addr string
-		err  error
-	)
-
-	mut.Lock()
-	c := &Consumer{
-		conn:    nil,
-		channel: nil,
-		tag:     DefaultConsumerTag,
-		done:    make(chan error),
+func (r *rabbitmqQ) UnSub() error {
+	if r.psc == nil {
+		return nil
 	}
-
-	if c.conn == nil {
-		mut.Unlock()
-		addr, err = config.GetString("amqp:url")
-		if err != nil {
-			addr = DefaultAMQPURL
-		}
-		mut.Lock()
-		if c.conn, err = amqp.Dial(addr); err != nil {
-			mut.Unlock()
-			return nil, err
-		}
+	err := r.psc.Cancel(r.tag(), false)
+	if err != nil {
+		return err
 	}
-	log.Printf("Connected to (%s)", addr)
+	return nil
+}
 
-	if c.channel, err = c.conn.Channel(); err != nil {
-		mut.Unlock()
+func (r *rabbitmqQ) Sub() (chan []byte, error) {
+	chnl, err := r.factory.getChonn(r.key(), r.exchname(), r.qname())
+	if err != nil {
 		return nil, err
 	}
 
-	exchange_conf, _ := config.GetString("amqp:exchange")
-	if exchange_conf == "" {
-		exchange_conf = DefaultExchange
-	}
-	log.Printf("Connected to (%s)", exchange_conf)
+	r.psc = chnl
 
-	if err = c.channel.ExchangeDeclare(
-		exchange_conf,       // name of the exchange
-		DefaultExchangeType, // exchange Type
-		true,                // durable
-		false,               // delete when complete
-		false,               // internal
-		false,               // noWait
-		nil,                 // arguments
+	msgChan := make(chan []byte)
+
+	log.Printf(" [x] Subscribing (%s,%s)", r.qname(), r.tag())
+
+	deliveries, err := chnl.Consume(
+		r.qname(), // name
+		r.tag(),   // consumerTag,
+		false,     // noAck
+		false,     // exclusive
+		false,     // noLocal
+		false,     // noWait
+		nil,       // arguments
+	)
+	if err != nil {
+		return nil, err
+	}
+	log.Printf(" [x] Subscribed (%s,%s)", r.qname(), r.tag())
+
+	//This is asynchronous, the callee will have to wait.
+	go func() {
+		//defer close(msgChan)
+		for d := range deliveries {
+			log.Printf(" [%s] : [%v] %q", r.qname(), d.DeliveryTag, d.Body)
+			msgChan <- d.Body
+		}
+
+	}()
+	return msgChan, nil
+}
+
+type rabbitmqQFactory struct {
+	sync.Mutex
+}
+
+func (factory *rabbitmqQFactory) Get(name string) (PubSubQ, error) {
+	return &rabbitmqQ{name: name, prefix: "megam", factory: factory}, nil
+}
+
+func (factory *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
+	addr, err := config.GetString("amqp:url")
+	if err != nil {
+		addr = "amqp://localhost:5672/"
+	}
+	conn, err := amqp.Dial(addr)
+
+	if err != nil {
+		return nil, err
+	}
+
+	//defer conn.Close()
+
+	log.Printf(" [x] Dialed to (%s)", addr)
+
+	chnl, err := conn.Channel()
+
+	if err != nil {
+		return nil, err
+	}
+
+	//defer chnl.Close()
+
+	if err = chnl.ExchangeDeclare(
+		exchname, // name of the exchange
+		"fanout", // exchange Type
+		true,     // durable
+		false,    // delete when complete
+		false,    // internal
+		false,    // noWait
+		nil,      // arguments
 	); err != nil {
-		mut.Unlock()
 		return nil, err
 	}
 
-	log.Printf("Connection successful to  (%s,%s)", addr, exchange_conf)
-	mut.Unlock()
-	return c, err
+	log.Printf(" [x] Connection successful to  (%s,%s)", addr, exchname)
+	return chnl, err
 }
 
-func rconnection() (*Consumer, error) {
-	cons, err := connection()
+func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname string) (*amqp.Channel, error) {
+	chnl, err := factory.dial(exchname)
 	if err != nil {
 		return nil, err
 	}
+	log.Printf(" [x] Dialed  (%s)", exchname)
 
-	mut.Lock()
-	queue_conf, _ := config.GetString("amqp:queue")
-	if queue_conf == "" {
-		queue_conf = DefaultQueue
-	}
-
-	decl_q, err := cons.channel.QueueDeclare(
-		queue_conf, // name of the queue
-		true,       // durable
-		false,      // delete when usused
-		false,      // exclusive
-		false,      // noWait
-		nil,        // arguments
+	qu, err := chnl.QueueDeclare(
+		qname, // name of the queue
+		true,  // durable
+		false, // delete when usused
+		false, // exclusive
+		false, // noWait
+		nil,   // arguments
 	)
-
 	if err != nil {
-		mut.Unlock()
 		return nil, err
 	}
-	log.Printf("Connected to (%s)", queue_conf)
+	
+	log.Printf(" [x] Declared queue (%s)", qname)
 
-	cons.queue = &decl_q
-
-	exchange_conf, _ := config.GetString("amqp:exchange")
-	if exchange_conf == "" {
-		exchange_conf = DefaultExchange
-	}
-	routingkey_conf, _ := config.GetString("amqp:routingkey")
-	if routingkey_conf == "" {
-		routingkey_conf = DefaultRoutingKey
-	}
-
-	if err = cons.channel.QueueBind(
-		cons.queue.Name, // name of the queue
-		routingkey_conf,
-		exchange_conf,
+	if err = chnl.QueueBind(
+		qu.Name, // name of the queue
+		key,
+		exchname,
 		false, // noWait
 		nil,   // arguments
 	); err != nil {
-		mut.Unlock()
-		return nil, err
-	}
-	mut.Unlock()
-
-	log.Printf("Connection successful to (%s,%s,%s)", queue_conf, exchange_conf, routingkey_conf)
-	return cons, nil
-}
-
-//returns AMQP Consumer (ASynchronous, blocked - dies on shutdown)
-func consume(timeout time.Duration) (<-chan amqp.Delivery, error) {
-
-	cons, err := rconnection()
-	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("Starting consumer (%s,%s)", cons.queue.Name, cons.tag)
-
-	deliveries, err := cons.channel.Consume(
-		cons.queue.Name, // name
-		cons.tag,        // consumerTag,
-		false,           // noAck
-		false,           // exclusive
-		false,           // noLocal
-		false,           // noWait
-		nil,             // arguments
-	)
-
-	if err != nil {
-		return nil, err
-	}
-	log.Printf("Started consumer (%s,%s)", cons.queue.Name, cons.tag)
-
-	return deliveries, nil
+	log.Printf(" [x] Bound to queue (%s,%s,%s)", qname, exchname, key)
+	return chnl, nil
 }
-
-/*
-//shut it down, the handler actually shuts it down.
-func (c *Consumer) Shutdown() error {
-	// will close() the deliveries channel
-	if err := c.channel.Cancel(c.tag, true); err != nil {
-		return fmt.Errorf("Consumer cancel failed: %s", err)
-	}
-
-	if err := c.conn.Close(); err != nil {
-		return fmt.Errorf("AMQP connection close error: %s", err)
-	}
-
-	defer log.Printf("AMQP shutdown OK")
-
-	// wait for handle() to exit
-	return <-c.done
-}
-
-*/

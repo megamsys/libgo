@@ -1,4 +1,4 @@
-#Copyright (c) 2013-14 Megam Systems.
+#Copyright (c) 2014 Megam Systems.
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -12,34 +12,34 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 ###############################################################################
-# Makefile to compile libgo.
+# Makefile to compile cib.
 # lists all the dependencies for test, prod and we can run a go build aftermath.
 ###############################################################################
 
+GOPATH  := $(GOPATH):$(shell pwd)/../../../../
 
-LIBGO_HOME = $(HOME)/code/megam/workspace/libgo
-
-export GOPATH=$(LIBGO_HOME)
 
 define HG_ERROR
 
-FATAL: you need mercurial (hg) to download gulp dependencies.
+FATAL: you need mercurial (hg) to download cib dependencies.
        Check README.md for details
+
+
 endef
 
 define GIT_ERROR
 
-FATAL: you need git to download gulp dependencies.
+FATAL: you need git to download cib dependencies.
        Check README.md for details
 endef
 
 define BZR_ERROR
 
-FATAL: you need bazaar (bzr) to download gulp dependencies.
+FATAL: you need bazaar (bzr) to download cib dependencies.
        Check README.md for details
 endef
 
-.PHONY: all check-path get hg git bzr get-test get-prod test client
+.PHONY: all check-path get hg git bzr get-code test
 
 all: check-path get test
 
@@ -51,24 +51,9 @@ ifndef GOPATH
 	@echo "       http://golang.org/cmd/go/#GOPATH_environment_variable"
 	@exit 1
 endif
-#ifneq ($(subst ~,$(HOME),$(GOPATH))/src/github.com/*/gulp, $(PWD))
-#	@echo "FATAL: you must clone gulp inside your GOPATH To do so,"
-#	@echo "       you can run go get github.com/megamsys/libgo/..."
-#	@echo "       or clone it manually to the dir $(GOPATH)/src/github.com/megamsys/libgo"
-#	@exit 1
-#endif
+	@exit 0
 
-clean:
-	@/bin/rm -f -r $(LIBGO_HOME)/pkg
-	@go list -f '{{range .TestImports}}{{.}} {{end}}' ./... | tr ' ' '\n' |\
-		grep '^.*\..*/.*$$' | grep -v 'github.com/megamsys/libgo' |\
-		sort | uniq | xargs -I{} rm -f -r $(LIBGO_HOME)/src/{}
-	@go list -f '{{range .Imports}}{{.}} {{end}}' ./... | tr ' ' '\n' |\
-		grep '^.*\..*/.*$$' | grep -v 'github.com/megamsys/libgo' |\
-		sort | uniq | xargs -I{} rm -f -r $(LIBGO_HOME)/src/{}
-	@/bin/echo "Clean ...ok"
-
-get: hg git bzr get-test get-prod
+get: hg git bzr get-code godep
 
 hg:
 	$(if $(shell hg), , $(error $(HG_ERROR)))
@@ -79,24 +64,24 @@ git:
 bzr:
 	$(if $(shell bzr), , $(error $(BZR_ERROR)))
 
-get-test:
-	@/bin/echo -n "Installing test dependencies... "
-	@go list -f '{{range .TestImports}}{{.}} {{end}}' ./... | tr ' ' '\n' |\
-		grep '^.*\..*/.*$$' | grep -v 'github.com/megamsys/libgo' |\
-		sort | uniq | xargs go get -u >/tmp/.get-test 2>&1 || (cat /tmp/.get-test && exit 1)
-	@/bin/echo "ok"
-	@rm -f /tmp/.get-test
+get-code:
+	go get $(GO_EXTRAFLAGS) -u -d -t ./...
 
-get-prod:
-	@/bin/echo -n "Installing production dependencies... "
-	@go list -f '{{range .Imports}}{{.}} {{end}}' ./... | tr ' ' '\n' |\
-		grep '^.*\..*/.*$$' | grep -v 'github.com/megamsys/libgo' |\
-		sort | uniq | xargs go get -u >/tmp/.get-prod 2>&1 || (cat /tmp/.get-prod && exit 1)
-	@/bin/echo "ok"
-	@rm -f /tmp/.get-prod
+godep:
+	go get $(GO_EXTRAFLAGS) github.com/tools/godep
+	godep restore ./...
 
 _go_test:
-	@go test -i ./...
-	@go test ./...
+	go clean $(GO_EXTRAFLAGS) ./...
+	go test $(GO_EXTRAFLAGS) ./...
+
 
 test: _go_test
+
+_install_deadcode: git
+	go get $(GO_EXTRAFLAGS) github.com/remyoudompheng/go-misc/deadcode
+
+deadcode: _install_deadcode
+	@go list ./... | sed -e 's;github.com/megamsys/cloudinabox/;;' | xargs deadcode
+
+deadc0de: deadcode

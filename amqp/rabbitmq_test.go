@@ -3,65 +3,83 @@ package amqp
 import ()
 
 import (
+	"log"
+	"time"
+
 	"github.com/tsuru/config"
 	"gopkg.in/check.v1"
 )
 
-type RabbitMQSuite struct{}
+type RabbitMQSuite struct{ factory *rabbitmqQFactory }
 
 var _ = check.Suite(&RabbitMQSuite{})
 
 func (s *RabbitMQSuite) SetUpSuite(c *check.C) {
-	//	config.Set("queue-server", "127.0.0.1:11300")
-}
-
-func (s *RabbitMQSuite) TestConnection(c *check.C) {
-	_, err := connection()
+	s.factory = &rabbitmqQFactory{}
+	config.Set("queue", "rabbitmq")
+	_, err := s.factory.dial("unittest_exchange")
 	c.Assert(err, check.IsNil)
 }
 
-func (s *RabbitMQSuite) TestConnectionQueueServerUndefined(c *check.C) {
-	old, _ := config.Get("amqp:url")
-	config.Unset("amqp:url")
-	defer config.Set("amqp:url", old)
-	conn, err := connection()
+func (s *RabbitMQSuite) TestFactoryGet(c *check.C) {
+	var factory rabbitmqQFactory
+	q, err := factory.Get("ancient")
 	c.Assert(err, check.IsNil)
-	c.Assert(conn, check.NotNil)
+	rq, ok := q.(*rabbitmqQ)
+	c.Assert(ok, check.Equals, true)
+	c.Assert(rq.name, check.Equals, "ancient")
 }
-
-func (s *RabbitMQSuite) TestConnectionResfused(c *check.C) {
-	old, _ := config.Get("amqp:url")
-	config.Set("amqp:url", "127.0.0.1:11301")
-	defer config.Set("amqp:url", old)
-	conn, err := connection()
-	c.Assert(conn, check.IsNil)
-	c.Assert(err, check.NotNil)
-}
-
-/*func (s *RabbitMQSuite) TestPut(c *check.C) {
-	msg := Message{
-		Action: "startapp",
-		Args:   []string{"node1.megam.co"},
-	}
-	q := rabbitmqQ{name: "default"}
-	err := q.Put(&msg, 0)
-	c.Assert(err, check.IsNil)
-	c.Assert(msg.id, check.Not(check.Equals), 0)
-	defer conn.Delete(msg.id)
-	id, body, err := conn.Reserve(1e6)
-	c.Assert(err, check.IsNil)
-	c.Assert(id, check.Equals, msg.id)
-	var got Message
-	buf := bytes.NewBuffer(body)
-	err = gob.NewDecoder(buf).Decode(&got)
-	c.Assert(err, check.IsNil)
-	got.id = msg.id
-	c.Assert(got, check.DeepEquals, msg)
-}*/
 
 func (s *RabbitMQSuite) TestRabbitMQFactoryIsInFactoriesMap(c *check.C) {
 	f, ok := factories["rabbitmq"]
 	c.Assert(ok, check.Equals, true)
-	_, ok = f.(rabbitmqFactory)
+	_, ok = f.(*rabbitmqQFactory)
 	c.Assert(ok, check.Equals, true)
+}
+
+func (s *RabbitMQSuite) TestRabbitMQPubSub(c *check.C) {
+	var factory rabbitmqQFactory
+	q, err := factory.Get("mypubsub")
+	c.Assert(err, check.IsNil)
+	pubSubQ, ok := q.(PubSubQ)
+	c.Assert(ok, check.Equals, true)
+	msgChan, err := pubSubQ.Sub()
+	c.Assert(err, check.IsNil)
+	err = pubSubQ.Pub([]byte("howdy pubsub"))
+	c.Assert(err, check.IsNil)
+	c.Assert(<-msgChan, check.DeepEquals, []byte("howdy pubsub"))
+}
+
+func (s *RabbitMQSuite) TestRabbitMQPubSubUnsub(c *check.C) {
+	var factory rabbitmqQFactory
+	q, err := factory.Get("mypubsub")
+	c.Assert(err, check.IsNil)
+	pubSubQ, ok := q.(PubSubQ)
+	c.Assert(ok, check.Equals, true)
+	msgChan, err := pubSubQ.Sub()
+	c.Assert(err, check.IsNil)
+
+	err = pubSubQ.Pub([]byte("howdy pubsubunsub"))
+	c.Assert(err, check.IsNil)
+	
+	done := make(chan bool)
+	
+	go func() {
+		time.Sleep(1e9)
+		pubSubQ.UnSub()
+	}()
+	go func() {
+		msgs := make([][]byte, 0)
+		for msg := range msgChan {
+			log.Printf(" [x] %q", msg)
+			msgs = append(msgs, msg)
+		}
+		c.Assert(msgs, check.DeepEquals, [][]byte{[]byte("howdy pubsubunsub")})
+		done <- true
+	}()
+	select {
+	case <-done:
+	case <-time.After(10e9):
+		c.Error("Timeout waiting for message.")
+	}
 }

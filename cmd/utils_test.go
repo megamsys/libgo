@@ -1,7 +1,7 @@
 package cmd
 
 import (
-//	"launchpad.net/gocheck"
+//	"gopkg.in/check.v1"
 )
 
 /*func (s *S) TestReadToken(c *check.C) {	
