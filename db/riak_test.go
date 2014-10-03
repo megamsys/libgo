@@ -168,8 +168,11 @@ func (s *S) TestFetchObject(c *check.C) {
 	defer storage.Close()
 	c.Assert(storage, check.NotNil)
 	c.Assert(err, check.IsNil)
-	err = storage.FetchObject("sampleobject")
-	log.Println("--> value   [TestFetch] [%s]", out.node_id)
+	object := ExampleData{
+		data string 
+	}
+	err = storage.FetchObject("sampleobject", &object)
+	log.Println("--> value   [TestFetch] [%s]", object.data)
 	c.Assert(err, check.IsNil)
 	log.Println("--> end   [TestFetch]")
 }
