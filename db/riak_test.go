@@ -32,6 +32,10 @@ type AppRequests struct {
 	created_at    string `json:"created_at"`
 }
 
+type SampleObject struct{ 
+	  Data string `json:"data"`
+	}
+
 var _ = check.Suite(&S{})
 
 var addr = []string{"127.0.0.1:8087"}
@@ -142,7 +146,7 @@ func (s *S) TestFetch(c *check.C) {
 }
 
 func (s *S) TestStoreObject(c *check.C) {
-	log.Println("--> start [TestFetch]")
+	log.Println("--> start [TestStore Object]")
 	config.Set("riak:url", "127.0.0.1:8087")
 	defer config.Unset("riak:url")
 	config.Set("riak:bucket", "appreqs")
@@ -159,7 +163,7 @@ func (s *S) TestStoreObject(c *check.C) {
 }
 
 func (s *S) TestFetchObject(c *check.C) {
-	log.Println("--> start [TestFetch]")
+	log.Println("--> start [TestFetch Object]")
 	config.Set("riak:url", "127.0.0.1:8087")
 	defer config.Unset("riak:url")
 	config.Set("riak:bucket", "appreqs")
@@ -168,11 +172,9 @@ func (s *S) TestFetchObject(c *check.C) {
 	defer storage.Close()
 	c.Assert(storage, check.NotNil)
 	c.Assert(err, check.IsNil)
-	object := ExampleData{
-		data string 
-	}
-	err = storage.FetchObject("sampleobject", &object)
-	log.Println("--> value   [TestFetch] [%s]", object.data)
+	out := &SampleObject{}
+	err = storage.FetchObject("sampleobject", out)
+	log.Println("--> value   [TestFetch] [%s]", out.Data)
 	c.Assert(err, check.IsNil)
 	log.Println("--> end   [TestFetch]")
 }
