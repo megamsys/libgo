@@ -141,11 +141,12 @@ func (s *Storage) StoreStruct(key string, data interface{}) error {
 }
 
 // Fetch raw data (int, string, []byte)
-func (s *Storage) FetchObject(key string) error {
-	if _, err := s.coder_client.FetchObject(s.bktname, key); err != nil {
+func (s *Storage) FetchObject(key string, out interface{}) error {
+	if obj, err := s.coder_client.FetchObject(s.bktname, key); err != nil {
 		return fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", err)
 	}
-	fmt.Println(out)
+	out.data = string(obj.GetContent()[0].GetValue())
+	fmt.Println(string(obj.GetContent()[0].GetValue()))
 	//TO-DO:
 	//we need to return the fetched json -> to struct interface
 	return nil
