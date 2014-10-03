@@ -141,6 +141,39 @@ func (s *S) TestFetch(c *check.C) {
 	log.Println("--> end   [TestFetch]")
 }
 
+func (s *S) TestStoreObject(c *check.C) {
+	log.Println("--> start [TestFetch]")
+	config.Set("riak:url", "127.0.0.1:8087")
+	defer config.Unset("riak:url")
+	config.Set("riak:bucket", "appreqs")
+	defer config.Unset("riak:bucket")
+	storage, err := Conn("appreqs")
+	defer storage.Close()
+	c.Assert(storage, check.NotNil)
+	c.Assert(err, check.IsNil)
+	// Store Struct (uses coder)
+	data := "sampledata"
+	err = storage.StoreObject("sampleobject", data)
+	c.Assert(err, check.IsNil)
+	log.Println("--> end   [TestFetch]")
+}
+
+func (s *S) TestFetchObject(c *check.C) {
+	log.Println("--> start [TestFetch]")
+	config.Set("riak:url", "127.0.0.1:8087")
+	defer config.Unset("riak:url")
+	config.Set("riak:bucket", "appreqs")
+	defer config.Unset("riak:bucket")
+	storage, err := Conn("appreqs")
+	defer storage.Close()
+	c.Assert(storage, check.NotNil)
+	c.Assert(err, check.IsNil)
+	err = storage.FetchObject("sampleobject")
+	log.Println("--> value   [TestFetch] [%s]", out.node_id)
+	c.Assert(err, check.IsNil)
+	log.Println("--> end   [TestFetch]")
+}
+
 /*func (s *S) TestUsers(c *check.C) {
 	storage, _ := Open("127.0.0.1:27017", "megam_storage_test")
 	defer storage.Close()
