@@ -14,6 +14,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+    "encoding/json"
 )
 
 var (
@@ -142,19 +143,25 @@ func (s *Storage) StoreStruct(key string, data interface{}) error {
 
 // Fetch raw data (int, string, []byte)
 func (s *Storage) FetchObject(key string, out interface{}) error {
-	if obj, err := s.coder_client.FetchObject(s.bktname, key); err != nil {
+	obj, err := s.coder_client.FetchObject(s.bktname, key)
+	if err != nil {
 		return fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", err)
 	}
-	out.data = string(obj.GetContent()[0].GetValue())
-	fmt.Println(string(obj.GetContent()[0].GetValue()))
+	  object := "{\"Data\":\"" + string(obj.GetContent()[0].GetValue()) + "\"}"
+	  jsonBlob := []byte(object)
+      jerr := json.Unmarshal(jsonBlob, out)
+	  if jerr != nil {
+               return fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", jerr)
+	  }
+	fmt.Println(out)
 	//TO-DO:
 	//we need to return the fetched json -> to struct interface
 	return nil
 }
 
 // Store raw data (int, string, []byte)
-func (s *Storage) StoreObject(key string, data []byte) error {
-	if _, err := s.coder_client.StoreObject(s.bktname, key, data); err != nil {
+func (s *Storage) StoreObject(key string, data string) error {
+	if _, err := s.coder_client.StoreObject(s.bktname, key, []byte(data)); err != nil {
 		return fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", err)
 	}
 	return nil
