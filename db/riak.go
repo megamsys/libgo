@@ -141,21 +141,18 @@ func (s *Storage) StoreStruct(key string, data interface{}) error {
 	return nil
 }
 
+type SshObject struct{ 
+	  Data string 
+	}
+
 // Fetch raw data (int, string, []byte)
-func (s *Storage) FetchObject(key string, out interface{}) error {
+ func (s *Storage) FetchObject(key string, out *SshObject) error {
+
 	obj, err := s.coder_client.FetchObject(s.bktname, key)
 	if err != nil {
 		return fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", err)
 	}
-	  object := "{\"Data\":\"" + string(obj.GetContent()[0].GetValue()) + "\"}"
-	  jsonBlob := []byte(object)
-      jerr := json.Unmarshal(jsonBlob, out)
-	  if jerr != nil {
-               return fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", jerr)
-	  }
-	fmt.Println(out)
-	//TO-DO:
-	//we need to return the fetched json -> to struct interface
+    out.Data = string(obj.GetContent()[0].GetValue())
 	return nil
 }
 
