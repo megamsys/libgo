@@ -8,7 +8,7 @@ import (
 )
 
 func TestWatch(t *testing.T) {
-	c := NewClient(nil)
+	c := NewClient("")
 	defer func() {
 		c.Delete("watch_foo", true)
 	}()
@@ -53,7 +53,7 @@ func TestWatch(t *testing.T) {
 }
 
 func TestWatchAll(t *testing.T) {
-	c := NewClient(nil)
+	c := NewClient("")
 	defer func() {
 		c.Delete("watch_foo", true)
 	}()

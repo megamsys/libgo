@@ -14,7 +14,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-    "encoding/json"
 )
 
 var (
@@ -141,8 +140,8 @@ func (s *Storage) StoreStruct(key string, data interface{}) error {
 	return nil
 }
 
-type SshObject struct{ 
-	  Data string 
+type SshObject struct{
+	  Data string
 	}
 
 // Fetch raw data (int, string, []byte)

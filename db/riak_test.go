@@ -3,7 +3,6 @@ package db
 import (
 	"github.com/tsuru/config"
 	"gopkg.in/check.v1"
-	//	"reflect"
 	"log"
 	"strings"
 	"sync"
@@ -32,7 +31,7 @@ type AppRequests struct {
 	created_at    string `json:"created_at"`
 }
 
-type SampleObject struct{ 
+type SampleObject struct{
 	  Data string `json:"data"`
 	}
 
@@ -172,7 +171,7 @@ func (s *S) TestFetchObject(c *check.C) {
 	defer storage.Close()
 	c.Assert(storage, check.NotNil)
 	c.Assert(err, check.IsNil)
-	out := &SampleObject{}
+	out := &SshObject{}
 	err = storage.FetchObject("sampleobject", out)
 	log.Println("--> value   [TestFetch] [%s]", out.Data)
 	c.Assert(err, check.IsNil)

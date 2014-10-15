@@ -1,17 +1,13 @@
 package etcd
 
 import (
-	"encoding/json"
-	"fmt"
-	"net"
-	"net/url"
 	"os"
 	"testing"
 )
 
 
 func TestPersistence(t *testing.T) {
-	c := NewClient(nil)
+	c := NewClient("")
 
 
 	fo, err := os.Create("config.json")
@@ -25,5 +21,5 @@ func TestPersistence(t *testing.T) {
 	}()
 
 	c.SetPersistence(fo)
-	
+
 }
