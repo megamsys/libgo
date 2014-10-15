@@ -99,14 +99,14 @@ func TestWatchAll(t *testing.T) {
 
 func setHelper(key, value string, c *Client) {
 	time.Sleep(time.Second)
-	c.Set(key, value, 100)
+	c.Set(key, value)
 }
 
 func setLoop(key, value string, c *Client) {
 	time.Sleep(time.Second)
 	for i := 0; i < 10; i++ {
 		newValue := fmt.Sprintf("%s_%v", value, i)
-		c.Set(key, newValue, 100)
+		c.Set(key, newValue)
 		time.Sleep(time.Second / 10)
 	}
 }
