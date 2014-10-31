@@ -31,20 +31,3 @@ func (s *S) TestShouldReturnBodyMessageOnError(c *check.C) {
 
 
 
-func (s *S) TestShouldSkipValidationIfThereIsNoSupportedHeaderDeclared(c *check.C) {
-	var buf bytes.Buffer
-	request, err := http.NewRequest("GET", "/", nil)
-	c.Assert(err, check.IsNil)
-	context := Context{
-		Stderr: &buf,
-	}
-	trans := ttesting.Transport{Message: "", Status: http.StatusOK, Headers: map[string][]string{"Supported-Tsuru": {"0.3"}}}
-	manager := Manager{
-		version: "0.2.1",
-	}
-	client := NewClient(&http.Client{Transport: &trans}, &context, &manager)
-	_, err = client.Do(request)
-	c.Assert(err, check.IsNil)
-	c.Assert(buf.String(), check.Equals, "")
-}
-
