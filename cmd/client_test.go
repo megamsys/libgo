@@ -48,21 +48,3 @@ func (s *S) TestShouldSkipValidationIfThereIsNoSupportedHeaderDeclared(c *check.
 	c.Assert(buf.String(), check.Equals, "")
 }
 
-func (s *S) TestShouldSkupValidationIfServerDoesNotReturnSupportedHeader(c *check.C) {
-	var buf bytes.Buffer
-	request, err := http.NewRequest("GET", "/", nil)
-	c.Assert(err, check.IsNil)
-	context := Context{
-		Stderr: &buf,
-	}
-	trans := ttesting.Transport{Message: "", Status: http.StatusOK}
-	manager := Manager{
-		name:          "glb",
-		version:       "0.2.1",
-		versionHeader: "Supported-Tsuru",
-	}
-	client := NewClient(&http.Client{Transport: &trans}, &context, &manager)
-	_, err = client.Do(request)
-	c.Assert(err, check.IsNil)
-	c.Assert(buf.String(), check.Equals, "")
-}
