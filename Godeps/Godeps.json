@@ -1,14 +1,14 @@
 {
 	"ImportPath": "github.com/megamsys/libgo",
-	"GoVersion": "go1.3.3",
+	"GoVersion": "go1.4beta1",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
 		{
 			"ImportPath": "code.google.com/p/goprotobuf/proto",
-			"Comment": "go.r60-157",
-			"Rev": "725eb0907b649c438e0e8f1601648597141fb66c"
+			"Comment": "go.r60-159",
+			"Rev": "26b4b5c8a6ec0e0bc5a8d2807c9f42f7d1bb291a"
 		},
 		{
 			"ImportPath": "github.com/howeyc/fsnotify",
@@ -21,7 +21,7 @@
 		},
 		{
 			"ImportPath": "github.com/streadway/amqp",
-			"Rev": "7d6d1802c7710be39564a287f860360c6328f956"
+			"Rev": "6ffc9248c4b16699477e7411084c2402f2f0c351"
 		},
 		{
 			"ImportPath": "github.com/tsuru/commandmocker",
@@ -33,7 +33,7 @@
 		},
 		{
 			"ImportPath": "gopkg.in/check.v1",
-			"Rev": "91ae5f88a67b14891cfd43895b01164f6c120420"
+			"Rev": "64131543e7896d5bcc6bd5a76287eb75ea96c673"
 		},
 		{
 			"ImportPath": "gopkg.in/v1/yaml",
