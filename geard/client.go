@@ -1,4 +1,4 @@
-package etcd
+package geard
 
 import (
 	"crypto/tls"
@@ -9,22 +9,14 @@ import (
 	"time"
 )
 
-// See SetConsistency for how to use these constants.
-const (
-	// Using strings rather than iota because the consistency level
-	// could be persisted to disk, so it'd be better to use
-	// human-readable values.
-	STRONG_CONSISTENCY = "STRONG"
-	WEAK_CONSISTENCY   = "WEAK"
-)
-
 const (
 	defaultBufferSize = 10
 )
 
-
 type Client struct {
-	url       string
+	Host       string
+	Port       string
+	url        string
 	httpClient  *http.Client
 	persistence io.Writer
 	cURLch      chan string
@@ -36,7 +28,7 @@ type Client struct {
 	// http status code of response.
 	// If CheckRetry is nil, client will call the default one
 	// `DefaultCheckRetry`.
-	// Argument cluster is the etcd.Cluster object that these requests have been made on.
+	// Argument cluster is the geard.Cluster object that these requests have been made on.
 	// Argument numReqs is the number of http.Requests that have been made so far.
 	// Argument lastResp is the http.Responses from the last request.
 	// Argument err is the reason of the failure.
@@ -46,26 +38,11 @@ type Client struct {
 
 // NewClient create a basic client that is configured to be used
 // with the given machine list.
-func NewClient(name string) *Client {
-	//config := Config{
-		// default timeout is one second
-	//	DialTimeout: time.Second,
-		// default consistency level is STRONG
-	//	Consistency: STRONG_CONSISTENCY,
-	//}
-
-	client := &Client{url: name}
+func NewClient(host string, port string) *Client {
+	client := &Client{Host: host, Port: port}
 
 	client.initHTTPClient()
-	//client.saveConfig()
-
 	return client
-}
-
-// SetPersistence sets a writer to which the config will be
-// written every time it's changed.
-func (c *Client) SetPersistence(writer io.Writer) {
-	c.persistence = writer
 }
 
 // Override the Client's HTTP Transport object
@@ -73,7 +50,7 @@ func (c *Client) SetTransport(tr *http.Transport) {
 	c.httpClient.Transport = tr
 }
 
-// initHTTPClient initializes a HTTP client for etcd client
+// initHTTPClient initializes a HTTP client for geard client
 func (c *Client) initHTTPClient() {
 	tr := &http.Transport{
 		Dial: c.dial,
