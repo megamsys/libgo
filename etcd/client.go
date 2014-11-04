@@ -76,7 +76,7 @@ func (c *Client) SetTransport(tr *http.Transport) {
 // initHTTPClient initializes a HTTP client for etcd client
 func (c *Client) initHTTPClient() {
 	tr := &http.Transport{
-		Dial: c.dial,
+		Dial: c.Dial,
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
 		},
@@ -87,8 +87,8 @@ func (c *Client) initHTTPClient() {
 
 // dial attempts to open a TCP connection to the provided address, explicitly
 // enabling keep-alives with a one-second interval.
-func (c *Client) dial(network, addr string) (net.Conn, error) {       
-        conn, err := net.Dial(network, addr)
+func (c *Client) Dial(network, addr string) (net.Conn, error) {  
+     conn, err := net.Dial(network, addr)
 	//conn, err := net.DialTimeout(network, addr, c.config.DialTimeout)
 	if err != nil {
 		return nil, err

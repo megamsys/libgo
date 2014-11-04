@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"log"
 	"sync"
-
 	"github.com/streadway/amqp"
 	"github.com/tsuru/config"
 )
@@ -101,7 +100,7 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 	deliveries, err := chnl.Consume(
 		r.qname(), // name
 		r.tag(),   // consumerTag,
-		false,     // noAck
+		true,     // noAck
 		false,     // exclusive
 		false,     // noLocal
 		false,     // noWait
@@ -130,6 +129,19 @@ type rabbitmqQFactory struct {
 
 func (factory *rabbitmqQFactory) Get(name string) (PubSubQ, error) {
 	return &rabbitmqQ{name: name, prefix: "megam", factory: factory}, nil
+}
+
+func (factory *rabbitmqQFactory) Dial() (*amqp.Connection, error) {
+	addr, err := config.GetString("amqp:url")
+	if err != nil {
+		addr = "amqp://localhost:5672/"
+	}
+	conn, err := amqp.Dial(addr)
+
+	if err != nil {
+		return nil, err
+	}
+	return conn, nil
 }
 
 func (factory *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
