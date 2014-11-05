@@ -27,7 +27,7 @@ package amqp
 // and stop capability.
 import (
 	"fmt"
-
+    "github.com/streadway/amqp"
 	"github.com/tsuru/config"
 )
 
@@ -51,6 +51,8 @@ type PubSubQ interface {
 type QFactory interface {
 	// Get returns a queue instance, identified by the given name.
 	Get(name string) (PubSubQ, error)
+	
+	Dial() (*amqp.Connection, error)
 }
 
 var factories = map[string]QFactory{
