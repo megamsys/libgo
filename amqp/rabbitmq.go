@@ -71,6 +71,7 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 	); err != nil {
 		return fmt.Errorf("Exchange Publish: %s", err)
 	}
+	log.Printf(" [x] Publish message (%q).", err)
 	return err
 }
 
