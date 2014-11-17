@@ -5,7 +5,7 @@ import (
 )
 
 func TestDelete(t *testing.T) {
-	c := NewClient("")
+	c := NewClient(nil)
 	defer func() {
 		c.Delete("foo", true)
 	}()
@@ -32,7 +32,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestDeleteAll(t *testing.T) {
-	c := NewClient("")
+	c := NewClient(nil)
 	defer func() {
 		c.Delete("foo", true)
 		c.Delete("fooDir", true)

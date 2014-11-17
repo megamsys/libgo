@@ -8,7 +8,7 @@ import (
 )
 
 func TestWatch(t *testing.T) {
-	c := NewClient("")
+	c := NewClient(nil)
 	defer func() {
 		c.Delete("watch_foo", true)
 	}()
@@ -53,7 +53,7 @@ func TestWatch(t *testing.T) {
 }
 
 func TestWatchAll(t *testing.T) {
-	c := NewClient("")
+	c := NewClient(nil)
 	defer func() {
 		c.Delete("watch_foo", true)
 	}()
@@ -99,14 +99,14 @@ func TestWatchAll(t *testing.T) {
 
 func setHelper(key, value string, c *Client) {
 	time.Sleep(time.Second)
-	c.Set(key, value)
+	c.Set(key, value, 100)
 }
 
 func setLoop(key, value string, c *Client) {
 	time.Sleep(time.Second)
 	for i := 0; i < 10; i++ {
 		newValue := fmt.Sprintf("%s_%v", value, i)
-		c.Set(key, newValue)
+		c.Set(key, newValue, 100)
 		time.Sleep(time.Second / 10)
 	}
 }

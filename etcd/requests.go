@@ -3,7 +3,9 @@ package etcd
 import (
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
 	"path"
@@ -37,7 +39,14 @@ func NewRawRequest(method, relativePath string, values url.Values, cancel <-chan
 // getCancelable issues a cancelable GET request
 func (c *Client) getCancelable(key string, options Options,
 	cancel <-chan bool) (*RawResponse, error) {
+	logger.Debugf("get %s [%s]", key, c.cluster.Leader)
 	p := keyToPath(key)
+
+	// If consistency level is set to STRONG, append
+	// the `consistent` query string.
+	if c.config.Consistency == STRONG_CONSISTENCY {
+		options["consistent"] = true
+	}
 
 	str, err := options.toParameters(VALID_GET_OPTIONS)
 	if err != nil {
@@ -46,7 +55,7 @@ func (c *Client) getCancelable(key string, options Options,
 	p += str
 
 	req := NewRawRequest("GET", p, nil, cancel)
-	resp, err := c.SendRequest(p, req)
+	resp, err := c.SendRequest(req)
 
 	if err != nil {
 		return nil, err
@@ -61,23 +70,21 @@ func (c *Client) get(key string, options Options) (*RawResponse, error) {
 }
 
 // put issues a PUT request
-func (c *Client) put(key string, value string, options Options) (*RawResponse, error) {
-        
-	logger.Debugf("put %s, %s", key, value)
+func (c *Client) put(key string, value string,
+	options Options) (*RawResponse, error) {
+
+	logger.Debugf("put %s, %s, [%s]", key, value, c.cluster.Leader)
 	p := keyToPath(key)
-        fmt.Println(p)
 
 	str, err := options.toParameters(VALID_PUT_OPTIONS)
 	if err != nil {
 		return nil, err
 	}
 	p += str
-        fmt.Println(p)
 
 	req := NewRawRequest("PUT", p, buildValues(value), nil)
-         fmt.Println(req)
-	resp, err := c.SendRequest(p, req)
-        fmt.Println(resp)
+	resp, err := c.SendRequest(req)
+
 	if err != nil {
 		return nil, err
 	}
@@ -87,11 +94,11 @@ func (c *Client) put(key string, value string, options Options) (*RawResponse, e
 
 // post issues a POST request
 func (c *Client) post(key string, value string) (*RawResponse, error) {
-	logger.Debugf("post %s, %s, ttl: %d", key, value)
+	logger.Debugf("post %s, %s, [%s]", key, value, c.cluster.Leader)
 	p := keyToPath(key)
 
 	req := NewRawRequest("POST", p, buildValues(value), nil)
-	resp, err := c.SendRequest(p, req)
+	resp, err := c.SendRequest(req)
 
 	if err != nil {
 		return nil, err
@@ -102,7 +109,7 @@ func (c *Client) post(key string, value string) (*RawResponse, error) {
 
 // delete issues a DELETE request
 func (c *Client) delete(key string, options Options) (*RawResponse, error) {
-	logger.Debugf("delete %s", key)
+	logger.Debugf("delete %s [%s]", key, c.cluster.Leader)
 	p := keyToPath(key)
 
 	str, err := options.toParameters(VALID_DELETE_OPTIONS)
@@ -112,7 +119,7 @@ func (c *Client) delete(key string, options Options) (*RawResponse, error) {
 	p += str
 
 	req := NewRawRequest("DELETE", p, nil, nil)
-	resp, err := c.SendRequest(p, req)
+	resp, err := c.SendRequest(req)
 
 	if err != nil {
 		return nil, err
@@ -122,7 +129,7 @@ func (c *Client) delete(key string, options Options) (*RawResponse, error) {
 }
 
 // SendRequest sends a HTTP request and returns a Response as defined by etcd
-func (c *Client) SendRequest(path string, rr *RawRequest) (*RawResponse, error) {
+func (c *Client) SendRequest(rr *RawRequest) (*RawResponse, error) {
 
 	var req *http.Request
 	var resp *http.Response
@@ -131,7 +138,7 @@ func (c *Client) SendRequest(path string, rr *RawRequest) (*RawResponse, error) 
 	var respBody []byte
 
 	var numReqs = 1
-        fmt.Println("------------entry------")
+
 	checkRetry := c.CheckRetry
 	if checkRetry == nil {
 		checkRetry = DefaultCheckRetry
@@ -171,10 +178,11 @@ func (c *Client) SendRequest(path string, rr *RawRequest) (*RawResponse, error) 
 
 	// If we connect to a follower and consistency is required, retry until
 	// we connect to a leader
-	//sleep := 25 * time.Millisecond
-	//maxSleep := time.Second
-	//for attempt := 0; ; attempt++ {
-		/*if attempt > 0 {
+	sleep := 25 * time.Millisecond
+	maxSleep := time.Second
+
+	for attempt := 0; ; attempt++ {
+		if attempt > 0 {
 			select {
 			case <-cancelled:
 				return nil, ErrRequestCancelled
@@ -184,42 +192,54 @@ func (c *Client) SendRequest(path string, rr *RawRequest) (*RawResponse, error) 
 					sleep = maxSleep
 				}
 			}
-		}*/
-                fmt.Println("Connecting to etcd: attempt")
-		//logger.Debug("Connecting to etcd: attempt", attempt+1, "for", rr.RelativePath)
+		}
 
-		httpPath = c.url + version + "/" + path
-		
+		logger.Debug("Connecting to etcd: attempt ", attempt+1, " for ", rr.RelativePath)
+
+		if rr.Method == "GET" && c.config.Consistency == WEAK_CONSISTENCY {
+			// If it's a GET and consistency level is set to WEAK,
+			// then use a random machine.
+			httpPath = c.getHttpPath(true, rr.RelativePath)
+		} else {
+			// Else use the leader.
+			httpPath = c.getHttpPath(false, rr.RelativePath)
+		}
 
 		// Return a cURL command if curlChan is set
-                c.OpenCURL()
 		if c.cURLch != nil {
 			command := fmt.Sprintf("curl -X %s %s", rr.Method, httpPath)
 			for key, value := range rr.Values {
 				command += fmt.Sprintf(" -d %s=%s", key, value[0])
 			}
-                        fmt.Println(command)
 			c.sendCURL(command)
 		}
 
 		logger.Debug("send.request.to ", httpPath, " | method ", rr.Method)
-                 
-		reqLock.Lock()
- 
-		if rr.Values == nil {
-			if req, err = http.NewRequest(rr.Method, httpPath, nil); err != nil {
-				return nil, err
-			}
-		} else {
-			body := strings.NewReader(rr.Values.Encode())
-			if req, err = http.NewRequest(rr.Method, httpPath, body); err != nil {
-				return nil, err
-			}
 
-			req.Header.Set("Content-Type",
-				"application/x-www-form-urlencoded; param=value")
+		req, err := func() (*http.Request, error) {
+			reqLock.Lock()
+			defer reqLock.Unlock()
+
+			if rr.Values == nil {
+				if req, err = http.NewRequest(rr.Method, httpPath, nil); err != nil {
+					return nil, err
+				}
+			} else {
+				body := strings.NewReader(rr.Values.Encode())
+				if req, err = http.NewRequest(rr.Method, httpPath, body); err != nil {
+					return nil, err
+				}
+
+				req.Header.Set("Content-Type",
+					"application/x-www-form-urlencoded; param=value")
+			}
+			return req, nil
+		}()
+
+		if err != nil {
+			return nil, err
 		}
-		reqLock.Unlock()
+
 		resp, err = c.httpClient.Do(req)
 		defer func() {
 			if resp != nil {
@@ -235,36 +255,43 @@ func (c *Client) SendRequest(path string, rr *RawRequest) (*RawResponse, error) 
 		}
 
 		numReqs++
-               
+
 		// network error, change a machine!
 		if err != nil {
-			logger.Debug("network error:", err.Error())
+			logger.Debug("network error: ", err.Error())
 			lastResp := http.Response{}
-			if checkErr := checkRetry(numReqs, lastResp, err); checkErr != nil {
+			if checkErr := checkRetry(c.cluster, numReqs, lastResp, err); checkErr != nil {
 				return nil, checkErr
 			}
 
-			//c.cluster.switchLeader(attempt % len(c.cluster.Machines))
-			//continue
+			c.cluster.switchLeader(attempt % len(c.cluster.Machines))
+			continue
 		}
 
 		// if there is no error, it should receive response
-		logger.Debug("recv.response.from", httpPath)
-                fmt.Println(resp)
+		logger.Debug("recv.response.from ", httpPath)
+
 		if validHttpStatusCode[resp.StatusCode] {
 			// try to read byte code and break the loop
-                        fmt.Println("--------if entry----------")
-                         fmt.Println(resp.StatusCode)
 			respBody, err = ioutil.ReadAll(resp.Body)
 			if err == nil {
-				logger.Debug("recv.success.", httpPath)
-				//break
+				logger.Debug("recv.success ", httpPath)
+				break
 			}
 			// ReadAll error may be caused due to cancel request
 			select {
 			case <-cancelled:
 				return nil, ErrRequestCancelled
 			default:
+			}
+
+			if err == io.ErrUnexpectedEOF {
+				// underlying connection was closed prematurely, probably by timeout
+				// TODO: empty body or unexpectedEOF can cause http.Transport to get hosed;
+				// this allows the client to detect that and take evasive action. Need
+				// to revisit once code.google.com/p/go/issues/detail?id=8648 gets fixed.
+				respBody = []byte{}
+				break
 			}
 		}
 
@@ -277,19 +304,19 @@ func (c *Client) SendRequest(path string, rr *RawRequest) (*RawResponse, error) 
 			} else {
 				// Update cluster leader based on redirect location
 				// because it should point to the leader address
-				//c.cluster.updateLeaderFromURL(u)
-				logger.Debug("recv.response.relocate", u.String())
+				c.cluster.updateLeaderFromURL(u)
+				logger.Debug("recv.response.relocate ", u.String())
 			}
 			resp.Body.Close()
-			//continue
+			continue
 		}
 
-		if checkErr := checkRetry(numReqs, *resp,
+		if checkErr := checkRetry(c.cluster, numReqs, *resp,
 			errors.New("Unexpected HTTP status code")); checkErr != nil {
 			return nil, checkErr
 		}
 		resp.Body.Close()
-	//}
+	}
 
 	r := &RawResponse{
 		StatusCode: resp.StatusCode,
@@ -303,8 +330,13 @@ func (c *Client) SendRequest(path string, rr *RawRequest) (*RawResponse, error) 
 // DefaultCheckRetry defines the retrying behaviour for bad HTTP requests
 // If we have retried 2 * machine number, stop retrying.
 // If status code is InternalServerError, sleep for 200ms.
-func DefaultCheckRetry(numReqs int, lastResp http.Response,
+func DefaultCheckRetry(cluster *Cluster, numReqs int, lastResp http.Response,
 	err error) error {
+
+	if numReqs >= 2*len(cluster.Machines) {
+		return newError(ErrCodeEtcdNotReachable,
+			"Tried to connect to each peer twice and failed", 0)
+	}
 
 	code := lastResp.StatusCode
 	if code == http.StatusInternalServerError {
@@ -316,13 +348,29 @@ func DefaultCheckRetry(numReqs int, lastResp http.Response,
 	return nil
 }
 
+func (c *Client) getHttpPath(random bool, s ...string) string {
+	var machine string
+	if random {
+		machine = c.cluster.Machines[rand.Intn(len(c.cluster.Machines))]
+	} else {
+		machine = c.cluster.Leader
+	}
+
+	fullPath := machine + "/" + version
+	for _, seg := range s {
+		fullPath = fullPath + "/" + seg
+	}
+
+	return fullPath
+}
+
 // buildValues builds a url.Values map according to the given value and ttl
 func buildValues(value string) url.Values {
 	v := url.Values{}
 
 	if value != "" {
 		v.Set("value", value)
-	}
+	}	
 
 	return v
 }
