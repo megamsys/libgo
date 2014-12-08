@@ -126,7 +126,7 @@ func (c *Client) SendRequest(rr *RawRequest, json string) (*RawResponse, error) 
 			 }
 			
 			if json != "" {
-				command += fmt.Sprintf(" -d %s", json)
+				command += fmt.Sprintf(" -d '%s' ", json)
 			 }
             log.Info(command)
 			c.sendCURL(command)
