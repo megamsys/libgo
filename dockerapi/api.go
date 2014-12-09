@@ -30,7 +30,7 @@ func (c *Client) List(name, string) (*RawResponse, error) {
 	req := NewRawRequest("GET", url)
 	resp, err := c.SendRequest(req, "")
 	return resp, err
-	
+	}
 	
 	
 func (c *Client) SendRequest(rr *RawRequest, json string) (*RawResponse, error) {	
@@ -62,4 +62,3 @@ func (c *Client) SendRequest(rr *RawRequest, json string) (*RawResponse, error) 
 
 	return r, nil
 }
-	
