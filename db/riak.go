@@ -11,9 +11,9 @@ import (
 	"github.com/megamsys/riakpbc"
 	"github.com/tsuru/config"
 	"log"
-	"strings"
+	"strings"        
 	"sync"
-	"time"
+	"time"	
 )
 
 var (
@@ -162,6 +162,15 @@ func (s *Storage) StoreObject(key string, data string) error {
 	}
 	return nil
 }
+
+func (s *Storage) FetchObjectByIndex(bucket, index, key, start, end string) ([][]byte, error) {
+	number, err := s.coder_client.Index(bucket, index, key, start, end) 
+	if err != nil {
+		return nil, fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", err)
+	}	
+	return number.GetKeys(), nil
+}
+
 
 func init() {
 	ticker = time.NewTicker(time.Hour)
