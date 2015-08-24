@@ -1,48 +1,38 @@
 {
 	"ImportPath": "github.com/megamsys/libgo",
-	"GoVersion": "go1.4beta1",
+	"GoVersion": "go1.5",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
 		{
-			"ImportPath": "code.google.com/p/goprotobuf/proto",
-			"Comment": "go.r60-159",
-			"Rev": "26b4b5c8a6ec0e0bc5a8d2807c9f42f7d1bb291a"
+			"ImportPath": "github.com/golang/glog",
+			"Rev": "fca8c8854093a154ff1eb580aae10276ad6b1b5f"
 		},
 		{
-			"ImportPath": "github.com/howeyc/fsnotify",
-			"Comment": "v0.9.0-11-g6b1ef89",
-			"Rev": "6b1ef893dc11e0447abda6da20a5203481878dda"
+			"ImportPath": "github.com/golang/protobuf/proto",
+			"Rev": "73aaaa9eb61d74fbf7e256ca586a3a565b308eea"
 		},
 		{
-			"ImportPath": "github.com/mrb/riakpbc",
-			"Rev": "b20607befda4bf864c4afd595a57b8f99754b885"
+			"ImportPath": "github.com/megamsys/riakpbc",
+			"Rev": "930958dc06ef2f84b93c81cc1c9f09459731e288"
 		},
 		{
 			"ImportPath": "github.com/streadway/amqp",
-			"Rev": "6ffc9248c4b16699477e7411084c2402f2f0c351"
+			"Rev": "f4879ba28fffbb576743b03622a9ff20461826b2"
 		},
 		{
 			"ImportPath": "github.com/tsuru/commandmocker",
-			"Rev": "adc1ee2fa7604e1663b2564ca1283d71c9153cac"
-		},
-		{
-			"ImportPath": "github.com/tsuru/config",
-			"Rev": "96579b79a0a66b9b6c95a8ff7c344aa512b41288"
+			"Rev": "be4aec17ebc7264c791bf01709bfd956475d2ee8"
 		},
 		{
 			"ImportPath": "gopkg.in/check.v1",
-			"Rev": "64131543e7896d5bcc6bd5a76287eb75ea96c673"
-		},
-		{
-			"ImportPath": "gopkg.in/v1/yaml",
-			"Rev": "9f9df34309c04878acc86042b16630b0f696e1de"
+			"Rev": "11d3bc7aa68e238947792f30573146a3231fc0f1"
 		},
 		{
 			"ImportPath": "launchpad.net/gnuflag",
-			"Comment": "13",
-			"Rev": "roger.peppe@canonical.com-20140716064605-pk32dnmfust02yab"
+			"Comment": "14",
+			"Rev": "roger.peppe@canonical.com-20150127164241-i95i710z8ju182mx"
 		}
 	]
 }
