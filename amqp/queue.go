@@ -27,8 +27,7 @@ package amqp
 // and stop capability.
 import (
 	"fmt"
-    "github.com/streadway/amqp"
-	"github.com/tsuru/config"
+	"github.com/streadway/amqp"
 )
 
 // PubSubQ represents an implementation that allows Publishing and
@@ -51,35 +50,51 @@ type PubSubQ interface {
 type QFactory interface {
 	// Get returns a queue instance, identified by the given name.
 	Get(name string) (PubSubQ, error)
-	
+
 	Dial() (*amqp.Connection, error)
 }
 
 var factories = map[string]QFactory{
-	"rabbitmq": &rabbitmqQFactory{},
+	"rabbitmq": &rabbitmqQFactory{BindAddress: "amqp://localhost:5672/"},
 }
 
 // Register registers a new queue factory. This is how one would add a new
-// queue to tsuru.
+// queue to megamd.
 func Register(name string, factory QFactory) {
 	factories[name] = factory
 }
 
-// Factory returns an instance of the QFactory used in tsuru. It reads tsuru
-// configuration to find the currently used queue system and returns an
-// instance of the configured system, if it's registered. Otherwise it
+// Factory returns an instance of the QFactory used in megamd. It used the default
+// configuration of rabbitmq as the queue system and returns an
+// instance of the same, if it's registered. Otherwise it
 // will return an error.
 func Factory() (QFactory, error) {
-	name, err := config.GetString("queue")
-	if err != nil {
-		name = "rabbitmq"
-	}
+	name := "rabbitmq"
 	if f, ok := factories[name]; ok {
 		return f, nil
 	}
 	return nil, fmt.Errorf("Queue %q is not known.", name)
 }
 
+//a function that returns a new rabbitmq handler when provided  the server bind address and the queue name.
+func NewRabbitMQ(baddr string, q string) (PubSubQ, error) {
+	rf, err := Factory()
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to load rabbitmq(%s) for queue(%s): %s", baddr, q, err)
+	}
+
+	rf.(*rabbitmqQFactory).BindAddress = baddr
+
+	psQ, err := rf.Get(q)
+
+	if err != nil {
+		fmt.Errorf("Failed to load rabbitmq(%s) for queue(%s): %s", baddr, q, err)
+	}
+
+	return psQ, nil
+
+}
 
 // Message represents the message stored in the queue.
 //

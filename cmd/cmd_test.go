@@ -28,7 +28,7 @@ func (c *TestCommand) Info() *Info {
 	}
 }
 
-func (c *TestCommand) Run(context *Context, client *Client) error {
+func (c *TestCommand) Run(context *Context) error {
 	io.WriteString(context.Stdout, "Running TestCommand")
 	return nil
 }
@@ -41,7 +41,7 @@ func (c *ErrorCommand) Info() *Info {
 	return &Info{Name: "error"}
 }
 
-func (c *ErrorCommand) Run(context *Context, client *Client) error {
+func (c *ErrorCommand) Run(context *Context) error {
 	return errors.New(c.msg)
 }
 
@@ -63,12 +63,6 @@ func (s *S) TestRun(c *check.C) {
 	c.Assert(manager.stdout.(*bytes.Buffer).String(), check.Equals, "Running TestCommand")
 }
 
-/*func (s *S) TestFileSystem(c *check.C) {
-	fsystem = &testing.RecordingFs{}
-	c.Assert(filesystem(), check.DeepEquals, fsystem)
-	fsystem = nil
-	c.Assert(filesystem(), check.DeepEquals, fs.OsFs{})
-}*/
 
 func (s *S) TestHelpCommandShouldBeRegisteredByDefault(c *check.C) {
 	var stdout, stderr bytes.Buffer
@@ -80,7 +74,7 @@ func (s *S) TestHelpCommandShouldBeRegisteredByDefault(c *check.C) {
 func (s *S) TestHelpReturnErrorIfTheGivenCommandDoesNotExist(c *check.C) {
 	command := help{manager: manager}
 	context := Context{[]string{"someone-create"}, manager.stdout, manager.stderr, manager.stdin}
-	err := command.Run(&context,nil)
+	err := command.Run(&context)
 	c.Assert(err, check.NotNil)
 	c.Assert(err, check.ErrorMatches, `^command "someone-create" does not exist.$`)
 }
@@ -90,7 +84,7 @@ func (s *S) TestVersion(c *check.C) {
 	manager := NewManager("gulpd", "0.1", "", &stdout, &stderr, os.Stdin)
 	command := version{manager: manager}
 	context := Context{[]string{}, manager.stdout, manager.stderr, manager.stdin}
-	err := command.Run(&context,nil)
+	err := command.Run(&context)
 	c.Assert(err, check.IsNil)
 	c.Assert(manager.stdout.(*bytes.Buffer).String(), check.Equals, "gulpd version 0.1.\n")
 }
@@ -117,7 +111,7 @@ func (c *ArgCmd) Info() *Info {
 	}
 }
 
-func (cmd *ArgCmd) Run(ctx *Context, client *Client) error {
+func (cmd *ArgCmd) Run(ctx *Context) error {
 	return nil
 }
 
@@ -152,7 +146,7 @@ Foo do anything or nothing.
 	manager.Register(&TestCommand{})
 	context := Context{[]string{"foo"}, manager.stdout, manager.stderr, manager.stdin}
 	command := help{manager: manager}
-	err := command.Run(&context,nil)
+	err := command.Run(&context)
 	c.Assert(err, check.IsNil)
 	c.Assert(manager.stdout.(*bytes.Buffer).String(), check.Equals, expected)
 }

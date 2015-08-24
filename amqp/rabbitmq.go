@@ -17,10 +17,9 @@ package amqp
 
 import (
 	"fmt"
-	"log"
-	"sync"
+	log "github.com/golang/glog"
 	"github.com/streadway/amqp"
-	"github.com/tsuru/config"
+	"sync"
 )
 
 type rabbitmqQ struct {
@@ -52,7 +51,7 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 		return err
 	}
 
-	log.Printf(" [x] Publishing (%s, %s) message (%q).", r.exchname(), r.key() , msg)
+	log.Infof("[libgo] pubh msg (%s, %s) (%q).", r.exchname(), r.key(), msg)
 
 	if err = chnl.Publish(
 		r.exchname(), // publish to an exchange
@@ -69,9 +68,9 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 			// a bunch of application/implementation-specific fields
 		},
 	); err != nil {
-		return fmt.Errorf("Exchange Publish: %s", err)
+		return fmt.Errorf("Failed to publish message in exchange: %s", err)
 	}
-	log.Printf(" [x] Publish message (%q).", err)
+	log.Infof("[libgo] pubh msg SUCCESS.")
 	return err
 }
 
@@ -96,12 +95,12 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 
 	msgChan := make(chan []byte)
 
-	log.Printf(" [x] Subscribing (%s,%s)", r.qname(), r.tag())
+	log.Infof("[libgo] subs (%s,%s)", r.qname(), r.tag())
 
 	deliveries, err := chnl.Consume(
 		r.qname(), // name
 		r.tag(),   // consumerTag,
-		true,     // noAck
+		true,      // noAck
 		false,     // exclusive
 		false,     // noLocal
 		false,     // noWait
@@ -110,13 +109,13 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Printf(" [x] Subscribed (%s,%s)", r.qname(), r.tag())
+	log.Infof("[libgo] subs %s (%s) SUCCESS.", r.qname(), r.tag())
 
 	//This is asynchronous, the callee will have to wait.
 	go func() {
 		//defer close(msgChan)
 		for d := range deliveries {
-			log.Printf(" [%s] : [%v] %q", r.qname(), d.DeliveryTag, d.Body)
+			log.Infof("[libgo] subd %s: (%v,%q)", r.qname(), d.DeliveryTag, d.Body)
 			msgChan <- d.Body
 		}
 
@@ -125,19 +124,17 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 }
 
 type rabbitmqQFactory struct {
+	BindAddress string
 	sync.Mutex
 }
 
-func (factory *rabbitmqQFactory) Get(name string) (PubSubQ, error) {
-	return &rabbitmqQ{name: name, prefix: "megam", factory: factory}, nil
+func (f *rabbitmqQFactory) Get(name string) (PubSubQ, error) {
+	return &rabbitmqQ{name: name, prefix: "megam", factory: f}, nil
 }
 
-func (factory *rabbitmqQFactory) Dial() (*amqp.Connection, error) {
-	addr, err := config.GetString("amqp:url")
-	if err != nil {
-		addr = "amqp://localhost:5672/"
-	}
-	conn, err := amqp.Dial(addr)
+func (f *rabbitmqQFactory) Dial() (*amqp.Connection, error) {
+	log.Infof("[libgo] dial  amqp (%s)\n", f.BindAddress)
+	conn, err := amqp.Dial(f.BindAddress)
 
 	if err != nil {
 		return nil, err
@@ -145,20 +142,14 @@ func (factory *rabbitmqQFactory) Dial() (*amqp.Connection, error) {
 	return conn, nil
 }
 
-func (factory *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
-	addr, err := config.GetString("amqp:url")
-	if err != nil {
-		addr = "amqp://localhost:5672/"
-	}
-	conn, err := amqp.Dial(addr)
+func (f *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
+	conn, err := f.Dial()
 
 	if err != nil {
 		return nil, err
 	}
 
-	//defer conn.Close()
-
-	log.Printf(" [x] Dialed to (%s)", addr)
+	log.Infof("[libgo] dial amqp (%s)\n", f.BindAddress)
 
 	chnl, err := conn.Channel()
 
@@ -180,7 +171,7 @@ func (factory *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
 		return nil, err
 	}
 
-	log.Printf(" [x] Connection successful to  (%s,%s)", addr, exchname)
+	log.Infof("[libgo] conn amqp (%s) SUCCESS.\n", f.BindAddress, exchname)
 	return chnl, err
 }
 
@@ -189,7 +180,7 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 	if err != nil {
 		return nil, err
 	}
-	log.Printf(" [x] Dialed  (%s)", exchname)
+	log.Infof("[libgo] dial amqp  (%s)\n", exchname)
 
 	qu, err := chnl.QueueDeclare(
 		qname, // name of the queue
@@ -202,8 +193,8 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 	if err != nil {
 		return nil, err
 	}
-	
-	log.Printf(" [x] Declared queue (%s)", qname)
+
+	log.Infof("[libgo] decl queue (%s)\n", qname)
 
 	if err = chnl.QueueBind(
 		qu.Name, // name of the queue
@@ -215,6 +206,6 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 		return nil, err
 	}
 
-	log.Printf(" [x] Bound to queue (%s,%s,%s)", qname, exchname, key)
+	log.Infof("[libgo] bound queue (%s,%s,%s)\n", qname, exchname, key)
 	return chnl, nil
 }

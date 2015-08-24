@@ -8,13 +8,14 @@ package db
 
 import (
 	"fmt"
+	log "github.com/golang/glog"
 	"github.com/megamsys/riakpbc"
-	"github.com/tsuru/config"
-	"log"
-	"strings"        
+	"strings"
 	"sync"
-	"time"	
+	"time"
 )
+
+const period time.Duration = 7 * 24 * time.Hour
 
 var (
 	conn   = make(map[string]*session) // pool of connections
@@ -22,16 +23,14 @@ var (
 	ticker *time.Ticker                // for garbage collection
 )
 
-const (
-	DefaultRiakURL    = "127.0.0.1:8087"
-	DefaultBucketName = "appreqs"
-)
-
-const period time.Duration = 7 * 24 * time.Hour
-
 type session struct {
 	s    *riakpbc.Client
 	used time.Time
+}
+
+type RiakDB struct {
+	BindAddress []string
+	Bucket      string
 }
 
 // Storage holds the connection with the bucket name.
@@ -40,25 +39,16 @@ type Storage struct {
 	bktname      string
 }
 
-func open(addr []string, bucketname string) (*Storage, error) {
-	log.Printf("--> Dialing to %v", addr)
-	coder := riakpbc.NewCoder("json", riakpbc.JsonMarshaller, riakpbc.JsonUnmarshaller)
-	riakCoder := riakpbc.NewClientWithCoder(addr, coder)
-	if err := riakCoder.Dial(); err != nil {
-		return nil, err
-	}
+//a function that returns a new riakdb handler when provided the server bind address and the bucket name.
+func NewRiakDB(baddr []string, b string) (*RiakDB, error) {
+	return &RiakDB{BindAddress: baddr, Bucket: b}, nil
+}
 
-	// Set Client ID
-	/*if _, err := riakCoder.SetClientId("coolio"); err != nil {
-		log.Fatalf("Setting client ID failed: %v", err)
-	}
-	*/
-	storage := &Storage{coder_client: riakCoder, bktname: bucketname}
-
-	mut.Lock()
-	conn[strings.Join(addr, "::")] = &session{s: riakCoder, used: time.Now()}
-	mut.Unlock()
-	return storage, nil
+// Conn reads the riak object nd calls Open to get a database connection.
+//
+// Most megam packages should probably use this function.
+func (r *RiakDB) Conn() (*Storage, error) {
+	return Open(r.BindAddress, r.Bucket)
 }
 
 // Open dials to the Riak database, and return a new connection (represented
@@ -69,10 +59,9 @@ func open(addr []string, bucketname string) (*Storage, error) {
 // This function returns a pointer to a Storage, or a non-nil error in case of
 // any failure.
 func Open(addr []string, bktname string) (storage *Storage, err error) {
-	log.Printf("--> Connecting to %v", addr)
+	log.Infof("[libgo] conn riak (%v)", addr)
 	defer func() {
 		if r := recover(); r != nil {
-			log.Printf("--> Recovered from panic")
 			storage, err = open(addr, bktname)
 		}
 	}()
@@ -91,27 +80,9 @@ func Open(addr []string, bktname string) (storage *Storage, err error) {
 	return open(addr, bktname)
 }
 
-// Conn reads the megam config and calls Open to get a database connection.
-//
-// Most megam packages should probably use this function. Open is intended for
-// use when supporting more than one database.
-func Conn(bktname string) (*Storage, error) {
-	url, _ := config.GetString("riak:url")
-	if url == "" {
-		url = DefaultRiakURL
-	}
-	//bktname, _ := config.GetString("riak:bucket")
-	if bktname == "" {
-		bktname = DefaultBucketName
-	}
-	tadr := []string{url}
-	log.Printf("%v %s", tadr, bktname)
-	return Open(tadr, bktname)
-}
-
 // Close closes the storage, releasing the connection.
 func (s *Storage) Close() {
-	log.Printf("---] Closing storage %v", s)
+	log.Infof("[libgo] clos riak (%v)", s)
 	s.coder_client.Close()
 }
 
@@ -124,7 +95,7 @@ func (s *Storage) Close() {
 // Apps returns the apps collection from MongoDB.
 func (s *Storage) FetchStruct(key string, out interface{}) error {
 	if _, err := s.coder_client.FetchStruct(s.bktname, key, out); err != nil {
-		return fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", err)
+		return fmt.Errorf("Failed to fetch structure from riak.	==> %s", err.Error())
 	}
 	fmt.Println(out)
 	//TO-DO:
@@ -135,42 +106,61 @@ func (s *Storage) FetchStruct(key string, out interface{}) error {
 // StoreStruct returns the apps collection from MongoDB.
 func (s *Storage) StoreStruct(key string, data interface{}) error {
 	if _, err := s.coder_client.StoreStruct(s.bktname, key, data); err != nil {
-		return fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", err)
+		return fmt.Errorf("Failed to store a structure in riak --> %s", err.Error())
 	}
 	return nil
 }
 
-type SshObject struct{
-	  Data string
+func open(addr []string, bucketname string) (*Storage, error) {
+	log.Infof("[libgo] dial riak (%v)", addr)
+	coder := riakpbc.NewCoder("json", riakpbc.JsonMarshaller, riakpbc.JsonUnmarshaller)
+	riakCoder := riakpbc.NewClientWithCoder(addr, coder)
+	if err := riakCoder.Dial(); err != nil {
+		return nil, err
 	}
 
+	// Set Client ID
+	/*if _, err := riakCoder.SetClientId("coolio"); err != nil {
+		log.Fatalf("Setting client ID failed: %v", err)
+	}
+	*/
+	storage := &Storage{coder_client: riakCoder, bktname: bucketname}
+	mut.Lock()
+	conn[strings.Join(addr, "::")] = &session{s: riakCoder, used: time.Now()}
+	mut.Unlock()
+	return storage, nil
+}
+
+type SomeObject struct {
+	Data string
+}
+
 // Fetch raw data (int, string, []byte)
- func (s *Storage) FetchObject(key string, out *SshObject) error {
+func (s *Storage) FetchObject(key string, out *SomeObject) error {
 
 	obj, err := s.coder_client.FetchObject(s.bktname, key)
 	if err != nil {
-		return fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", err)
+		return fmt.Errorf("Failed to fetch from riak. %s", err.Error())
 	}
-    out.Data = string(obj.GetContent()[0].GetValue())
+	out.Data = string(obj.GetContent()[0].GetValue())
 	return nil
 }
 
 // Store raw data (int, string, []byte)
 func (s *Storage) StoreObject(key string, data string) error {
 	if _, err := s.coder_client.StoreObject(s.bktname, key, []byte(data)); err != nil {
-		return fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", err)
+		return fmt.Errorf("Failed to store in riak. %s", err)
 	}
 	return nil
 }
 
 func (s *Storage) FetchObjectByIndex(bucket, index, key, start, end string) ([][]byte, error) {
-	number, err := s.coder_client.Index(bucket, index, key, start, end) 
+	number, err := s.coder_client.Index(bucket, index, key, start, end)
 	if err != nil {
-		return nil, fmt.Errorf("Convert fetched JSON to the Struct, and return it failed: %s", err)
-	}	
+		return nil, fmt.Errorf("Failed to fetch object from riak. %s", err.Error())
+	}
 	return number.GetKeys(), nil
 }
-
 
 func init() {
 	ticker = time.NewTicker(time.Hour)
@@ -192,7 +182,7 @@ func retire(t *time.Ticker) {
 		mut.RUnlock()
 		mut.Lock()
 		for _, c := range old {
-			log.Printf("--> Stale conn[%s]", c)
+			log.Infof("[libgo] clos riak connection")
 			conn[c].s.Close()
 			delete(conn, c)
 		}

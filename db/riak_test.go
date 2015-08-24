@@ -1,9 +1,7 @@
 package db
 
 import (
-	"github.com/tsuru/config"
 	"gopkg.in/check.v1"
-	"log"
 	"strings"
 	"sync"
 	"testing"
@@ -19,27 +17,15 @@ type ExampleData struct {
 	Field2 int    `json:"field2"`
 }
 
-type AppRequests struct {
-	id            string `json:"id"`
-	node_id       string `json:"node_id"`
-	node_name     string `json:"node_name"`
-	appdefns_id   string `json:"appdefns_id"`
-	req_type      string `json:"req_type"`
-	lc_apply      string `json:"lc_apply"`
-	lc_additional string `json:"lc_additional"`
-	lc_when       string `json:"lc_when"`
-	created_at    string `json:"created_at"`
+type SampleObject struct {
+	Data string `json:"data"`
 }
-
-type SampleObject struct{
-	  Data string `json:"data"`
-	}
 
 var _ = check.Suite(&S{})
 
 var addr = []string{"127.0.0.1:8087"}
 
-const bkt = "appreqs"
+const bkt = "sample1"
 
 func (s *S) SetUpSuite(c *check.C) {
 	ticker.Stop()
@@ -50,7 +36,6 @@ func (s *S) TearDownTest(c *check.C) {
 }
 
 func (s *S) TestOpenReconnects(c *check.C) {
-	log.Println("--> start [TestOpenReconnects]")
 	storage, err := Open(addr, bkt)
 	c.Assert(err, check.IsNil)
 	storage.Close()
@@ -59,21 +44,15 @@ func (s *S) TestOpenReconnects(c *check.C) {
 	c.Assert(err, check.IsNil)
 	_, err = storage.coder_client.Ping()
 	c.Assert(err, check.IsNil)
-	log.Println("--> end   [TestOpenReconnects]")
-
 }
 
 func (s *S) TestOpenConnectionRefused(c *check.C) {
-	log.Println("--> start [TestOpenConnectionRefused]")
 	storage, err := Open([]string{"127.0.0.1:68098"}, bkt)
 	c.Assert(storage, check.IsNil)
 	c.Assert(err, check.NotNil)
-	log.Println("--> end   [TestOpenConnectionRefused]")
-
 }
 
 func (s *S) TestClose(c *check.C) {
-	log.Println("--> start [TestClose]")
 
 	defer func() {
 		r := recover()
@@ -86,110 +65,67 @@ func (s *S) TestClose(c *check.C) {
 	c.Assert(storage, check.NotNil)
 	_, err = storage.coder_client.Ping()
 	c.Check(err, check.IsNil)
-	log.Println("--> end   [TestClose]")
-
 }
 
 func (s *S) TestConn(c *check.C) {
-	log.Println("--> start [TestConn]")
-
-	config.Set("riak:url", "127.0.0.1:8087")
-	defer config.Unset("riak:url")
-	config.Set("riak:bucket", "appreqs")
-	defer config.Unset("riak:bucket")
-	storage, err := Conn("appreqs")
+	r, err := NewRiakDB(addr, bkt)
+	storage, err := r.Conn()
 	defer storage.Close()
 	c.Assert(storage, check.NotNil)
 	c.Assert(err, check.IsNil)
 	_, err = storage.coder_client.Ping()
 	c.Check(err, check.IsNil)
-	log.Println("--> end   [TestConn]")
-
 }
 
 func (s *S) TestStore(c *check.C) {
-	log.Println("--> start [TestFetch]")
-	config.Set("riak:url", "127.0.0.1:8087")
-	defer config.Unset("riak:url")
-	config.Set("riak:bucket", "appreqs")
-	defer config.Unset("riak:bucket")
-	storage, err := Conn("appreqs")
+	r, err := NewRiakDB(addr, bkt)
+	storage, err := r.Conn()
 	defer storage.Close()
 	c.Assert(storage, check.NotNil)
 	c.Assert(err, check.IsNil)
-	// Store Struct (uses coder)
 	data := ExampleData{
 		Field1: "ExampleData1",
 		Field2: 1,
 	}
 	err = storage.StoreStruct("sampledata", &data)
 	c.Assert(err, check.IsNil)
-	log.Println("--> end   [TestFetch]")
 }
 
 func (s *S) TestFetch(c *check.C) {
-	log.Println("--> start [TestFetch]")
-	config.Set("riak:url", "127.0.0.1:8087")
-	defer config.Unset("riak:url")
-	config.Set("riak:bucket", "appreqs")
-	defer config.Unset("riak:bucket")
-	storage, err := Conn("appreqs")
+	r, err := NewRiakDB(addr, bkt)
+	storage, err := r.Conn()
 	defer storage.Close()
 	c.Assert(storage, check.NotNil)
 	c.Assert(err, check.IsNil)
-	out := &AppRequests{}
+	out := &ExampleData{}
 	err = storage.FetchStruct("sampledata", out)
-	log.Println("--> value   [TestFetch] [%s]", out.node_id)
 	c.Assert(err, check.IsNil)
-	log.Println("--> end   [TestFetch]")
 }
 
 func (s *S) TestStoreObject(c *check.C) {
-	log.Println("--> start [TestStore Object]")
-	config.Set("riak:url", "127.0.0.1:8087")
-	defer config.Unset("riak:url")
-	config.Set("riak:bucket", "appreqs")
-	defer config.Unset("riak:bucket")
-	storage, err := Conn("appreqs")
+	r, err := NewRiakDB(addr, bkt)
+
+	storage, err := r.Conn()
 	defer storage.Close()
 	c.Assert(storage, check.NotNil)
 	c.Assert(err, check.IsNil)
-	// Store Struct (uses coder)
 	data := "sampledata"
 	err = storage.StoreObject("sampleobject", data)
 	c.Assert(err, check.IsNil)
-	log.Println("--> end   [TestFetch]")
 }
 
 func (s *S) TestFetchObject(c *check.C) {
-	log.Println("--> start [TestFetch Object]")
-	config.Set("riak:url", "127.0.0.1:8087")
-	defer config.Unset("riak:url")
-	config.Set("riak:bucket", "appreqs")
-	defer config.Unset("riak:bucket")
-	storage, err := Conn("appreqs")
+	r, err := NewRiakDB(addr, bkt)
+	storage, err := r.Conn()
 	defer storage.Close()
 	c.Assert(storage, check.NotNil)
 	c.Assert(err, check.IsNil)
-	out := &SshObject{}
+	out := &SomeObject{}
 	err = storage.FetchObject("sampleobject", out)
-	log.Println("--> value   [TestFetch] [%s]", out.Data)
 	c.Assert(err, check.IsNil)
-	log.Println("--> end   [TestFetch]")
 }
-
-/*func (s *S) TestUsers(c *check.C) {
-	storage, _ := Open("127.0.0.1:27017", "megam_storage_test")
-	defer storage.Close()
-	users := storage.Users()
-	usersc := storage.Collection("users")
-	c.Assert(users, check.DeepEquals, usersc)
-	c.Assert(users, HasUniqueIndex, []string{"email"})
-}
-*/
 
 func (s *S) TestRetire(c *check.C) {
-	log.Println("--> start [TestRetire]")
 	defer func() {
 		if r := recover(); !c.Failed() && r == nil {
 			c.Errorf("Should panic in ping, but did not!")
@@ -216,5 +152,4 @@ func (s *S) TestRetire(c *check.C) {
 	c.Check(ok, check.Equals, false)
 	sess1 := conn[ky]
 	sess1.s.Ping()
-	log.Println("--> end [TestOpenReconnects]")
 }

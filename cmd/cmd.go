@@ -2,15 +2,15 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/megamsys/libgo/fs"
 	"io"
-	"launchpad.net/gnuflag"
 	"os"
 	"regexp"
 	"sort"
-	"strconv"
 	"strings"
-	"net/http"
+
+	"github.com/megamsys/libgo/fs"
+	"launchpad.net/gnuflag"
+
 )
 
 type exiter interface {
@@ -95,8 +95,7 @@ func (m *Manager) Run(args []string) {
 	}
 	context := Context{args, m.stdout, m.stderr, m.stdin}
 
-	client := NewClient(&http.Client{}, &context, m)
-	err := command.Run(&context, client)
+	err := command.Run(&context)
 
 	if err != nil {
 		re := regexp.MustCompile(`^((Invalid token)|(You must provide the Authorization header))`)
@@ -122,7 +121,7 @@ func (m *Manager) finisher() exiter {
 
 type Command interface {
 	Info() *Info
-	Run(context *Context, client *Client) error
+	Run(context *Context) error
 }
 
 type FlaggedCommand interface {
@@ -156,7 +155,7 @@ func (c *help) Info() *Info {
 	}
 }
 
-func (c *help) Run(context *Context, client *Client) error {
+func (c *help) Run(context *Context) error {
 	output := fmt.Sprintf("%s version %s.\n\n", c.manager.name, c.manager.version)
 	if c.manager.wrong {
 		output += fmt.Sprint("ERROR: wrong number of arguments.\n\n")
@@ -214,7 +213,7 @@ func (c *version) Info() *Info {
 	}
 }
 
-func (c *version) Run(context *Context, client *Client) error {
+func (c *version) Run(context *Context) error {
 	fmt.Fprintf(context.Stdout, "%s version %s.\n", c.manager.name, c.manager.version)
 	return nil
 }
@@ -231,44 +230,4 @@ func filesystem() fs.Fs {
 		fsystem = fs.OsFs{}
 	}
 	return fsystem
-}
-
-// validateVersion checks whether current version is greater or equal to
-// supported version.
-func validateVersion(supported, current string) bool {
-	var (
-		bigger bool
-		limit  int
-	)
-	if supported == "" {
-		return true
-	}
-	partsSupported := strings.Split(supported, ".")
-	partsCurrent := strings.Split(current, ".")
-	if len(partsSupported) > len(partsCurrent) {
-		limit = len(partsCurrent)
-		bigger = true
-	} else {
-		limit = len(partsSupported)
-	}
-	for i := 0; i < limit; i++ {
-		current, err := strconv.Atoi(partsCurrent[i])
-		if err != nil {
-			return false
-		}
-		supported, err := strconv.Atoi(partsSupported[i])
-		if err != nil {
-			return false
-		}
-		if current < supported {
-			return false
-		}
-		if current > supported {
-			return true
-		}
-	}
-	if bigger {
-		return false
-	}
-	return true
 }
