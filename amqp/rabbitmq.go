@@ -17,7 +17,7 @@ package amqp
 
 import (
 	"fmt"
-	log "github.com/golang/glog"
+	log "github.com/Sirupsen/logrus"
 	"github.com/streadway/amqp"
 	"sync"
 )
