@@ -6,12 +6,13 @@
 	],
 	"Deps": [
 		{
-			"ImportPath": "github.com/golang/glog",
-			"Rev": "fca8c8854093a154ff1eb580aae10276ad6b1b5f"
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.8.6-15-gb17e718",
+			"Rev": "b17e7183259cc73db8b8fb9e534bfc153f53cb12"
 		},
 		{
 			"ImportPath": "github.com/golang/protobuf/proto",
-			"Rev": "73aaaa9eb61d74fbf7e256ca586a3a565b308eea"
+			"Rev": "1dceb1a2654bdc74ca97ad91f71f500eecc96269"
 		},
 		{
 			"ImportPath": "github.com/megamsys/riakpbc",
@@ -23,7 +24,7 @@
 		},
 		{
 			"ImportPath": "github.com/tsuru/commandmocker",
-			"Rev": "be4aec17ebc7264c791bf01709bfd956475d2ee8"
+			"Rev": "5cf1c7795a1c540dbe8e3fe2b5d88178b75d6492"
 		},
 		{
 			"ImportPath": "gopkg.in/check.v1",
