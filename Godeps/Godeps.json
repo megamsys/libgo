@@ -7,8 +7,8 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.8.6-15-gb17e718",
-			"Rev": "b17e7183259cc73db8b8fb9e534bfc153f53cb12"
+			"Comment": "v0.8.6-19-gc639bed",
+			"Rev": "c639bedcac481aca1023de7f5148ba6ad477b05e"
 		},
 		{
 			"ImportPath": "github.com/golang/protobuf/proto",
