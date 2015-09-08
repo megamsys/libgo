@@ -59,7 +59,7 @@ func (r *RiakDB) Conn() (*Storage, error) {
 // This function returns a pointer to a Storage, or a non-nil error in case of
 // any failure.
 func Open(addr []string, bktname string) (storage *Storage, err error) {
-	log.Infof("[libgo] conn riak (%v)", addr)
+	log.Infof("open riak (%v)", addr)
 	defer func() {
 		if r := recover(); r != nil {
 			storage, err = open(addr, bktname)
@@ -82,7 +82,7 @@ func Open(addr []string, bktname string) (storage *Storage, err error) {
 
 // Close closes the storage, releasing the connection.
 func (s *Storage) Close() {
-	log.Infof("[libgo] clos riak (%v)", s)
+	log.Infof("close riak (%v)", s)
 	s.coder_client.Close()
 }
 
@@ -95,9 +95,8 @@ func (s *Storage) Close() {
 // Apps returns the apps collection from MongoDB.
 func (s *Storage) FetchStruct(key string, out interface{}) error {
 	if _, err := s.coder_client.FetchStruct(s.bktname, key, out); err != nil {
-		return fmt.Errorf("Failed to fetch structure from riak.	==> %s", err.Error())
+		return fmt.Errorf("Failed to fetch structure from riak.	--> %s", err.Error())
 	}
-	fmt.Println(out)
 	//TO-DO:
 	//we need to return the fetched json -> to struct interface
 	return nil
@@ -112,7 +111,7 @@ func (s *Storage) StoreStruct(key string, data interface{}) error {
 }
 
 func open(addr []string, bucketname string) (*Storage, error) {
-	log.Infof("[libgo] dial riak (%v)", addr)
+	log.Infof("new open riak (%v)", addr)
 	coder := riakpbc.NewCoder("json", riakpbc.JsonMarshaller, riakpbc.JsonUnmarshaller)
 	riakCoder := riakpbc.NewClientWithCoder(addr, coder)
 	if err := riakCoder.Dial(); err != nil {
@@ -182,7 +181,7 @@ func retire(t *time.Ticker) {
 		mut.RUnlock()
 		mut.Lock()
 		for _, c := range old {
-			log.Infof("[libgo] clos riak connection")
+			log.Infof("close riak connection")
 			conn[c].s.Close()
 			delete(conn, c)
 		}
