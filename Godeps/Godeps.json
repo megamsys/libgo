@@ -1,18 +1,18 @@
 {
 	"ImportPath": "github.com/megamsys/libgo",
-	"GoVersion": "go1.5",
+	"GoVersion": "go1.5.1",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.8.6-19-gc639bed",
-			"Rev": "c639bedcac481aca1023de7f5148ba6ad477b05e"
+			"Comment": "v0.8.7",
+			"Rev": "418b41d23a1bf978c06faea5313ba194650ac088"
 		},
 		{
 			"ImportPath": "github.com/golang/protobuf/proto",
-			"Rev": "1dceb1a2654bdc74ca97ad91f71f500eecc96269"
+			"Rev": "535a10468679b4cf155f6a7afdf53b554633fc09"
 		},
 		{
 			"ImportPath": "github.com/megamsys/riakpbc",
