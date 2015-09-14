@@ -51,7 +51,7 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 		return err
 	}
 
-	log.Info(fmt.Printf("pubh msg (%s, %s) (%q).", r.exchname(), r.key(), msg))
+	log.Debug(fmt.Printf("pubh msg (%s, %s) (%q).", r.exchname(), r.key(), msg))
 
 	if err = chnl.Publish(
 		r.exchname(), // publish to an exchange
@@ -70,7 +70,7 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 	); err != nil {
 		return fmt.Errorf("Failed to publish message in exchange: %s", err)
 	}
-	log.Info("pubh msg SUCCESS.")
+	log.Debug("pubh msg SUCCESS.")
 	return err
 }
 
@@ -95,7 +95,7 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 
 	msgChan := make(chan []byte)
 
-	log.Infof("subs (%s,%s)", r.qname(), r.tag())
+	log.Debugf("subs (%s,%s)", r.qname(), r.tag())
 
 	deliveries, err := chnl.Consume(
 		r.qname(), // name
@@ -109,13 +109,13 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Infof("subs %s (%s) SUCCESS.", r.qname(), r.tag())
+	log.Debugf("subs %s (%s) SUCCESS.", r.qname(), r.tag())
 
 	//This is asynchronous, the callee will have to wait.
 	go func() {
 		//defer close(msgChan)
 		for d := range deliveries {
-			log.Infof("subd %s: (%v,%q)", r.qname(), d.DeliveryTag, d.Body)
+			log.Debugf("subd %s: (%v,%q)", r.qname(), d.DeliveryTag, d.Body)
 			msgChan <- d.Body
 		}
 
@@ -133,7 +133,7 @@ func (f *rabbitmqQFactory) Get(name string) (PubSubQ, error) {
 }
 
 func (f *rabbitmqQFactory) Dial() (*amqp.Connection, error) {
-	log.Infof("dial  amqp (%s)\n", f.BindAddress)
+	log.Debugf("dial  amqp (%s)\n", f.BindAddress)
 	conn, err := amqp.Dial(f.BindAddress)
 
 	if err != nil {
@@ -149,7 +149,7 @@ func (f *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
 		return nil, err
 	}
 
-	log.Infof("dial amqp (%s)\n", f.BindAddress)
+	log.Debugf("dial amqp (%s)\n", f.BindAddress)
 
 	chnl, err := conn.Channel()
 
@@ -171,7 +171,7 @@ func (f *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
 		return nil, err
 	}
 
-	log.Infof("conn amqp (%s) SUCCESS.\n", f.BindAddress, exchname)
+	log.Debugf("conn amqp (%s) SUCCESS.\n", f.BindAddress)
 	return chnl, err
 }
 
@@ -180,7 +180,7 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 	if err != nil {
 		return nil, err
 	}
-	log.Infof("dial amqp  (%s)\n", exchname)
+	log.Debugf("dial amqp  (%s)\n", exchname)
 
 	qu, err := chnl.QueueDeclare(
 		qname, // name of the queue
@@ -194,7 +194,7 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 		return nil, err
 	}
 
-	log.Infof("decl queue (%s)\n", qname)
+	log.Debugf("decl queue (%s)\n", qname)
 
 	if err = chnl.QueueBind(
 		qu.Name, // name of the queue
@@ -206,6 +206,6 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 		return nil, err
 	}
 
-	log.Infof("bound queue (%s,%s,%s)\n", qname, exchname, key)
+	log.Debugf("bound queue (%s,%s,%s)\n", qname, exchname, key)
 	return chnl, nil
 }
