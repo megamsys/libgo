@@ -51,8 +51,6 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 		return err
 	}
 
-	log.Debug(fmt.Printf("pubh msg (%s, %s) (%q).", r.exchname(), r.key(), msg))
-
 	if err = chnl.Publish(
 		r.exchname(), // publish to an exchange
 		r.key(),      // routing to 0 or more queues
@@ -70,7 +68,7 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 	); err != nil {
 		return fmt.Errorf("Failed to publish message in exchange: %s", err)
 	}
-	log.Debug("pubh msg SUCCESS.")
+	log.Debug("[amqp] pub SUCCESS.")
 	return err
 }
 
@@ -95,8 +93,6 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 
 	msgChan := make(chan []byte)
 
-	log.Debugf("subs (%s,%s)", r.qname(), r.tag())
-
 	deliveries, err := chnl.Consume(
 		r.qname(), // name
 		r.tag(),   // consumerTag,
@@ -109,13 +105,12 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("subs %s (%s) SUCCESS.", r.qname(), r.tag())
+	log.Debugf("[amqp] sub %s (%s) SUCCESS.", r.qname(), r.tag())
 
 	//This is asynchronous, the callee will have to wait.
 	go func() {
 		//defer close(msgChan)
 		for d := range deliveries {
-			log.Debugf("subd %s: (%v,%q)", r.qname(), d.DeliveryTag, d.Body)
 			msgChan <- d.Body
 		}
 
@@ -133,7 +128,6 @@ func (f *rabbitmqQFactory) Get(name string) (PubSubQ, error) {
 }
 
 func (f *rabbitmqQFactory) Dial() (*amqp.Connection, error) {
-	log.Debugf("dial  amqp (%s)\n", f.BindAddress)
 	conn, err := amqp.Dial(f.BindAddress)
 
 	if err != nil {
@@ -149,7 +143,7 @@ func (f *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
 		return nil, err
 	}
 
-	log.Debugf("dial amqp (%s)\n", f.BindAddress)
+	log.Debugf("[amqp] dial (%s) SUCCESS", f.BindAddress)
 
 	chnl, err := conn.Channel()
 
@@ -171,7 +165,6 @@ func (f *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
 		return nil, err
 	}
 
-	log.Debugf("conn amqp (%s) SUCCESS.\n", f.BindAddress)
 	return chnl, err
 }
 
@@ -180,7 +173,6 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("dial amqp  (%s)\n", exchname)
 
 	qu, err := chnl.QueueDeclare(
 		qname, // name of the queue
@@ -194,7 +186,7 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 		return nil, err
 	}
 
-	log.Debugf("decl queue (%s)\n", qname)
+	log.Debugf("[amqp] queue (%s) SUCCESS", qname)
 
 	if err = chnl.QueueBind(
 		qu.Name, // name of the queue
@@ -206,6 +198,5 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 		return nil, err
 	}
 
-	log.Debugf("bound queue (%s,%s,%s)\n", qname, exchname, key)
 	return chnl, nil
 }

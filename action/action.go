@@ -1,4 +1,4 @@
-/* 
+/*
 ** Copyright [2012-2014] [Megam Systems]
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,14 @@
 ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 ** See the License for the specific language governing permissions and
 ** limitations under the License.
-*/
+ */
 
 package action
 
 import (
 	"errors"
+	log "github.com/Sirupsen/logrus"
 	"sync"
-	"log"
 )
 
 // Result is the value returned by Forward. It is used in the call of the next
@@ -38,6 +38,8 @@ type Forward func(context FWContext) (Result, error)
 // parameters given to the pipeline executor and the result of the forward
 // phase.
 type Backward func(context BWContext)
+
+type OnErrorFunc func(FWContext, error)
 
 // FWContext is the context used in calls to Forward functions (forward phase).
 type FWContext struct {
@@ -78,6 +80,10 @@ type Action struct {
 	// Minimum number of parameters that this action requires to run.
 	MinParams int
 
+	// Function taht will be invoked after some failure occurured in the
+	// Forward phase of this same action.
+	OnError OnErrorFunc
+
 	// Result of the action. Stored for use in the backward phase.
 	result Result
 
@@ -110,7 +116,7 @@ func (p *Pipeline) Result() Result {
 // all actions. If none of the Forward calls return error, the pipeline
 // execution ends in the forward phase and is "committed".
 //
-// If any of the Forward call fail, the executor switches to the backward phase
+// If any of the Forward calls fails, the executor switches to the backward phase
 // (roll back) and call the Backward function for each action completed. It
 // does not call the Backward function of the action that has failed.
 //
@@ -124,14 +130,14 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 	if len(p.actions) == 0 {
 		return errors.New("No actions to execute.")
 	}
-	fwCtx := FWContext{Params: params}	
-	for i, a := range p.actions {	
-		log.Printf("[pipeline] running the Forward for the %s action", a.Name)
-		if a.Forward == nil {		
+	fwCtx := FWContext{Params: params}
+	for i, a := range p.actions {
+		log.Debugf("[pipeline] running the Forward for the %s action", a.Name)
+		if a.Forward == nil {
 			err = errors.New("All actions must define the forward function.")
-		} else if len(fwCtx.Params) < a.MinParams {		
+		} else if len(fwCtx.Params) < a.MinParams {
 			err = errors.New("Not enough parameters to call Action.Forward.")
-		} else {		
+		} else {
 			r, err = a.Forward(fwCtx)
 			a.rMutex.Lock()
 			a.result = r
@@ -139,7 +145,10 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 			fwCtx.Previous = r
 		}
 		if err != nil {
-			log.Printf("[pipeline] error running the Forward for the %s action - %s", a.Name, err.Error())
+			log.Debugf("[pipeline] error running the Forward for the %s action - %s", a.Name, err)
+			if a.OnError != nil {
+				a.OnError(fwCtx, err)
+			}
 			p.rollback(i-1, params)
 			return err
 		}
@@ -150,7 +159,7 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 func (p *Pipeline) rollback(index int, params []interface{}) {
 	bwCtx := BWContext{Params: params}
 	for i := index; i >= 0; i-- {
-		log.Printf("[pipeline] running Backward for %s action", p.actions[i].Name)
+		log.Debugf("[pipeline] running Backward for %s action", p.actions[i].Name)
 		if p.actions[i].Backward != nil {
 			bwCtx.FWResult = p.actions[i].result
 			p.actions[i].Backward(bwCtx)

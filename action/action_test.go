@@ -17,8 +17,10 @@
 package action
 
 import (
-	"gopkg.in/check.v1"
+	"errors"
 	"testing"
+
+	"gopkg.in/check.v1"
 )
 
 func Test(t *testing.T) {
@@ -145,4 +147,44 @@ func (s *S) TestResult(c *check.C) {
 	c.Assert(err, check.IsNil)
 	r := pipeline.Result()
 	c.Assert(r, check.Equals, "ok")
+}
+
+func (s *S) TestDoesntOverwriteResult(c *check.C) {
+	myAction := Action{
+		Forward: func(ctx FWContext) (Result, error) {
+			return ctx.Params[0], nil
+		},
+		Backward: func(ctx BWContext) {
+		},
+	}
+	pipeline1 := NewPipeline(&myAction)
+	err := pipeline1.Execute("result1")
+	c.Assert(err, check.IsNil)
+	pipeline2 := NewPipeline(&myAction)
+	err = pipeline2.Execute("result2")
+	c.Assert(err, check.IsNil)
+	r1 := pipeline1.Result()
+	c.Assert(r1, check.Equals, "result1")
+	r2 := pipeline2.Result()
+	c.Assert(r2, check.Equals, "result2")
+}
+
+func (s *S) TestActionOnError(c *check.C) {
+	returnedErr := errors.New("my awesome error")
+	called := false
+	expectedParam := "param"
+	myAction := Action{
+		Forward: func(ctx FWContext) (Result, error) {
+			return nil, returnedErr
+		},
+		OnError: func(ctx FWContext, err error) {
+			called = true
+			c.Assert(ctx.Params[0], check.Equals, expectedParam)
+			c.Assert(err, check.Equals, returnedErr)
+		},
+	}
+	pipeline1 := NewPipeline(&myAction)
+	err := pipeline1.Execute(expectedParam)
+	c.Assert(err, check.Equals, returnedErr)
+	c.Assert(called, check.Equals, true)
 }

@@ -14,7 +14,6 @@ type RabbitMQSuite struct{ psq PubSubQ }
 var _ = check.Suite(&RabbitMQSuite{})
 
 func (s *RabbitMQSuite) SetUpSuite(c *check.C) {
-	// init BeeLogger
 	p, err := NewRabbitMQ("amqp://guest:guest@localhost:5672/", "testq")
 	s.psq = p
 	c.Assert(err, check.IsNil)
