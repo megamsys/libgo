@@ -82,6 +82,6 @@ _install_deadcode: git
 	go get $(GO_EXTRAFLAGS) github.com/remyoudompheng/go-misc/deadcode
 
 deadcode: _install_deadcode
-	@go list ./... | sed -e 's;github.com/megamsys/cloudinabox/;;' | xargs deadcode
+	@go list ./... | sed -e 's;github.com/megamsys/libgo/;;' | xargs deadcode
 
 deadc0de: deadcode
