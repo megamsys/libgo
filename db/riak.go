@@ -59,7 +59,6 @@ func (r *RiakDB) Conn() (*Storage, error) {
 // This function returns a pointer to a Storage, or a non-nil error in case of
 // any failure.
 func Open(addr []string, bktname string) (storage *Storage, err error) {
-	log.Infof("open riak (%v)", addr)
 	defer func() {
 		if r := recover(); r != nil {
 			storage, err = open(addr, bktname)
@@ -82,7 +81,7 @@ func Open(addr []string, bktname string) (storage *Storage, err error) {
 
 // Close closes the storage, releasing the connection.
 func (s *Storage) Close() {
-	log.Infof("close riak (%v)", s)
+	log.Debugf("[riak] closing...")
 	s.coder_client.Close()
 }
 
@@ -111,13 +110,11 @@ func (s *Storage) StoreStruct(key string, data interface{}) error {
 }
 
 func open(addr []string, bucketname string) (*Storage, error) {
-	log.Infof("new open riak (%v)", addr)
 	coder := riakpbc.NewCoder("json", riakpbc.JsonMarshaller, riakpbc.JsonUnmarshaller)
 	riakCoder := riakpbc.NewClientWithCoder(addr, coder)
 	if err := riakCoder.Dial(); err != nil {
 		return nil, err
 	}
-
 	// Set Client ID
 	/*if _, err := riakCoder.SetClientId("coolio"); err != nil {
 		log.Fatalf("Setting client ID failed: %v", err)
@@ -127,6 +124,7 @@ func open(addr []string, bucketname string) (*Storage, error) {
 	mut.Lock()
 	conn[strings.Join(addr, "::")] = &session{s: riakCoder, used: time.Now()}
 	mut.Unlock()
+	log.Debugf("[riak] open (%v) SUCCESS", addr)
 	return storage, nil
 }
 
@@ -136,7 +134,6 @@ type SomeObject struct {
 
 // Fetch raw data (int, string, []byte)
 func (s *Storage) FetchObject(key string, out *SomeObject) error {
-
 	obj, err := s.coder_client.FetchObject(s.bktname, key)
 	if err != nil {
 		return fmt.Errorf("Failed to fetch from riak. %s", err.Error())
@@ -181,7 +178,7 @@ func retire(t *time.Ticker) {
 		mut.RUnlock()
 		mut.Lock()
 		for _, c := range old {
-			log.Infof("close riak connection")
+			log.Debugf("[riak] stale connection (%v)", c)
 			conn[c].s.Close()
 			delete(conn, c)
 		}
