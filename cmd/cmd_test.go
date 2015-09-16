@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"regexp"
 	"strings"
 
 	"github.com/megamsys/libgo/fs"
@@ -92,8 +91,12 @@ func (s *S) TestCustomLookup(c *check.C) {
 		fmt.Fprintf(ctx.Stdout, "test")
 		return nil
 	}
+
+	mode := func(modelvl int) {
+		//just set the log model
+	}
 	var stdout, stderr bytes.Buffer
-	manager := NewManager("glb", "0.x", "Foo-Megam", &stdout, &stderr, os.Stdin, lookup)
+	manager := NewManager("megamd", "0.x", &stdout, &stderr, os.Stdin, lookup, mode)
 	manager.Run([]string{"custom"})
 	c.Assert(stdout.String(), check.Equals, "test")
 }
@@ -165,15 +168,15 @@ func (s *S) TestRunCommandThatDoesNotExist(c *check.C) {
 }
 
 func (s *S) TestHelp(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
-Usage: glb command [args]
+Usage: megamd command [args]
 
 Available commands:
   help                 ` + `
   version              Display the current version
 
-Use glb help <commandname> to get more information about a command.
+Use megamd help <commandname> to get more information about a command.
 `
 	manager.RegisterDeprecated(&login{}, "login")
 	context := Context{[]string{}, manager.stdout, manager.stderr, manager.stdin}
@@ -184,21 +187,21 @@ Use glb help <commandname> to get more information about a command.
 }
 
 func (s *S) TestHelpWithTopics(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
-Usage: glb command [args]
+Usage: megamd command [args]
 
 Available commands:
   help                 ` + `
   login                Initiates a new megam session for a user
   version              Display the current version
 
-Use glb help <commandname> to get more information about a command.
+Use megamd help <commandname> to get more information about a command.
 
 Available topics:
   target
 
-Use glb help <topicname> to get more information about a topic.
+Use megamd help <topicname> to get more information about a topic.
 `
 	manager.Register(&login{})
 	manager.RegisterTopic("target", "something")
@@ -210,7 +213,7 @@ Use glb help <topicname> to get more information about a topic.
 }
 
 func (s *S) TestHelpFromTopic(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
 Targets
 
@@ -226,7 +229,7 @@ Megam likes to manage targets
 
 func (s *S) TestHelpCommandShouldBeRegisteredByDefault(c *check.C) {
 	var stdout, stderr bytes.Buffer
-	m := NewManager("megam", "1.0", "", &stdout, &stderr, os.Stdin, nil)
+	m := NewManager("megamd", "1.0", &stdout, &stderr, os.Stdin, nil, nil)
 	_, exists := m.Commands["help"]
 	c.Assert(exists, check.Equals, true)
 }
@@ -240,39 +243,39 @@ func (s *S) TestHelpReturnErrorIfTheGivenCommandDoesNotExist(c *check.C) {
 }
 
 func (s *S) TestRunWithoutArgsShouldRunHelp(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
-Usage: glb command [args]
+Usage: megamd command [args]
 
 Available commands:
   help                 ` + `
   version              Display the current version
 
-Use glb help <commandname> to get more information about a command.
+Use megamd help <commandname> to get more information about a command.
 `
 	manager.Run([]string{})
 	c.Assert(manager.stdout.(*bytes.Buffer).String(), check.Equals, expected)
 }
 
 func (s *S) TestDashDashHelp(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
-Usage: glb command [args]
+Usage: megamd command [args]
 
 Available commands:
   help                 ` + `
   version              Display the current version
 
-Use glb help <commandname> to get more information about a command.
+Use megamd help <commandname> to get more information about a command.
 `
 	manager.Run([]string{"--help"})
 	c.Assert(manager.stdout.(*bytes.Buffer).String(), check.Equals, expected)
 }
 
 func (s *S) TestRunCommandWithDashHelp(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
-Usage: glb foo
+Usage: megamd foo
 
 Foo do anything or nothing.
 
@@ -283,9 +286,9 @@ Foo do anything or nothing.
 }
 
 func (s *S) TestRunCommandWithDashH(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
-Usage: glb foo
+Usage: megamd foo
 
 Foo do anything or nothing.
 
@@ -296,9 +299,9 @@ Foo do anything or nothing.
 }
 
 func (s *S) TestHelpShouldReturnHelpForACmd(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
-Usage: glb foo
+Usage: megamd foo
 
 Foo do anything or nothing.
 
@@ -309,9 +312,9 @@ Foo do anything or nothing.
 }
 
 func (s *S) TestDashDashHelpShouldReturnHelpForACmd(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
-Usage: glb foo
+Usage: megamd foo
 
 Foo do anything or nothing.
 
@@ -336,9 +339,9 @@ func (s *S) TestDuplicateHFlag(c *check.C) {
 }
 
 func (s *S) TestHelpDeprecatedCmd(c *check.C) {
-	expectedStdout := `glb version 1.0.
+	expectedStdout := `megamd version 1.0.
 
-Usage: glb foo
+Usage: megamd foo
 
 Foo do anything or nothing.
 
@@ -361,9 +364,9 @@ Foo do anything or nothing.
 func (s *S) TestHelpDeprecatedCmdWritesWarningFirst(c *check.C) {
 	expected := `WARNING: "bar" is deprecated. Showing help for "foo" instead.
 
-glb version 1.0.
+megamd version 1.0.
 
-Usage: glb foo
+Usage: megamd foo
 
 Foo do anything or nothing.
 
@@ -378,16 +381,16 @@ Foo do anything or nothing.
 
 func (s *S) TestVersion(c *check.C) {
 	var stdout, stderr bytes.Buffer
-	manager := NewManager("megam", "5.0", "", &stdout, &stderr, os.Stdin, nil)
+	manager := NewManager("megamd", "5.0", &stdout, &stderr, os.Stdin, nil, nil)
 	command := version{manager: manager}
 	context := Context{[]string{}, manager.stdout, manager.stderr, manager.stdin}
 	err := command.Run(&context)
 	c.Assert(err, check.IsNil)
-	c.Assert(manager.stdout.(*bytes.Buffer).String(), check.Equals, "megam version 5.0.\n")
+	c.Assert(manager.stdout.(*bytes.Buffer).String(), check.Equals, "megamd version 5.0.\n")
 }
 
 func (s *S) TestDashDashVersion(c *check.C) {
-	expected := "glb version 1.0.\n"
+	expected := "megamd version 1.0.\n"
 	manager.Run([]string{"--version"})
 	c.Assert(manager.stdout.(*bytes.Buffer).String(), check.Equals, expected)
 }
@@ -419,11 +422,11 @@ func (cmd *ArgCmd) Run(ctx *Context) error {
 }
 
 func (s *S) TestRunWrongArgsNumberShouldRunsHelpAndReturnStatus1(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
 ERROR: wrong number of arguments.
 
-Usage: glb arg [args]
+Usage: megamd arg [args]
 
 some desc
 
@@ -437,11 +440,11 @@ Maximum # of arguments: 2
 }
 
 func (s *S) TestRunWithTooManyArguments(c *check.C) {
-	expected := `glb version 1.0.
+	expected := `megamd version 1.0.
 
 ERROR: wrong number of arguments.
 
-Usage: glb arg [args]
+Usage: megamd arg [args]
 
 some desc
 
@@ -455,15 +458,15 @@ Maximum # of arguments: 2
 }
 
 func (s *S) TestHelpShouldReturnUsageWithTheCommandName(c *check.C) {
-	expected := `megam version 1.0.
+	expected := `megamd version 1.0.
 
-Usage: megam foo
+Usage: megamd foo
 
 Foo do anything or nothing.
 
 `
 	var stdout, stderr bytes.Buffer
-	manager := NewManager("megam", "1.0", "", &stdout, &stderr, os.Stdin, nil)
+	manager := NewManager("megamd", "1.0", &stdout, &stderr, os.Stdin, nil, nil)
 	manager.Register(&TestCommand{})
 	context := Context{[]string{"foo"}, manager.stdout, manager.stderr, manager.stdin}
 	command := help{manager: manager}
@@ -500,7 +503,7 @@ func (s *S) TestFinisherReturnTheDefinedE(c *check.C) {
 
 func (s *S) TestVersionIsRegisteredByNewManager(c *check.C) {
 	var stdout, stderr bytes.Buffer
-	manager := NewManager("megam", "1.0", "", &stdout, &stderr, os.Stdin, nil)
+	manager := NewManager("megamd", "1.0", &stdout, &stderr, os.Stdin, nil, nil)
 	ver, ok := manager.Commands["version"]
 	c.Assert(ok, check.Equals, true)
 	c.Assert(ver, check.FitsTypeOf, &version{})
@@ -510,7 +513,10 @@ func (s *S) TestInvalidCommandFuzzyMatch01(c *check.C) {
 	lookup := func(ctx *Context) error {
 		return os.ErrNotExist
 	}
-	manager := BuildBaseManager("megam", "1.0", "", lookup)
+	mode := func(modelvl int) {
+		//do nothing.
+	}
+	manager := BuildBaseManager("megam", "1.0", lookup, mode)
 	var stdout, stderr bytes.Buffer
 	var exiter recordingExiter
 	manager.e = &exiter
@@ -535,7 +541,7 @@ func (s *S) TestInvalidCommandFuzzyMatch02(c *check.C) {
 	lookup := func(ctx *Context) error {
 		return os.ErrNotExist
 	}
-	manager := BuildBaseManager("megam", "1.0", "", lookup)
+	manager := BuildBaseManager("megam", "1.0", lookup, nil)
 	var stdout, stderr bytes.Buffer
 	var exiter recordingExiter
 	manager.e = &exiter
@@ -557,7 +563,7 @@ func (s *S) TestInvalidCommandFuzzyMatch03(c *check.C) {
 	lookup := func(ctx *Context) error {
 		return os.ErrNotExist
 	}
-	manager := BuildBaseManager("megam", "1.0", "", lookup)
+	manager := BuildBaseManager("megam", "1.0", lookup, nil)
 	var stdout, stderr bytes.Buffer
 	var exiter recordingExiter
 	manager.e = &exiter
@@ -579,7 +585,7 @@ func (s *S) TestInvalidCommandFuzzyMatch04(c *check.C) {
 	lookup := func(ctx *Context) error {
 		return os.ErrNotExist
 	}
-	manager := BuildBaseManager("megam", "1.0", "", lookup)
+	manager := BuildBaseManager("megam", "1.0", lookup, nil)
 	var stdout, stderr bytes.Buffer
 	var exiter recordingExiter
 	manager.e = &exiter

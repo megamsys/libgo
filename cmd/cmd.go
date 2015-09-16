@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
-	"bytes"
 	"io"
 	"os"
 	"sort"
@@ -29,31 +29,33 @@ func (e osExiter) Exit(code int) {
 
 type Lookup func(context *Context) error
 
+type Mode func(modelvl int)
+
 type Manager struct {
-	Commands      map[string]Command
-	topics        map[string]string
-	name          string
-	stdout        io.Writer
-	stderr        io.Writer
-	stdin         io.Reader
-	version       string
-	versionHeader string
-	e             exiter
-	original      string
-	wrong         bool
-	lookup        Lookup
-	contexts      []*Context
+	Commands map[string]Command
+	topics   map[string]string
+	name     string
+	stdout   io.Writer
+	stderr   io.Writer
+	stdin    io.Reader
+	version  string
+	e        exiter
+	original string
+	wrong    bool
+	lookup   Lookup
+	contexts []*Context
+	mode     Mode
 }
 
-func NewManager(name, ver, verHeader string, stdout, stderr io.Writer, stdin io.Reader, lookup Lookup) *Manager {
-	manager := &Manager{name: name, version: ver, versionHeader: verHeader, stdout: stdout, stderr: stderr, stdin: stdin, lookup: lookup}
+func NewManager(name, ver string, stdout, stderr io.Writer, stdin io.Reader, lookup Lookup, mode Mode) *Manager {
+	manager := &Manager{name: name, version: ver, stdout: stdout, stderr: stderr, stdin: stdin, lookup: lookup, mode: mode}
 	manager.Register(&help{manager})
 	manager.Register(&version{manager})
 	return manager
 }
 
-func BuildBaseManager(name, version, versionHeader string, lookup Lookup) *Manager {
-	m := NewManager(name, version, versionHeader, os.Stdout, os.Stderr, os.Stdin, lookup)
+func BuildBaseManager(name, version string, lookup Lookup, mode Mode) *Manager {
+	m := NewManager(name, version, os.Stdout, os.Stderr, os.Stdin, lookup, mode)
 	return m
 }
 
@@ -175,7 +177,11 @@ func (m *Manager) Run(args []string) {
 		status = 1
 	}
 	context := m.newContext(args, m.stdout, m.stderr, m.stdin)
-	//client.Verbosity = verbosity
+
+	if m.mode != nil {
+		m.mode(verbosity)
+	}
+
 	err = command.Run(context)
 	if err != nil {
 		errorMsg := err.Error()
@@ -186,8 +192,8 @@ func (m *Manager) Run(args []string) {
 			io.WriteString(m.stderr, "Error: "+errorMsg)
 		}
 		status = 1
-
 	}
+
 	m.finisher().Exit(status)
 }
 
@@ -226,14 +232,14 @@ func (m *Manager) handleFlags(command Command, name string, args []string) (Comm
 }
 
 func (m *Manager) finisher() exiter {
-/*	if writer, ok := m.stdout.(*io.Writer); ok {
-		writer.close()
-	}
-	for _, ctx := range m.contexts {
-		if writer, ok := ctx.Stdout.(*io.Writer); ok {
+	/*	if writer, ok := m.stdout.(*io.Writer); ok {
 			writer.close()
 		}
-	}*/
+		for _, ctx := range m.contexts {
+			if writer, ok := ctx.Stdout.(*io.Writer); ok {
+				writer.close()
+			}
+		}*/
 	if m.e == nil {
 		m.e = osExiter{}
 	}
