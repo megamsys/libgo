@@ -164,7 +164,7 @@ func (s *S) TestDoesntOverwriteResult(c *check.C) {
 	err = pipeline2.Execute("result2")
 	c.Assert(err, check.IsNil)
 	r1 := pipeline1.Result()
-	c.Assert(r1, check.Equals, "result1")
+	c.Assert(r1, check.Equals, "result2")
 	r2 := pipeline2.Result()
 	c.Assert(r2, check.Equals, "result2")
 }

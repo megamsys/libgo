@@ -19,6 +19,10 @@
 			"Rev": "930958dc06ef2f84b93c81cc1c9f09459731e288"
 		},
 		{
+			"ImportPath": "github.com/sajari/fuzzy",
+			"Rev": "74a5fdec1a94b45e04659eb7f609291424065a7c"
+		},
+		{
 			"ImportPath": "github.com/streadway/amqp",
 			"Rev": "f4879ba28fffbb576743b03622a9ff20461826b2"
 		},
