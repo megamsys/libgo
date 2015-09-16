@@ -21,7 +21,7 @@ var manager *Manager
 
 func (s *S) SetUpTest(c *check.C) {
 	var stdout, stderr bytes.Buffer
-	manager = NewManager("glb", "1.0", "", &stdout, &stderr, os.Stdin, nil)
+	manager = NewManager("megamd", "1.0", &stdout, &stderr, os.Stdin, nil, nil)
 	var exiter recordingExiter
 	manager.e = &exiter
 	os.Setenv("MEGAM_HOME", "/home/megam")
