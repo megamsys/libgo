@@ -68,7 +68,7 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 	); err != nil {
 		return fmt.Errorf("Failed to publish message in exchange: %s", err)
 	}
-	log.Debug("[amqp] pub SUCCESS.")
+	log.Debugf("[amqp] pub >%s< SUCCESS.",r.exchname())
 	return err
 }
 
@@ -105,7 +105,7 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("[amqp] sub %s (%s) SUCCESS.", r.qname(), r.tag())
+	log.Debugf("[amqp] sub >%s< (%s) SUCCESS.", r.qname(), r.tag())
 
 	//This is asynchronous, the callee will have to wait.
 	go func() {
