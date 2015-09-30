@@ -12,7 +12,7 @@
 		},
 		{
 			"ImportPath": "github.com/golang/protobuf/proto",
-			"Rev": "535a10468679b4cf155f6a7afdf53b554633fc09"
+			"Rev": "0c959e80d8acfedb1ecd50c9f14a58cee287dc95"
 		},
 		{
 			"ImportPath": "github.com/megamsys/riakpbc",
@@ -20,11 +20,11 @@
 		},
 		{
 			"ImportPath": "github.com/sajari/fuzzy",
-			"Rev": "74a5fdec1a94b45e04659eb7f609291424065a7c"
+			"Rev": "2a247f20ed71703e33e4cd3c97f5ba390cbead1e"
 		},
 		{
 			"ImportPath": "github.com/streadway/amqp",
-			"Rev": "f4879ba28fffbb576743b03622a9ff20461826b2"
+			"Rev": "79beb307dcf5904fb8cb061276f1c14f222012c2"
 		},
 		{
 			"ImportPath": "github.com/tsuru/commandmocker",

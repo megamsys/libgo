@@ -130,9 +130,11 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 	if len(p.actions) == 0 {
 		return errors.New("No actions to execute.")
 	}
+	log.Debugf("   =====> pipe [%d]", len(p.actions))
+
 	fwCtx := FWContext{Params: params}
 	for i, a := range p.actions {
-		log.Debugf("[pipeline] running the Forward for the %s action", a.Name)
+		log.Debugf("  ====> step> %d: %s action", i, a.Name)
 		if a.Forward == nil {
 			err = errors.New("All actions must define the forward function.")
 		} else if len(fwCtx.Params) < a.MinParams {
@@ -145,7 +147,7 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 			fwCtx.Previous = r
 		}
 		if err != nil {
-			log.Debugf("[pipeline] error running the Forward for the %s action - %s", a.Name, err)
+			log.Debugf("  ====> step> %d: %s action error - %s", i, a.Name, err)
 			if a.OnError != nil {
 				a.OnError(fwCtx, err)
 			}
@@ -153,13 +155,14 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 			return err
 		}
 	}
+	log.Debugf("   !====> pipe [%d] !.", len(p.actions))
 	return nil
 }
 
 func (p *Pipeline) rollback(index int, params []interface{}) {
 	bwCtx := BWContext{Params: params}
 	for i := index; i >= 0; i-- {
-		log.Debugf("[pipeline] running Backward for %s action", p.actions[i].Name)
+		log.Debugf("  ====> <step %d: %s action", i, p.actions[i].Name)
 		if p.actions[i].Backward != nil {
 			bwCtx.FWResult = p.actions[i].result
 			p.actions[i].Backward(bwCtx)
