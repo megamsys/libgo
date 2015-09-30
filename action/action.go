@@ -18,8 +18,11 @@ package action
 
 import (
 	"errors"
-	log "github.com/Sirupsen/logrus"
+	"fmt"
 	"sync"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/megamsys/libgo/cmd"
 )
 
 // Result is the value returned by Forward. It is used in the call of the next
@@ -130,11 +133,12 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 	if len(p.actions) == 0 {
 		return errors.New("No actions to execute.")
 	}
-	log.Debugf("   =====> pipe [%d]", len(p.actions))
+
+	log.Debugf(cmd.Colorfy(fmt.Sprintf("@xxxx[{:::::> pipe [%d]", len(p.actions)), "white", "", "bold"))
 
 	fwCtx := FWContext{Params: params}
 	for i, a := range p.actions {
-		log.Debugf("  ====> step> %d: %s action", i, a.Name)
+		log.Debugf(cmd.Colorfy(fmt.Sprintf("  ====> step ~(‾%d‾)~ %s action", i, a.Name), "green", "", "bold"))
 		if a.Forward == nil {
 			err = errors.New("All actions must define the forward function.")
 		} else if len(fwCtx.Params) < a.MinParams {
@@ -147,7 +151,7 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 			fwCtx.Previous = r
 		}
 		if err != nil {
-			log.Debugf("  ====> step> %d: %s action error - %s", i, a.Name, err)
+			log.Debugf(cmd.Colorfy(fmt.Sprintf("  ====> step%d: %s action error - %s", i, a.Name, err), "yellow", "", "bold"))
 			if a.OnError != nil {
 				a.OnError(fwCtx, err)
 			}
@@ -155,14 +159,14 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 			return err
 		}
 	}
-	log.Debugf("   !====> pipe [%d] !.", len(p.actions))
+	log.Debugf(cmd.Colorfy("@xxxx[{:::::> pipe !.!", "white", "", "bold"))
 	return nil
 }
 
 func (p *Pipeline) rollback(index int, params []interface{}) {
 	bwCtx := BWContext{Params: params}
 	for i := index; i >= 0; i-- {
-		log.Debugf("  ====> <step %d: %s action", i, p.actions[i].Name)
+		log.Debugf(cmd.Colorfy(fmt.Sprintf("  ====> step%d: %s action", i, p.actions[i].Name), "red", "", "bold"))
 		if p.actions[i].Backward != nil {
 			bwCtx.FWResult = p.actions[i].result
 			p.actions[i].Backward(bwCtx)
