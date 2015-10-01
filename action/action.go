@@ -134,7 +134,7 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 		return errors.New("No actions to execute.")
 	}
 
-	log.Debugf(cmd.Colorfy(fmt.Sprintf("*======> pipe [%d]", len(p.actions)), "magenta", "", "bold"))
+	log.Debugf(cmd.Colorfy(fmt.Sprintf("======> pipe [%d]", len(p.actions)), "magenta", "white", "bold"))
 
 	fwCtx := FWContext{Params: params}
 	for i, a := range p.actions {
@@ -159,7 +159,7 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 			return err
 		}
 	}
-	log.Debugf(cmd.Colorfy("*======> pipe !.!", "magenta", "", "bold"))
+	log.Debugf(cmd.Colorfy("======> pipe !.!", "magenta", "white", "bold"))
 	return nil
 }
 
