@@ -134,11 +134,11 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 		return errors.New("No actions to execute.")
 	}
 
-	log.Debugf(cmd.Colorfy(fmt.Sprintf("==> pipeline [%d]", len(p.actions)), "gren", "", "bold"))
+	log.Debugf(cmd.Colorfy(fmt.Sprintf("==> pipeline [%d]", len(p.actions)), "light gray", "", "bold"))
 
 	fwCtx := FWContext{Params: params}
 	for i, a := range p.actions {
-		log.Debugf(cmd.Colorfy(fmt.Sprintf("  ==> step %d: %s action", i, a.Name), "blue", "", "bold"))
+		log.Debugf(cmd.Colorfy(fmt.Sprintf("  ==> step %d: %s action", i, a.Name), "green", "", "bold"))
 		if a.Forward == nil {
 			err = errors.New("All actions must define the forward function.")
 		} else if len(fwCtx.Params) < a.MinParams {
@@ -159,7 +159,7 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 			return err
 		}
 	}
-	log.Debugf(cmd.Colorfy("==> pipeline /-end-/", "green", "", "bold"))
+	log.Debugf(cmd.Colorfy("==> pipeline /-end-/", "light gray", "", "bold"))
 	return nil
 }
 
