@@ -134,11 +134,11 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 		return errors.New("No actions to execute.")
 	}
 
-	log.Debugf(cmd.Colorfy(fmt.Sprintf("======> pipeline [%d]", len(p.actions)), "magenta", "", "bold"))
+	log.Debugf(cmd.Colorfy(fmt.Sprintf("==> pipeline [%d]", len(p.actions)), "white", "", "bold"))
 
 	fwCtx := FWContext{Params: params}
 	for i, a := range p.actions {
-		log.Debugf(cmd.Colorfy(fmt.Sprintf("  ====> step %d: %s action", i, a.Name), "green", "", "bold"))
+		log.Debugf(cmd.Colorfy(fmt.Sprintf("  => step %d: %s action", i, a.Name), "green", "", "bold"))
 		if a.Forward == nil {
 			err = errors.New("All actions must define the forward function.")
 		} else if len(fwCtx.Params) < a.MinParams {
@@ -151,7 +151,7 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 			fwCtx.Previous = r
 		}
 		if err != nil {
-			log.Debugf(cmd.Colorfy(fmt.Sprintf("  ====> step %d: %s action error - %s", i, a.Name, err), "yellow", "", "bold"))
+			log.Debugf(cmd.Colorfy(fmt.Sprintf("  => step %d: %s action error - %s", i, a.Name, err), "yellow", "", ""))
 			if a.OnError != nil {
 				a.OnError(fwCtx, err)
 			}
@@ -159,14 +159,14 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 			return err
 		}
 	}
-	log.Debugf(cmd.Colorfy("======> pipeline !.!", "magenta", "", "bold"))
+	log.Debugf(cmd.Colorfy("==> pipeline /-end-/", "white", "", "bold"))
 	return nil
 }
 
 func (p *Pipeline) rollback(index int, params []interface{}) {
 	bwCtx := BWContext{Params: params}
 	for i := index; i >= 0; i-- {
-		log.Debugf(cmd.Colorfy(fmt.Sprintf("  ====> step %d: %s action", i, p.actions[i].Name), "red", "", "bold"))
+		log.Debugf(cmd.Colorfy(fmt.Sprintf("  => step %d: %s action", i, p.actions[i].Name), "red", "", "bold"))
 		if p.actions[i].Backward != nil {
 			bwCtx.FWResult = p.actions[i].result
 			p.actions[i].Backward(bwCtx)
