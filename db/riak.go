@@ -81,7 +81,7 @@ func Open(addr []string, bktname string) (storage *Storage, err error) {
 
 // Close closes the storage, releasing the connection.
 func (s *Storage) Close() {
-	log.Debugf("[riak] closing...")
+	log.Debugf("  [riak] closing...")
 	s.coder_client.Close()
 }
 
@@ -124,7 +124,7 @@ func open(addr []string, bucketname string) (*Storage, error) {
 	mut.Lock()
 	conn[strings.Join(addr, "::")] = &session{s: riakCoder, used: time.Now()}
 	mut.Unlock()
-	log.Debugf("[riak] open (%v) SUCCESS", addr)
+	log.Debugf("  [riak] open (%v) SUCCESS", addr)
 	return storage, nil
 }
 
@@ -178,7 +178,7 @@ func retire(t *time.Ticker) {
 		mut.RUnlock()
 		mut.Lock()
 		for _, c := range old {
-			log.Debugf("[riak] stale connection (%v)", c)
+			log.Debugf("  [riak] stale connection (%v)", c)
 			conn[c].s.Close()
 			delete(conn, c)
 		}

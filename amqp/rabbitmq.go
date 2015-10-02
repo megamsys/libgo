@@ -68,7 +68,7 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 	); err != nil {
 		return fmt.Errorf("Failed to publish message in exchange: %s", err)
 	}
-	log.Debugf("[amqp] pub (%s) SUCCESS.",r.exchname())
+	log.Debugf("  [amqp] pub (%s) SUCCESS.",r.exchname())
 	return err
 }
 
@@ -105,7 +105,7 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("[amqp] sub (%s, %s) SUCCESS.", r.qname(), r.tag())
+	log.Debugf("  [amqp] sub (%s, %s) SUCCESS.", r.qname(), r.tag())
 
 	//This is asynchronous, the callee will have to wait.
 	go func() {
@@ -143,7 +143,7 @@ func (f *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
 		return nil, err
 	}
 
-	log.Debugf("[amqp] dial (%s) SUCCESS", f.BindAddress)
+	log.Debugf("  [amqp] dial (%s, %s) SUCCESS", exchname, f.BindAddress)
 
 	chnl, err := conn.Channel()
 
@@ -186,7 +186,7 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 		return nil, err
 	}
 
-	log.Debugf("[amqp] queue (%s) SUCCESS", qname)
+	log.Debugf("  [amqp] queue (%s) SUCCESS", qname)
 
 	if err = chnl.QueueBind(
 		qu.Name, // name of the queue
