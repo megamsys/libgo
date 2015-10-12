@@ -2,18 +2,10 @@ package safe
 
 import (
 	"gopkg.in/check.v1"
-	"testing"
 	"runtime"
 	"sync"
 )
 
-type S struct{}
-
-var _ = check.Suite(&S{})
-
-func Test(t *testing.T) {
-	check.TestingT(t)
-}
 
 func (s *S) TestNewCounter(c *check.C) {
 	ct := NewCounter(2)
