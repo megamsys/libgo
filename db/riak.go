@@ -8,11 +8,13 @@ package db
 
 import (
 	"fmt"
-	log "github.com/Sirupsen/logrus"
-	"github.com/megamsys/riakpbc"
 	"strings"
 	"sync"
 	"time"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/megamsys/libgo/cmd"
+	"github.com/megamsys/riakpbc"
 )
 
 const period time.Duration = 7 * 24 * time.Hour
@@ -81,7 +83,7 @@ func Open(addr []string, bktname string) (storage *Storage, err error) {
 
 // Close closes the storage, releasing the connection.
 func (s *Storage) Close() {
-	log.Debugf("  [riak] closing...")
+	log.Debugf(cmd.Colorfy("  > [riak] close", "blue", "", "bold"))
 	s.coder_client.Close()
 }
 
@@ -124,7 +126,7 @@ func open(addr []string, bucketname string) (*Storage, error) {
 	mut.Lock()
 	conn[strings.Join(addr, "::")] = &session{s: riakCoder, used: time.Now()}
 	mut.Unlock()
-	log.Debugf("  [riak] open (%v) SUCCESS", addr)
+	log.Debugf(cmd.Colorfy("  > [riak] open ", "blue", "", "bold") + fmt.Sprintf("%v success", addr))
 	return storage, nil
 }
 
@@ -178,7 +180,7 @@ func retire(t *time.Ticker) {
 		mut.RUnlock()
 		mut.Lock()
 		for _, c := range old {
-			log.Debugf("  [riak] stale connection (%v)", c)
+			log.Debugf(cmd.Colorfy("  > [riak] stale ", "blue", "", "bold") + fmt.Sprintf("%v ", c))
 			conn[c].s.Close()
 			delete(conn, c)
 		}
