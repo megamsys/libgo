@@ -126,7 +126,7 @@ func open(addr []string, bucketname string) (*Storage, error) {
 	mut.Lock()
 	conn[strings.Join(addr, "::")] = &session{s: riakCoder, used: time.Now()}
 	mut.Unlock()
-	log.Debugf(cmd.Colorfy("  > [riak] open ", "blue", "", "bold") + fmt.Sprintf("%v success", addr))
+	log.Debugf(cmd.Colorfy("  > [riak] open  ", "blue", "", "bold") + fmt.Sprintf("%v success", addr))
 	return storage, nil
 }
 
