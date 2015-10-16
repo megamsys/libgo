@@ -17,9 +17,11 @@ package amqp
 
 import (
 	"fmt"
-	log "github.com/Sirupsen/logrus"
-	"github.com/streadway/amqp"
 	"sync"
+
+	log "github.com/Sirupsen/logrus"
+	"github.com/megamsys/libgo/cmd"
+	"github.com/streadway/amqp"
 )
 
 type rabbitmqQ struct {
@@ -68,7 +70,8 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 	); err != nil {
 		return fmt.Errorf("Failed to publish message in exchange: %s", err)
 	}
-	log.Debugf("  [amqp] pub (%s) SUCCESS.",r.exchname())
+
+	log.Debugf(cmd.Colorfy("  > [amqp] pub ", "blue", "", "bold") + fmt.Sprintf("%s success", r.exchname()))
 	return err
 }
 
@@ -105,7 +108,7 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("  [amqp] sub (%s, %s) SUCCESS.", r.qname(), r.tag())
+	log.Debugf(cmd.Colorfy("  > [amqp] sub ", "blue", "", "bold") + fmt.Sprintf("%s success", r.qname()))
 
 	//This is asynchronous, the callee will have to wait.
 	go func() {
@@ -143,7 +146,7 @@ func (f *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
 		return nil, err
 	}
 
-	log.Debugf("  [amqp] dial (%s, %s) SUCCESS", exchname, f.BindAddress)
+	log.Debugf(cmd.Colorfy("  > [amqp] dial ", "blue", "", "bold") + fmt.Sprintf("%s success", exchname))
 
 	chnl, err := conn.Channel()
 
@@ -185,8 +188,8 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 	if err != nil {
 		return nil, err
 	}
+	log.Debugf(cmd.Colorfy("  > [amqp] queue ", "blue", "", "bold") + fmt.Sprintf("%s success", qname))
 
-	log.Debugf("  [amqp] queue (%s) SUCCESS", qname)
 
 	if err = chnl.QueueBind(
 		qu.Name, // name of the queue
