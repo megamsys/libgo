@@ -104,7 +104,6 @@ func (s *S) TestFetch(c *check.C) {
 
 func (s *S) TestStoreObject(c *check.C) {
 	r, err := NewRiakDB(addr, bkt)
-
 	storage, err := r.Conn()
 	defer storage.Close()
 	c.Assert(storage, check.NotNil)
@@ -123,6 +122,22 @@ func (s *S) TestFetchObject(c *check.C) {
 	out := &SomeObject{}
 	err = storage.FetchObject("sampleobject", out)
 	c.Assert(err, check.IsNil)
+}
+
+func (s *S) TestDeleteObject(c *check.C) {
+	r, err := NewRiakDB(addr, bkt)
+	storage, err := r.Conn()
+	defer storage.Close()
+	c.Assert(storage, check.NotNil)
+	c.Assert(err, check.IsNil)
+	data := "sampledata"
+	err = storage.StoreObject("sampleobject1", data)
+	c.Assert(err, check.IsNil)
+	err = storage.DeleteObject("sampleobject1")
+	c.Assert(err, check.IsNil)
+	out := &SomeObject{}
+	err = storage.FetchObject("sampleobject1", out)
+	c.Assert(err, check.NotNil)
 }
 
 func (s *S) TestRetire(c *check.C) {

@@ -152,6 +152,13 @@ func (s *Storage) StoreObject(key string, data string) error {
 	return nil
 }
 
+func (s *Storage) DeleteObject(key string) error {
+	if _, err := s.coder_client.DeleteObject(s.bktname, key); err != nil {
+		return fmt.Errorf("Failed to delee in riak. %s", err)
+	}
+	return nil
+}
+
 func (s *Storage) FetchObjectByIndex(bucket, index, key, start, end string) ([][]byte, error) {
 	number, err := s.coder_client.Index(bucket, index, key, start, end)
 	if err != nil {
