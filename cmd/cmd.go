@@ -373,9 +373,7 @@ func (c *help) Run(context *Context) error {
 			output += fmt.Sprintln("\nAvailable topics:")
 			j := 0
 			for topic := range c.manager.topics {
-
-				output += fmt.Sprintf("hello toic %d %s\n",j, topic)
-				j++
+			output += fmt.Sprintf("  %s\n", topic)
 			}
 			output += fmt.Sprintf("\nUse %s help <topicname> to get more information about a topic.\n", c.manager.name)
 		}
