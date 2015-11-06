@@ -371,7 +371,6 @@ func (c *help) Run(context *Context) error {
 		output += fmt.Sprintf("\nUse %s help <commandname> to get more information about a command.\n", c.manager.name)
 		if len(c.manager.topics) > 0 {
 			output += fmt.Sprintln("\nAvailable topics:")
-			j := 0
 			for topic := range c.manager.topics {
 			output += fmt.Sprintf("  %s\n", topic)
 			}
