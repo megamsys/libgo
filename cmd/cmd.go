@@ -347,6 +347,18 @@ func (c *help) Run(context *Context) error {
 			}
 		}
 		sort.Strings(commands)
+
+		i := 0
+		first := commands[0]
+		for _, cmd := range commands {
+
+			if cmd == "help" {
+				commands[0] = commands[i]
+				commands[i] = first
+				break
+		  }
+				i++
+	  }
 		for _, command := range commands {
 			description := c.manager.Commands[command].Info().Desc
 			description = strings.Split(description, "\n")[0]
@@ -360,7 +372,7 @@ func (c *help) Run(context *Context) error {
 		if len(c.manager.topics) > 0 {
 			output += fmt.Sprintln("\nAvailable topics:")
 			for topic := range c.manager.topics {
-				output += fmt.Sprintf("  %s\n", topic)
+			output += fmt.Sprintf("  %s\n", topic)
 			}
 			output += fmt.Sprintf("\nUse %s help <topicname> to get more information about a topic.\n", c.manager.name)
 		}
