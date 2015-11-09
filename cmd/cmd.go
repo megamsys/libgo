@@ -310,9 +310,12 @@ func (c *help) Info() *Info {
 
 func (c *help) Run(context *Context) error {
 	const deprecatedMsg = "WARNING: %q is deprecated. Showing help for %q instead.\n\n"
-	output := fmt.Sprintf("%s version %s.\n\n", c.manager.name, c.manager.version)
+	output := fmt.Sprintf("%s version %s.\n\n",
+		Colorfy(c.manager.name, "yellow", "", "bold"),
+		Colorfy(c.manager.version, "blue", "", "bold"))
 	if c.manager.wrong {
-		output += fmt.Sprint("ERROR: wrong number of arguments.\n\n")
+		output += fmt.Sprint("%s: %s.\n\n", Colorfy("ERROR", "red", "", "bold"),
+			Colorfy("wrong number of arguments", "white", "", "bold"))
 	}
 	if len(context.Args) > 0 {
 		if cmd, ok := c.manager.Commands[context.Args[0]]; ok {
@@ -320,7 +323,10 @@ func (c *help) Run(context *Context) error {
 				fmt.Fprintf(context.Stderr, deprecatedMsg, deprecated.oldName, cmd.Info().Name)
 			}
 			info := cmd.Info()
-			output += fmt.Sprintf("Usage: %s %s\n", c.manager.name, info.Usage)
+			output += fmt.Sprintf("%s %s %s\n",
+				Colorfy("Usage:", "white", "", "bold"),
+				Colorfy(c.manager.name, "yellow", "", "bold"),
+				Colorfy(info.Usage, "cyan", "", ""))
 			output += fmt.Sprintf("\n%s\n", info.Desc)
 			flags := c.parseFlags(cmd)
 			if flags != "" {
