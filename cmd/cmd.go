@@ -323,10 +323,7 @@ func (c *help) Run(context *Context) error {
 				fmt.Fprintf(context.Stderr, deprecatedMsg, deprecated.oldName, cmd.Info().Name)
 			}
 			info := cmd.Info()
-			output += fmt.Sprintf("%s %s %s\n",
-				Colorfy("Usage:", "white", "", "bold"),
-				Colorfy(c.manager.name, "yellow", "", "bold"),
-				Colorfy(info.Usage, "cyan", "", ""))
+			output += fmt.Sprintf("Usage: %s %s\n", c.manager.name, info.Usage)
 			output += fmt.Sprintf("\n%s\n", info.Desc)
 			flags := c.parseFlags(cmd)
 			if flags != "" {
@@ -345,11 +342,7 @@ func (c *help) Run(context *Context) error {
 			return fmt.Errorf("command %q does not exist.", context.Args[0])
 		}
 	} else {
-		output += fmt.Sprintf("%s %s %s\n\n%s\n",
-			Colorfy("Usage:", "white", "", "bold"),
-			Colorfy(c.manager.name, "yellow", "", "bold"),
-			Colorfy(c.Info().Usage, "cyan", "", ""),
-		  Colorfy("Available commands:","blue","",""))
+		output += fmt.Sprintf("Usage: %s %s\n\nAvailable commands:\n", c.manager.name, c.Info().Usage)
 		var commands []string
 		for name, cmd := range c.manager.Commands {
 			if _, ok := cmd.(*DeprecatedCommand); !ok {
@@ -371,9 +364,7 @@ func (c *help) Run(context *Context) error {
 				description = strings.ToUpper(description[:1]) + description[1:]
 			}
 			fmtStr := fmt.Sprintf("  %%-%ds %%s\n", maxCmdSize)
-			output += fmt.Sprintf(fmtStr,
-				Colorfy(command,"green","", "bold"),
-				Colorfy(description,"cyan","",""))
+			output += fmt.Sprintf(fmtStr, command, description)
 		}
 		output += fmt.Sprintf("\nUse %s help <commandname> to get more information about a command.\n", c.manager.name)
 		if len(c.manager.topics) > 0 {
