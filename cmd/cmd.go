@@ -314,7 +314,7 @@ func (c *help) Run(context *Context) error {
 		Colorfy(c.manager.name, "yellow", "", "bold"),
 		Colorfy(c.manager.version, "blue", "", "bold"))
 	if c.manager.wrong {
-		output += fmt.Sprint("%s: %s.\n\n", Colorfy("ERROR", "red", "", "bold"),
+		output += fmt.Sprintf("%s: %s.\n\n", Colorfy("ERROR", "red", "", "bold"),
 			Colorfy("wrong number of arguments", "white", "", "bold"))
 	}
 	if len(context.Args) > 0 {
