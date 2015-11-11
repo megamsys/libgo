@@ -310,12 +310,9 @@ func (c *help) Info() *Info {
 
 func (c *help) Run(context *Context) error {
 	const deprecatedMsg = "WARNING: %q is deprecated. Showing help for %q instead.\n\n"
-	output := fmt.Sprintf("%s version %s.\n\n",
-		Colorfy(c.manager.name, "green", "", "bold"),
-		Colorfy(c.manager.version, "yellow", "", "bold"))
+	output := fmt.Sprintf("%s version %s.\n\n",c.manager.name, c.manager.version)
 	if c.manager.wrong {
-		output += fmt.Sprintf("%s: %s.\n\n", Colorfy("ERROR", "red", "", "bold"),
-			Colorfy("wrong number of arguments", "white", "", "bold"))
+		output += fmt.Sprintf("%s: %s.\n\n", "ERROR","wrong number of arguments")
 	}
 	if len(context.Args) > 0 {
 		if cmd, ok := c.manager.Commands[context.Args[0]]; ok {
