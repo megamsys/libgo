@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"sync"
 
-	log "github.com/Sirupsen/logrus"
-	"github.com/megamsys/libgo/cmd"
+	//log "github.com/Sirupsen/logrus"
+	//"github.com/megamsys/libgo/cmd"
 	"github.com/streadway/amqp"
 )
 
