@@ -347,6 +347,18 @@ func (c *help) Run(context *Context) error {
 			}
 		}
 		sort.Strings(commands)
+
+		i := 0
+		first := commands[0]
+		for _, cmd := range commands {
+
+			if cmd == "help" {
+				commands[0] = commands[i]
+				commands[i] = first
+				break
+		  }
+				i++
+	  }
 		maxCmdSize := 20
 		for _, command := range commands {
 			if len(command) > maxCmdSize {
