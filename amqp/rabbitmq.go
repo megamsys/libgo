@@ -52,7 +52,11 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 	if err != nil {
 		return err
 	}
-
+	
+	if _, err = r.factory.getChonn(r.key(), r.exchname(), r.qname()); err != nil {
+		return err
+	}
+	
 	if err = chnl.Publish(
 		r.exchname(), // publish to an exchange
 		r.key(),      // routing to 0 or more queues
@@ -71,7 +75,7 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 		return fmt.Errorf("Failed to publish message in exchange: %s", err)
 	}
 
-	log.Debugf(cmd.Colorfy("  > [amqp] pub   ", "blue", "", "bold") + fmt.Sprintf("%s success", r.exchname()))
+	//log.Debugf(cmd.Colorfy("  > [amqp] pub   ", "blue", "", "bold") + fmt.Sprintf("%s success", r.exchname()))
 	return err
 }
 
@@ -108,7 +112,7 @@ func (r *rabbitmqQ) Sub() (chan []byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf(cmd.Colorfy("  > [amqp] sub   ", "blue", "", "bold") + fmt.Sprintf("%s success", r.qname()))
+	//log.Debugf(cmd.Colorfy("  > [amqp] sub   ", "blue", "", "bold") + fmt.Sprintf("%s success", r.qname()))
 
 	//This is asynchronous, the callee will have to wait.
 	go func() {
@@ -146,7 +150,7 @@ func (f *rabbitmqQFactory) dial(exchname string) (*amqp.Channel, error) {
 		return nil, err
 	}
 
-	log.Debugf(cmd.Colorfy("  > [amqp] dial  ", "blue", "", "bold") + fmt.Sprintf("%s success", exchname))
+	//log.Debugf(cmd.Colorfy("  > [amqp] dial  ", "blue", "", "bold") + fmt.Sprintf("%s success", exchname))
 
 	chnl, err := conn.Channel()
 
@@ -188,7 +192,7 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf(cmd.Colorfy("  > [amqp] queue ", "blue", "", "bold") + fmt.Sprintf("%s success", qname))
+	//log.Debugf(cmd.Colorfy("  > [amqp] queue ", "blue", "", "bold") + fmt.Sprintf("%s success", qname))
 
 
 	if err = chnl.QueueBind(
