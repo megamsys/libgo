@@ -24,7 +24,7 @@ func (HCSuite) TestCheck(c *check.C) {
 	AddChecker("failing", failingChecker)
 	AddChecker("disabled", disabledChecker)
 	expected := []Result{
-		{Name: "success", Status: HealthCheckOK},
+		{Name: "success", Status: HealthCheckOK, Raw: "hey cool"},
 		{Name: "failing", Status: "fail - something went wrong"},
 	}
 	result := Check()
@@ -35,14 +35,14 @@ func (HCSuite) TestCheck(c *check.C) {
 	c.Assert(result[1].Duration, check.Not(check.Equals), 0)
 }
 
-func successChecker() error {
-	return nil
+func successChecker() (interface{}, error) {
+	return "hey cool", nil
 }
 
-func failingChecker() error {
-	return errors.New("something went wrong")
+func failingChecker() (interface{}, error) {
+	return nil, errors.New("something went wrong")
 }
 
-func disabledChecker() error {
-	return ErrDisabledComponent
+func disabledChecker() (interface{}, error) {
+	return nil, ErrDisabledComponent
 }

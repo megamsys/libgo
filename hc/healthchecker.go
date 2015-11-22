@@ -21,7 +21,7 @@ var checkers []healthChecker
 
 type healthChecker struct {
 	name  string
-	check func() error
+	check func() (interface{}, error)
 }
 
 // Result represents a result of a processed healthcheck call. It will contain
@@ -30,12 +30,13 @@ type healthChecker struct {
 type Result struct {
 	Name     string
 	Status   string
+	Raw      interface{}
 	Duration time.Duration
 }
 
 // AddChecker adds a new checker to the internal list of checkers. Checkers
 // added to this list can then be checked using the Check function.
-func AddChecker(name string, check func() error) {
+func AddChecker(name string, check func() (interface{}, error)) {
 	checker := healthChecker{name: name, check: check}
 	checkers = append(checkers, checker)
 }
@@ -46,15 +47,17 @@ func Check() []Result {
 	results := make([]Result, 0, len(checkers))
 	for _, checker := range checkers {
 		startTime := time.Now()
-		if err := checker.check(); err != nil && err != ErrDisabledComponent {
+		if raw, err := checker.check(); err != nil && err != ErrDisabledComponent {
 			results = append(results, Result{
 				Name:     checker.name,
+				Raw:      raw,
 				Status:   "fail - " + err.Error(),
 				Duration: time.Now().Sub(startTime),
 			})
 		} else if err == nil {
 			results = append(results, Result{
 				Name:     checker.name,
+				Raw:      raw,
 				Status:   HealthCheckOK,
 				Duration: time.Now().Sub(startTime),
 			})
