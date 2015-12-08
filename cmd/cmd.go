@@ -310,9 +310,9 @@ func (c *help) Info() *Info {
 
 func (c *help) Run(context *Context) error {
 	const deprecatedMsg = "WARNING: %q is deprecated. Showing help for %q instead.\n\n"
-	output := fmt.Sprintf("%s version %s.\n\n",c.manager.name, c.manager.version)
+	output := fmt.Sprintf("%s version %s.\n\n", c.manager.name, c.manager.version)
 	if c.manager.wrong {
-		output += fmt.Sprintf("%s: %s.\n\n", "ERROR","wrong number of arguments")
+		output += fmt.Sprintf("%s: %s.\n\n", "ERROR", "wrong number of arguments")
 	}
 	if len(context.Args) > 0 {
 		if cmd, ok := c.manager.Commands[context.Args[0]]; ok {
@@ -356,9 +356,9 @@ func (c *help) Run(context *Context) error {
 				commands[0] = commands[i]
 				commands[i] = first
 				break
-		  }
-				i++
-	  }
+			}
+			i++
+		}
 		maxCmdSize := 20
 		for _, command := range commands {
 			if len(command) > maxCmdSize {
