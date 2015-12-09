@@ -1,18 +1,18 @@
 {
 	"ImportPath": "github.com/megamsys/libgo",
-	"GoVersion": "go1.5.1",
+	"GoVersion": "go1.5.2",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.8.7-35-gfe6f2b0",
-			"Rev": "fe6f2b03125e4fcafb21406381010e363a072c80"
+			"Comment": "v0.8.7-53-g446d1c1",
+			"Rev": "446d1c146faa8ed3f4218f056fcd165f6bcfda81"
 		},
 		{
 			"ImportPath": "github.com/golang/protobuf/proto",
-			"Rev": "d3d78384b82d449651d2435ed329d70f7c48aa56"
+			"Rev": "68415e7123da32b07eab49c96d2c4d6158360e9b"
 		},
 		{
 			"ImportPath": "github.com/megamsys/riakpbc",
@@ -29,6 +29,14 @@
 		{
 			"ImportPath": "github.com/tsuru/commandmocker",
 			"Rev": "5cf1c7795a1c540dbe8e3fe2b5d88178b75d6492"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "7b85b097bf7527677d54d3220065e966a0e3b613"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "2bacc619e34d59719d9ed86f0e04e8261aed3409"
 		},
 		{
 			"ImportPath": "gopkg.in/check.v1",
