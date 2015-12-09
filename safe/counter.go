@@ -1,6 +1,5 @@
 package safe
 
-
 import (
 	"sync/atomic"
 )
@@ -32,4 +31,3 @@ func (c *Counter) Increment() {
 func (c *Counter) Decrement() {
 	atomic.AddInt64(&c.v, -1)
 }
-

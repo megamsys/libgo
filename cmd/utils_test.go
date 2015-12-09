@@ -22,7 +22,6 @@ func (s *S) TestJoinWithUserDirHomePath(c *check.C) {
 	c.Assert(path, check.Equals, "/wat/a/b")
 }
 
-
 func (s *S) TestMergeFlagSet(c *check.C) {
 	var x, y bool
 	fs1 := gnuflag.NewFlagSet("x", gnuflag.ExitOnError)

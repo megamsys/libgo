@@ -6,7 +6,6 @@ import (
 	"sync"
 )
 
-
 func (s *S) TestNewCounter(c *check.C) {
 	ct := NewCounter(2)
 	c.Assert(ct.v, check.Equals, int64(2))

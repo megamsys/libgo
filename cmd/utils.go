@@ -22,7 +22,6 @@ func JoinWithUserDir(p ...string) string {
 	return filepath.Join(paths...)
 }
 
-
 func MergeFlagSet(fs1, fs2 *gnuflag.FlagSet) *gnuflag.FlagSet {
 	fs2.VisitAll(func(flag *gnuflag.Flag) {
 		fs1.Var(flag.Value, flag.Name, flag.Usage)
