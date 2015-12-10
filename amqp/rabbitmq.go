@@ -75,6 +75,7 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 		return fmt.Errorf("Failed to publish message in exchange: %s", err)
 	}
 
+	defer chnl.Close()
 	//log.Debugf(cmd.Colorfy("  > [amqp] pub   ", "blue", "", "bold") + fmt.Sprintf("%s success", r.exchname()))
 	return err
 }
