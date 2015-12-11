@@ -31,15 +31,20 @@ func (s *RabbitMQSuite) TestRabbitMQPubSub(c *check.C) {
 	c.Assert(ok, check.Equals, true)
 	msgChan, err := pubSubQ.Sub()
 	c.Assert(err, check.IsNil)
+	err = pubSubQ.Connect()
+	c.Assert(err, check.IsNil)
 	err = pubSubQ.Pub([]byte("howdy pubsub"))
 	c.Assert(err, check.IsNil)
 	c.Assert(<-msgChan, check.DeepEquals, []byte("howdy pubsub"))
+	pubSubQ.Close()
 }
 
 func (s *RabbitMQSuite) TestRabbitMQPubSubUnsub(c *check.C) {
 	pubSubQ, ok := s.psq.(PubSubQ)
 	c.Assert(ok, check.Equals, true)
-	err := pubSubQ.Pub([]byte("howdy pubsubunsub"))
+	err := pubSubQ.Connect()
+	c.Assert(err, check.IsNil)
+	err = pubSubQ.Pub([]byte("howdy pubsubunsub"))
 	c.Assert(err, check.IsNil)
 
 	msgChan, err := pubSubQ.Sub()
@@ -49,7 +54,7 @@ func (s *RabbitMQSuite) TestRabbitMQPubSubUnsub(c *check.C) {
 
 	err = pubSubQ.Pub([]byte("howdy pubsubunsub"))
 	c.Assert(err, check.IsNil)
-
+	pubSubQ.Close()
 	go func() {
 		time.Sleep(1e9)
 		pubSubQ.UnSub()
@@ -70,3 +75,4 @@ func (s *RabbitMQSuite) TestRabbitMQPubSubUnsub(c *check.C) {
 		c.Error("Timeout waiting for message.")
 	}
 }
+

@@ -43,6 +43,10 @@ type PubSubQ interface {
 	// Unsubscribe the queue, this should make sure the channel returned
 	// by Sub() is closed.
 	UnSub() error
+
+	Connect() error
+
+	Close()
 }
 
 // QFactory manages queues. It's able to create new queue and handler
