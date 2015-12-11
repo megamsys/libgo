@@ -29,6 +29,7 @@ type rabbitmqQ struct {
 	prefix  string
 	factory *rabbitmqQFactory
 	psc     *amqp.Channel
+	pc      *amqp.Channel
 }
 
 func (r *rabbitmqQ) exchname() string {
@@ -47,17 +48,25 @@ func (r *rabbitmqQ) key() string {
 	return r.prefix + "_" + r.name + "_key"
 }
 
-func (r *rabbitmqQ) Pub(msg []byte) error {
+func (r *rabbitmqQ) Connect() error {
 	chnl, err := r.factory.dial(r.exchname()) // return amqp.Channel
 	if err != nil {
+		return fmt.Errorf("Failed to connect to exchange: %s", err)
+	} 
+
+        r.pc = chnl
+	
+     return nil
+}
+
+
+func (r *rabbitmqQ) Pub(msg []byte) error {
+	
+	if _, err := r.factory.getChonn(r.key(), r.exchname(), r.qname()); err != nil {
 		return err
 	}
 
-	if _, err = r.factory.getChonn(r.key(), r.exchname(), r.qname()); err != nil {
-		return err
-	}
-
-	if err = chnl.Publish(
+	err := r.pc.Publish(
 		r.exchname(), // publish to an exchange
 		r.key(),      // routing to 0 or more queues
 		false,        // mandatory
@@ -71,13 +80,18 @@ func (r *rabbitmqQ) Pub(msg []byte) error {
 			Priority:        0,              // 0-9
 			// a bunch of application/implementation-specific fields
 		},
-	); err != nil {
+	)
+
+ 	if err != nil {
 		return fmt.Errorf("Failed to publish message in exchange: %s", err)
 	}
 
-	defer chnl.Close()
 	//log.Debugf(cmd.Colorfy("  > [amqp] pub   ", "blue", "", "bold") + fmt.Sprintf("%s success", r.exchname()))
 	return err
+}
+
+func (r *rabbitmqQ) Close() {
+	r.pc.Close()
 }
 
 func (r *rabbitmqQ) UnSub() error {
@@ -207,3 +221,4 @@ func (factory *rabbitmqQFactory) getChonn(key string, exchname string, qname str
 
 	return chnl, nil
 }
+
