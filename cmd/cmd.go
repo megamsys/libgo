@@ -98,7 +98,7 @@ func (m *Manager) RegisterTopic(name, content string) {
 func (m *Manager) Run(args []string) {
 	var (
 		status         int
-		verbosity      int
+		verbosity      bool
 		displayHelp    bool
 		displayVersion bool
 	)
@@ -107,8 +107,8 @@ func (m *Manager) Run(args []string) {
 	}
 	flagset := gnuflag.NewFlagSet("megamd flags", gnuflag.ContinueOnError)
 	flagset.SetOutput(m.stderr)
-	flagset.IntVar(&verbosity, "verbosity", 0, "Verbosity level: 1 => print debug")
-	flagset.IntVar(&verbosity, "v", 0, "Verbosity level: 1 => print debug")
+	flagset.BoolVar(&verbosity, "verbosity", false, "Verbosity print debug")
+	flagset.BoolVar(&verbosity, "v", false, "Verbosity print debug")
 	flagset.BoolVar(&displayHelp, "help", false, "Display help and exit")
 	flagset.BoolVar(&displayHelp, "h", false, "Display help and exit")
 	flagset.BoolVar(&displayVersion, "version", false, "Print version and exit")
@@ -177,9 +177,8 @@ func (m *Manager) Run(args []string) {
 		status = 1
 	}
 	context := m.newContext(args, m.stdout, m.stderr, m.stdin)
-
-	if m.mode != nil {
-		m.mode(verbosity)
+  if m.mode != nil && verbosity {
+		m.mode(2)
 	}
 
 	err = command.Run(context)
