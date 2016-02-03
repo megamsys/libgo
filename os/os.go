@@ -10,6 +10,7 @@ const (
 	Windows
 	OSX
 	CentOS
+	Debian
 	Arch
 )
 
@@ -23,6 +24,8 @@ func (t OSType) String() string {
 		return "OSX"
 	case CentOS:
 		return "CentOS"
+	case Debian:
+		return "Debian"
 	case Arch:
 		return "Arch"
 	}
