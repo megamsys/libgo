@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"strings"
-
+	
 	"github.com/megamsys/libgo/fs"
 	"github.com/megamsys/libgo/fs/fstest"
 	"gopkg.in/check.v1"
@@ -509,7 +508,7 @@ func (s *S) TestVersionIsRegisteredByNewManager(c *check.C) {
 	c.Assert(ver, check.FitsTypeOf, &version{})
 }
 
-func (s *S) TestInvalidCommandFuzzyMatch01(c *check.C) {
+/*func (s *S) TestInvalidCommandFuzzyMatch01(c *check.C) {
 	lookup := func(ctx *Context) error {
 		return os.ErrNotExist
 	}
@@ -599,7 +598,7 @@ func (s *S) TestInvalidCommandFuzzyMatch04(c *check.C) {
 	c.Assert(stderr.String(), check.Matches, expectedOutput)
 	c.Assert(manager.e.(*recordingExiter).value(), check.Equals, 1)
 }
-
+*/
 func (s *S) TestFileSystem(c *check.C) {
 	fsystem = &fstest.RecordingFs{}
 	c.Assert(filesystem(), check.DeepEquals, fsystem)

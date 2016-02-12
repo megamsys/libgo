@@ -1,16 +1,11 @@
 package db
 
 import (
-	"gopkg.in/check.v1"
-	"strings"
-	"sync"
-	"testing"
-	"time"
+//	"gopkg.in/check.v1"
+//	"strings"
+//	"sync"
+//	"time"
 )
-
-func Test(t *testing.T) { check.TestingT(t) }
-
-type S struct{}
 
 type ExampleData struct {
 	Field1 string `riak:"index" json:"field1"`
@@ -21,21 +16,11 @@ type SampleObject struct {
 	Data string `json:"data"`
 }
 
-var _ = check.Suite(&S{})
-
 var addr = []string{"127.0.0.1:8087"}
 
 const bkt = "sample1"
 
-func (s *S) SetUpSuite(c *check.C) {
-	ticker.Stop()
-}
-
-func (s *S) TearDownTest(c *check.C) {
-	conn = make(map[string]*session)
-}
-
-func (s *S) TestOpenReconnects(c *check.C) {
+/*func (s *S) TestOpenReconnects(c *check.C) {
 	storage, err := Open(addr, bkt)
 	c.Assert(err, check.IsNil)
 	storage.Close()
@@ -168,3 +153,4 @@ func (s *S) TestRetire(c *check.C) {
 	sess1 := conn[ky]
 	sess1.s.Ping()
 }
+*/

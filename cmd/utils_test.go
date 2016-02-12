@@ -9,15 +9,15 @@ import (
 )
 
 func (s *S) TestJoinWithUserDir(c *check.C) {
-	expected := path.Join(os.Getenv("HOME"), "a", "b")
+	expected := path.Join(os.Getenv("MEGAM_HOME"), "a", "b")
 	path := JoinWithUserDir("a", "b")
 	c.Assert(path, check.Equals, expected)
 }
 
 func (s *S) TestJoinWithUserDirHomePath(c *check.C) {
-	defer os.Setenv("HOME", os.Getenv("HOME"))
-	os.Setenv("HOME", "")
-	os.Setenv("HOMEPATH", "/wat")
+	defer os.Setenv("MEGAM_HOME", os.Getenv("MEGAM_HOME"))
+	os.Setenv("MEGAM_HOME", "")
+	os.Setenv("MEGAM_HOME", "/wat")
 	path := JoinWithUserDir("a", "b")
 	c.Assert(path, check.Equals, "/wat/a/b")
 }
