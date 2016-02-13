@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/megamsys/gocassa"
 	"gopkg.in/check.v1"
-	"github.com/hailocab/gocassa"
 )
 
 func Test(t *testing.T) { check.TestingT(t) }
@@ -25,7 +25,6 @@ var _ = check.Suite(&S{})
 var noips = []string{"127.0.0.1"}
 
 func (s *S) SetUpSuite(c *check.C) {
-	ticker.Stop()
 
 	s.sy, _ = NewScyllaDB(ScyllaDBOpts{
 		KeySpaceName: "testing",
@@ -34,6 +33,10 @@ func (s *S) SetUpSuite(c *check.C) {
 		Password:     "",
 		Debug:        true,
 	})
+
+	if s.sy == nil {
+		c.Skip("- ScyllaDB isn't running. Did you start it ? ")
+	}
 	c.Assert(s.sy, check.NotNil)
 }
 
@@ -48,11 +51,11 @@ func (s *S) TestReadWhereRowNotFound(c *check.C) {
 	})
 	c.Assert(err, check.IsNil)
 	res := Customer{}
-	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name":""}}, &res)
+	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name": ""}}, &res)
 	c.Assert(err, check.NotNil)
 }
 
-func (s *S) TestMultiplePKReadUsingPK1(c *check.C) {
+func (s *S) TestTablWithMultiplePKButReadUsingOnePK(c *check.C) {
 	rand.Seed(time.Now().Unix())
 	t := s.sy.Table("customer", []string{"Id", "Name"}, []string{}, &Customer{})
 	err := t.T.(gocassa.TableChanger).CreateIfNotExist()
@@ -78,6 +81,6 @@ func (s *S) TestReadWhereRowFound(c *check.C) {
 	})
 	c.Assert(err, check.IsNil)
 	res := Customer{}
-	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name":"Joe"}}, &res)
+	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name": "Joe"}}, &res)
 	c.Assert(err, check.IsNil)
 }
