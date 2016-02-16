@@ -1,5 +1,5 @@
 package db
-
+/*
 import (
 //	"gopkg.in/check.v1"
 //	"strings"
@@ -20,7 +20,7 @@ var addr = []string{"127.0.0.1:8087"}
 
 const bkt = "sample1"
 
-/*func (s *S) TestOpenReconnects(c *check.C) {
+func (s *S) TestOpenReconnects(c *check.C) {
 	storage, err := Open(addr, bkt)
 	c.Assert(err, check.IsNil)
 	storage.Close()

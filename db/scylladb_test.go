@@ -1,10 +1,12 @@
 package db
 
 import (
+	"fmt"
 	"math/rand"
 	"testing"
 	"time"
 
+	"github.com/gocql/gocql"
 	"github.com/megamsys/gocassa"
 	"gopkg.in/check.v1"
 )
@@ -25,25 +27,38 @@ var _ = check.Suite(&S{})
 var noips = []string{"127.0.0.1"}
 
 func (s *S) SetUpSuite(c *check.C) {
+	cluster := gocql.NewCluster("172.17.0.2")
+	cluster.Keyspace = "testing"
+	cluster.Consistency = gocql.Quorum
+	session, _ := cluster.CreateSession()
+	defer session.Close()
 
-	s.sy, _ = NewScyllaDB(ScyllaDBOpts{
-		KeySpaceName: "testing",
-		NodeIps:      noips,
-		Username:     "",
-		Password:     "",
-		Debug:        true,
-	})
-
-	if s.sy == nil {
-		c.Skip("- ScyllaDB isn't running. Did you start it ? ")
+	var id gocql.UUID
+	iter := session.Query(`SELECT * FROM CUSTOMER`).Iter()
+	for iter.Scan(&id) {
+		fmt.Println("Tweet:", id)
 	}
-	c.Assert(s.sy, check.NotNil)
+	/*	s.sy, _ = NewScyllaDB(ScyllaDBOpts{
+			KeySpaceName: "testing",
+			NodeIps:      noips,
+			Username:     "",
+			Password:     "",
+			Debug:        true,
+		})
+		c.Assert(s.sy, check.NotNil)
+	*/
+
+	//if s.sy == nil {
+	//	fmt.Println("------------- scylladb is not running")
+	//	c.Skip("- ScyllaDB isn't running. Did you start it ? ")
+	//}
 }
 
 func (s *S) TestReadWhereRowNotFound(c *check.C) {
 	rand.Seed(time.Now().Unix())
 	t := s.sy.Table("customer", []string{"Id", "Name"}, []string{}, &Customer{})
 	err := t.T.(gocassa.TableChanger).CreateIfNotExist()
+	c.Assert(err, check.NotNil)
 	c.Assert(err, check.IsNil)
 	err = t.Upsert(&Customer{
 		Id:   "1001",
