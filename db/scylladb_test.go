@@ -29,7 +29,7 @@ type Customer2 struct {
 
 var _ = check.Suite(&S{})
 
-var noips = []string{"103.56.92.24"}
+var noips = []string{"127.0.0.1"}
 
 func (s *S) SetUpSuite(c *check.C) {
 	s.sy, _ = NewScyllaDB(ScyllaDBOpts{
@@ -59,7 +59,7 @@ func (s *S) TestReadWhereRowNotFound(c *check.C) {
 	})
 	c.Assert(err, check.IsNil)
 	res := &Customer2{}
-	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name": "Hari"}}, res)
+	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name": ""}}, res)
 	c.Assert(err, check.NotNil)
 }
 func (s *S) TestTablWithMultiplePKButReadUsingOnePK(c *check.C) {
@@ -73,7 +73,7 @@ func (s *S) TestTablWithMultiplePKButReadUsingOnePK(c *check.C) {
 	})
 	c.Assert(err, check.IsNil)
 	res := Customer{}
-	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name":"" }}, &res)
+	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001"}}, &res)
 	c.Assert(err, check.NotNil)
 }
 
