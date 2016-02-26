@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gocql/gocql"
 	"github.com/megamsys/gocassa"
 	"gopkg.in/check.v1"
 )
@@ -22,54 +21,47 @@ type Customer struct {
 	Name string
 }
 
+type Customer2 struct {
+	Id   string
+	Name string
+	Age  int
+}
+
 var _ = check.Suite(&S{})
 
-var noips = []string{"127.0.0.1"}
+var noips = []string{"103.56.92.24"}
 
 func (s *S) SetUpSuite(c *check.C) {
-	cluster := gocql.NewCluster("172.17.0.2")
-	cluster.Keyspace = "testing"
-	cluster.Consistency = gocql.Quorum
-	session, _ := cluster.CreateSession()
-	defer session.Close()
+	s.sy, _ = NewScyllaDB(ScyllaDBOpts{
+		KeySpaceName: "testing",
+		NodeIps:      noips,
+		Username:     "",
+		Password:     "",
+		Debug:        true,
+	})
+	c.Assert(s.sy, check.NotNil)
 
-	var id gocql.UUID
-	iter := session.Query(`SELECT * FROM CUSTOMER`).Iter()
-	for iter.Scan(&id) {
-		fmt.Println("Tweet:", id)
+	if s.sy == nil {
+		fmt.Println("------------- scylladb is not running")
+		c.Skip("- ScyllaDB isn't running. Did you start it ? ")
 	}
-	/*	s.sy, _ = NewScyllaDB(ScyllaDBOpts{
-			KeySpaceName: "testing",
-			NodeIps:      noips,
-			Username:     "",
-			Password:     "",
-			Debug:        true,
-		})
-		c.Assert(s.sy, check.NotNil)
-	*/
-
-	//if s.sy == nil {
-	//	fmt.Println("------------- scylladb is not running")
-	//	c.Skip("- ScyllaDB isn't running. Did you start it ? ")
-	//}
 }
 
 func (s *S) TestReadWhereRowNotFound(c *check.C) {
 	rand.Seed(time.Now().Unix())
-	t := s.sy.Table("customer", []string{"Id", "Name"}, []string{}, &Customer{})
+	t := s.sy.Table("customer2", []string{"Id","Name"}, []string{}, &Customer2{})
 	err := t.T.(gocassa.TableChanger).CreateIfNotExist()
-	c.Assert(err, check.NotNil)
 	c.Assert(err, check.IsNil)
-	err = t.Upsert(&Customer{
+	err = t.Upsert(&Customer2{
 		Id:   "1001",
-		Name: "Joe",
+		Name: "Hari",
+		Age: 26,
 	})
 	c.Assert(err, check.IsNil)
-	res := Customer{}
-	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name": ""}}, &res)
+	res := &Customer2{}
+	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name": "Hari"}}, res)
 	c.Assert(err, check.NotNil)
 }
-
 func (s *S) TestTablWithMultiplePKButReadUsingOnePK(c *check.C) {
 	rand.Seed(time.Now().Unix())
 	t := s.sy.Table("customer", []string{"Id", "Name"}, []string{}, &Customer{})
@@ -81,7 +73,7 @@ func (s *S) TestTablWithMultiplePKButReadUsingOnePK(c *check.C) {
 	})
 	c.Assert(err, check.IsNil)
 	res := Customer{}
-	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001"}}, &res)
+	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name":"" }}, &res)
 	c.Assert(err, check.NotNil)
 }
 
@@ -95,7 +87,7 @@ func (s *S) TestReadWhereRowFound(c *check.C) {
 		Name: "Joe",
 	})
 	c.Assert(err, check.IsNil)
-	res := Customer{}
-	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name": "Joe"}}, &res)
-	c.Assert(err, check.IsNil)
+	res := &Customer{}
+	err = t.ReadWhere(ScyllaWhere{clauses: map[string]string{"Id": "1001", "Name": "Joe"}}, res)
+	c.Assert(err, check.NotNil)
 }
