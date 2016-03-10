@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	
+
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/gocassa"
 	"github.com/megamsys/libgo/cmd"
@@ -66,6 +66,7 @@ func (st *ScyllaTable) read(fields, ids map[string]interface{}, out interface{})
 	return st.T.Read(fields, ids, out).WithOptions(op).Run()
 }
 
+
 /*func (st *ScyllaTable) read(fn RelationsFunc, out interface{}) error {
 	log.Debugf(cmd.Colorfy("  > [scylla] read", "blue", "", "bold"))
 	return st.T.Where(fn()).ReadOne(out).Run()
@@ -99,5 +100,3 @@ func (wh ScyllaWhere) toEqs() []gocassa.Relation {
 	}
 	return r
 }
-
-
