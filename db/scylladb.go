@@ -100,11 +100,3 @@ func (wh ScyllaWhere) toEqs() []gocassa.Relation {
 	}
 	return r
 }
-
-
-<<<<<<< HEAD
-func Alt(a map[string]string) (ScyllaWhere) {
-	return ScyllaWhere{clauses:a}
-}
-=======
->>>>>>> origin/master
