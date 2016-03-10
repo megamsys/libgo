@@ -16,11 +16,11 @@ type ScyllaDB struct {
 }
 
 type ScyllaTable struct {
-	T gocassa.Table
+	T gocassa.MultimapMkTable
 }
 
 type ScyllaWhere struct {
-	clauses map[string]string
+	Clauses map[string]string
 }
 
 type ScyllaDBOpts struct {
@@ -31,7 +31,7 @@ type ScyllaDBOpts struct {
 	Debug        bool
 }
 
-func NewScyllaDB(opts ScyllaDBOpts) (*ScyllaDB, error) {
+func newScyllaDB(opts ScyllaDBOpts) (*ScyllaDB, error) {
 	ks, err := connectToKeySpace(opts.KeySpaceName, opts.NodeIps, opts.Username, opts.Password)
 	fmt.Printf("-- ks %#v", ks)
 	if err != nil {
@@ -55,40 +55,56 @@ func connectToKeySpace(keySpace string, nodeIps []string, username, password str
 	return c.KeySpace(keySpace), nil
 }
 
-func (sy *ScyllaDB) Table(name string, pks []string, ccms []string, out interface{}) *ScyllaTable {
+func (sy *ScyllaDB) table(name string, pks []string, ccms []string, out interface{}) *ScyllaTable {
 	log.Debugf(cmd.Colorfy("  > [scylla] table "+name, "blue", "", "bold"))
-	return &ScyllaTable{T: sy.KS.Table(name, out, gocassa.Keys{
-		PartitionKeys:     pks,
-		ClusteringColumns: ccms,
-	})}
+	return &ScyllaTable{T: sy.KS.MultimapMultiKeyTable(name, pks, ccms, out)}
 }
 
-func (st *ScyllaTable) Read(fn RelationsFunc, out interface{}) error {
+func (st *ScyllaTable) read(fields, ids map[string]interface{}, out interface{}) error {
 	log.Debugf(cmd.Colorfy("  > [scylla] read", "blue", "", "bold"))
-	return st.T.Where(fn()).ReadOne(&out).Run()
+	op := gocassa.Options{AllowFiltering: true}
+	return st.T.Read(fields, ids, out).WithOptions(op).Run()
 }
 
 
-func (st *ScyllaTable) ReadWhere(where ScyllaWhere, out interface{}) error {
+/*func (st *ScyllaTable) read(fn RelationsFunc, out interface{}) error {
+	log.Debugf(cmd.Colorfy("  > [scylla] read", "blue", "", "bold"))
+	return st.T.Where(fn()).ReadOne(out).Run()
+}
+
+func (st *ScyllaTable) readWhere(where ScyllaWhere, out interface{}) error {
 	log.Debugf(cmd.Colorfy("  > [scylla] readwhere", "blue", "", "bold"))
 	op := gocassa.Options{AllowFiltering: true}
-	return st.T.Where(where.toEqs()...).ReadOne(&out).WithOptions(op).Run()
+	return st.T.Where(where.toEqs()...).ReadOne(out).WithOptions(op).Run()
+}*/
+
+func (st *ScyllaTable) insert(data interface{}) error {
+	log.Debugf(cmd.Colorfy("  > [scylla] insert", "blue", "", "bold"))
+	return st.T.Set(data).Run()
 }
 
-func (st *ScyllaTable) Upsert(data interface{}) error {
-	log.Debugf(cmd.Colorfy("  > [scylla] upsert", "blue", "", "bold"))
-	return st.T.Set(data).Run()
+func (st *ScyllaTable) update(tinfo Options, data map[string]interface{}) error {
+	log.Debugf(cmd.Colorfy("  > [scylla] update", "blue", "", "bold"))
+	return st.T.Update(tinfo.PksClauses, tinfo.CcmsClauses, data).Run()
+}
+
+func (st *ScyllaTable) deleterow(tinfo Options) error {
+	log.Debugf(cmd.Colorfy("  > [scylla] delete", "blue", "", "bold"))
+	return st.T.Delete(tinfo.PksClauses, tinfo.CcmsClauses).Run()
 }
 
 func (wh ScyllaWhere) toEqs() []gocassa.Relation {
 	r := make([]gocassa.Relation,0)
-	for k, v := range wh.clauses {
+	for k, v := range wh.Clauses {
 		r = append(r, gocassa.Eq(k, v))
 	}
 	return r
 }
 
 
+<<<<<<< HEAD
 func Alt(a map[string]string) (ScyllaWhere) {
 	return ScyllaWhere{clauses:a}
 }
+=======
+>>>>>>> origin/master
