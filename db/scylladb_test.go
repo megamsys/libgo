@@ -29,7 +29,7 @@ type Customer2 struct {
 
 var _ = check.Suite(&S{})
 
-var noips = []string{"127.0.0.1"}
+var noips = []string{"103.56.92.24"}
 
 func (s *S) SetUpSuite(c *check.C) {
 	s.sy, _ = NewScyllaDB(ScyllaDBOpts{
