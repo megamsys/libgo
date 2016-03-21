@@ -3,6 +3,7 @@ package events
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/events/alerts"
+	constants "github.com/megamsys/libgo/utils"
 )
 
 // AfterFunc represents a after alert function, that can be registered with
@@ -27,10 +28,10 @@ func NewUser(e EventsConfigMap, fnmap AfterFuncsMap) *User {
 
 func register(e EventsConfigMap) {
 	notifiers = make(map[string]alerts.Notifier)
-	notifiers[alerts.MAILGUN] = newMailgun(e.Get(alerts.MAILGUN), e.Get(alerts.META))
-	notifiers[alerts.INFOBIP] = newInfobip(e.Get(alerts.INFOBIP))
-	notifiers[alerts.SLACK] = newSlack(e.Get(alerts.SLACK))
-	notifiers[alerts.SCYLLA] = newScylla(e.Get(alerts.META))
+	notifiers[constants.MAILGUN] = newMailgun(e.Get(constants.MAILGUN), e.Get(constants.META))
+	notifiers[constants.INFOBIP] = newInfobip(e.Get(constants.INFOBIP))
+	notifiers[constants.SLACK] = newSlack(e.Get(constants.SLACK))
+	notifiers[constants.SCYLLA] = newScylla(e.Get(constants.META))
 }
 
 func newMailgun(m map[string]string, n map[string]string) alerts.Notifier {

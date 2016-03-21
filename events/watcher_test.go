@@ -6,6 +6,7 @@ import (
 
 	"github.com/megamsys/libgo/events/alerts"
 	"gopkg.in/check.v1"
+	constants "github.com/megamsys/libgo/utils"
 )
 
 func Test(t *testing.T) { check.TestingT(t) }
@@ -20,14 +21,14 @@ type S struct {
 var _ = check.Suite(&S{})
 
 func (s *S) SetUpSuite(c *check.C) {
-	fakeEvent1 := makeEvent(createOldTime(), EventBill, alerts.ONBOARD)
-	fakeEvent2 := makeEvent(time.Now(), EventBill, alerts.DEDUCT)
+	fakeEvent1 := makeEvent(createOldTime(), constants.EventBill, alerts.ONBOARD)
+	fakeEvent2 := makeEvent(time.Now(), constants.EventBill, alerts.DEDUCT)
 	c.Assert(fakeEvent1, check.NotNil)
 	c.Assert(fakeEvent2, check.NotNil)
 
 	s.myEventHolder = NewEventManager(DefaultStoragePolicy())
 	req, _, err := getEventRequest(&eventReqOpts{
-		etype: EventBill,
+		etype: constants.EventBill,
 	})
 	c.Assert(err, check.IsNil)
 	s.myRequest = req
@@ -59,7 +60,7 @@ func createOldTime() time.Time {
 func (s *S) TestAddEventAddsEventsToEventManager(c *check.C) {
 	s.myEventHolder.AddEvent(s.fakeEvent1)
 	c.Assert(1, check.Equals, len(s.myEventHolder.eventStore))
-	c.Assert(s.fakeEvent1, check.DeepEquals, s.myEventHolder.eventStore[EventBill].Get(0).(*Event))
+	c.Assert(s.fakeEvent1, check.DeepEquals, s.myEventHolder.eventStore[constants.EventBill].Get(0).(*Event))
 }
 
 func (s *S) TestWatchEventsDetectsNewEvents(c *check.C) {

@@ -2,6 +2,7 @@ package alerts
 
 import (
 	log "github.com/Sirupsen/logrus"
+	constants "github.com/megamsys/libgo/utils"
 	mailgun "github.com/mailgun/mailgun-go"
 	"strings"
 )
@@ -18,50 +19,6 @@ const (
 	INVOICE
 	TRANSACTION
 	DESCRIPTION
-
-	//keys for watchers
-	MAILGUN = "mailgun"
-	SLACK   = "slack"
-	INFOBIP = "infobip"
-	SCYLLA  = "scylla"
-	META    = "meta"
-
-	//config keys by watchers
-	TOKEN          = "token"
-	CHANNEL        = "channel"
-	USERNAME       = "username"
-	PASSWORD       = "password"
-	APPLICATION_ID = "application_id"
-	MESSAGE_ID     = "message_id"
-	API_KEY        = "api_key"
-	DOMAIN         = "domain"
-	PIGGYBANKS     = "piggybanks"
-	
-	HOME           = "home"
-	DIR            = "dir"
-	SCYLLAHOST     = "scylla_host"
-	SCYLLAKEYSPACE = "scylla_keyspace"
-	
-	EVENT_TYPE      = "event_type"
-	ACCOUNT_ID     = "account_id"
-	ASSEMBLY_ID    = "assembly_id"
-	DATA		   = "data"
-	CREATED_AT     = "created_at"
-
-	//args for notification
-	NILAVU    = "nilavu"
-	LOGO      = "logo"
-	NAME      = "name"
-	VERTNAME  = "appname"
-	TEAM      = "team"
-	VERTTYPE  = "type"
-	EMAIL     = "email"
-	DAYS      = "days"
-	COST      = "cost"
-	STARTTIME = "starttime"
-	ENDTIME   = "endtime"
-	//STATUS    = "status"
-	//DESCRIPTION = "description"
 )
 
 type Notifier interface {
@@ -113,12 +70,12 @@ type mailgunner struct {
 
 func NewMailgun(m map[string]string, n map[string]string) Notifier {
 	return &mailgunner{
-		api_key: m[API_KEY],
-		domain:  m[DOMAIN],
-		nilavu:  m[NILAVU],
-		logo:    m[LOGO],
-		home:    n[HOME],
-		dir:     n[DIR],
+		api_key: m[constants.API_KEY],
+		domain:  m[constants.DOMAIN],
+		nilavu:  m[constants.NILAVU],
+		logo:    m[constants.LOGO],
+		home:    n[constants.HOME],
+		dir:     n[constants.DIR],
 	}
 }
 
@@ -140,14 +97,14 @@ func (m *mailgunner) Notify(eva EventAction, edata EventData) error {
 	if !m.satisfied() {
 		return nil
 	}
-	edata.M[NILAVU] = m.nilavu
-	edata.M[LOGO] = m.logo
+	edata.M[constants.NILAVU] = m.nilavu
+	edata.M[constants.LOGO] = m.logo
 
 	bdy, err := body(eva.String(), edata.M, m.dir)
 	if err != nil {
 		return err
 	}
-	m.Send(bdy, "", subject(eva), edata.M[EMAIL])
+	m.Send(bdy, "", subject(eva), edata.M[constants.EMAIL])
 	return nil
 }
 

@@ -2,6 +2,7 @@ package alerts
 
 import (
 	"github.com/Bowery/slack"
+	constants "github.com/megamsys/libgo/utils"
 )
 
 type slacker struct {
@@ -10,7 +11,7 @@ type slacker struct {
 }
 
 func NewSlack(m map[string]string) Notifier {
-	return &slacker{token: m[TOKEN], chnl: m[CHANNEL]}
+	return &slacker{token: m[constants.TOKEN], chnl: m[constants.CHANNEL]}
 }
 
 func (s *slacker) satisfied() bool {

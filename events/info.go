@@ -4,16 +4,12 @@ import (
 	"encoding/json"
 	"strconv"
 	"time"
-	"github.com/megamsys/libgo/bind"
+	"github.com/megamsys/libgo/pairs"
+	constants "github.com/megamsys/libgo/utils"
 	"github.com/megamsys/libgo/events/alerts"
 )
 
 const (
-	EventMachine   EventType     = "machine"
-	EventContainer               = "container"
-	EventBill                    = "bill"
-	EventUser                    = "user"
-	EventStatus                  = "status"
 	timePrecision  time.Duration = 10 * time.Millisecond // 10ms, i.e. 0.01s	
 )
 
@@ -22,7 +18,7 @@ type StoredEvent struct {
 	AccountsId string         `json:"AccountsId" riak:"index"`
 	Type       string         `json:"type"`
 	Action     string         `json:"action"`
-	Inputs     bind.JsonPairs `json:"inputs"`
+	Inputs     pairs.JsonPairs `json:"inputs"`
 	CreatedAt  string         `json:"created_at"`
 }
 
@@ -98,15 +94,15 @@ func toEventAction(a int) alerts.EventAction {
 func toEventType(t string) EventType {
 	switch t {
 	case "machine":
-		return EventMachine
+		return constants.EventMachine
 	case "container":
-		return EventContainer
+		return constants.EventContainer
 	case "bill":
-		return EventBill
+		return constants.EventBill
 	case "user":
-		return EventUser
+		return constants.EventUser
 	case "status":
-	    return EventStatus	
+	    return constants.EventStatus	
 	default:
 		return ""
 	}

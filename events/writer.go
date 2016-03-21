@@ -7,6 +7,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/events/alerts"
+	constants "github.com/megamsys/libgo/utils"
 )
 
 var W *EventsWriter
@@ -91,11 +92,11 @@ func (ew *EventsWriter) Close() {
 
 func watchHandlers(c EventsConfigMap) []*eventWatcher {
 	watchers := make([]*eventWatcher, 0)
-	watchers = append(watchers, &eventWatcher{eventType: EventMachine, Watcher: &Machine{}})
-	watchers = append(watchers, &eventWatcher{eventType: EventContainer, Watcher: &Container{}})
-	b := NewBill(c.Get(BILLMGR))
-	watchers = append(watchers, &eventWatcher{eventType: EventBill, Watcher: b})
-	watchers = append(watchers, &eventWatcher{eventType: EventUser, Watcher: NewUser(c, AfterFuncsMap{alerts.ONBOARD: AfterFuncs{b.OnboardFunc}})})
+	watchers = append(watchers, &eventWatcher{eventType: constants.EventMachine, Watcher: &Machine{}})
+	watchers = append(watchers, &eventWatcher{eventType: constants.EventContainer, Watcher: &Container{}})
+	b := NewBill(c.Get(constants.BILLMGR))
+	watchers = append(watchers, &eventWatcher{eventType: constants.EventBill, Watcher: b})
+	watchers = append(watchers, &eventWatcher{eventType: constants.EventUser, Watcher: NewUser(c, AfterFuncsMap{alerts.ONBOARD: AfterFuncs{b.OnboardFunc}})})
 	return watchers
 }
 

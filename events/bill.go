@@ -7,9 +7,8 @@ import (
 	"github.com/megamsys/libgo/events/alerts"
 	"github.com/megamsys/libgo/events/bills"
 	_ "github.com/megamsys/libgo/events/bills"
+	constants "github.com/megamsys/libgo/utils"
 )
-
-const BILLMGR = "bill"
 
 type Bill struct {
 	piggyBanks string
@@ -18,7 +17,7 @@ type Bill struct {
 
 func NewBill(b map[string]string) *Bill {
 	return &Bill{
-		piggyBanks: b[alerts.PIGGYBANKS],
+		piggyBanks: b[constants.PIGGYBANKS],
 	}
 }
 

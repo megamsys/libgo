@@ -1,5 +1,9 @@
 package alerts
 
+import (
+	constants "github.com/megamsys/libgo/utils"
+)
+
 type infobip struct {
 	url            string
 	username       string
@@ -12,11 +16,11 @@ type infobip struct {
 func NewInfobip(m map[string]string) Notifier {
 	return &infobip{
 		url:            "https://infobip.com/v2",
-		username:       m[USERNAME],
-		password:       m[PASSWORD],
-		api_key:        m[API_KEY],
-		application_id: m[APPLICATION_ID],
-		message_id:     m[MESSAGE_ID],
+		username:       m[constants.USERNAME],
+		password:       m[constants.PASSWORD],
+		api_key:        m[constants.API_KEY],
+		application_id: m[constants.APPLICATION_ID],
+		message_id:     m[constants.MESSAGE_ID],
 	}
 }
 

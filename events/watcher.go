@@ -1,14 +1,15 @@
 package events
 
 import (
+	constants "github.com/megamsys/libgo/utils"
 	"time"
 )
 
 var eventTypes = map[string]EventType{
-	"machine":   EventMachine,
-	"container": EventContainer,
-	"bill":      EventBill,
-	"user":      EventUser,
+	"machine":   constants.EventMachine,
+	"container": constants.EventContainer,
+	"bill":      constants.EventBill,
+	"user":      constants.EventUser,
 }
 
 // Interface for event  operation handlers.
