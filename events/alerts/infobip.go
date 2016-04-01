@@ -24,8 +24,11 @@ func NewInfobip(m map[string]string) Notifier {
 	}
 }
 
-func (i *infobip) satisfied() bool {
-	return false
+func (i *infobip) satisfied(eva EventAction) bool {
+	if eva == STATUS {
+		return false
+	}
+	return true
 }
 
 func (i *infobip) Notify(eva EventAction, edata EventData) error {

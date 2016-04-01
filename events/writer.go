@@ -94,9 +94,11 @@ func watchHandlers(c EventsConfigMap) []*eventWatcher {
 	watchers := make([]*eventWatcher, 0)
 	watchers = append(watchers, &eventWatcher{eventType: constants.EventMachine, Watcher: &Machine{}})
 	watchers = append(watchers, &eventWatcher{eventType: constants.EventContainer, Watcher: &Container{}})
-	b := NewBill(c.Get(constants.BILLMGR))
+	b := NewBill(c.Get(constants.BILLMGR), c.Get(constants.META))
 	watchers = append(watchers, &eventWatcher{eventType: constants.EventBill, Watcher: b})
 	watchers = append(watchers, &eventWatcher{eventType: constants.EventUser, Watcher: NewUser(c, AfterFuncsMap{alerts.ONBOARD: AfterFuncs{b.OnboardFunc}})})
+	a := NewAddons(c.Get(constants.ADDONS), c.Get(constants.META))
+	watchers = append(watchers, &eventWatcher{eventType: constants.EventBill, Watcher: a})
 	return watchers
 }
 

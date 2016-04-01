@@ -18,8 +18,9 @@ package bills
 import (
 	"strconv"
 	"time"
-
+    "strings"
 	"github.com/megamsys/libgo/db"
+	constants "github.com/megamsys/libgo/utils"
 	"gopkg.in/yaml.v2"
 )
 
@@ -29,15 +30,15 @@ const (
 
 type BalanceOpts struct {
 	Id        string
-	Consumed  int
-	Timestamp time.Time
+	Consumed  string
 }
 
 type Balances struct {
-	AccountsId string `json:"AccountsId"`
-	Name       string `json:"name"`
-	Credit     string `json:"credit"`
-	CreatedAt  string
+	Id        string `json:"id" cql:"id"`
+	AccountId string `json:"account_id" cql:"account_id"`
+	Credit    string `json:"credit" cql:"credit"`
+	CreatedAt string `json:"created_at" cql:"created_at"`
+	UpdatedAt string `json:"updated_at" cql:"updated_at"`
 }
 
 func (b *Balances) String() string {
@@ -51,25 +52,50 @@ func (b *Balances) String() string {
 //Temporary hack to create an assembly from its id.
 //This is used by SetStatus.
 //We need add a Notifier interface duck typed by Box and Carton ?
-func NewBalances(id string) (*Balances, error) {
+func NewBalances(id string, m map[string]string) (*Balances, error) {
 	b := &Balances{}
-	if err := db.Fetch(BALANCESBUCKET, id, b); err != nil {
+	ops := db.Options{
+		TableName:   BALANCESBUCKET,
+		Pks:         []string{},
+		Ccms:        []string{"account_id"},
+		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
+		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		PksClauses:  make(map[string]interface{}),
+		CcmsClauses: map[string]interface{}{"account_id": id},
+	}
+	if err := db.Fetchdb(ops, b); err != nil {
 		return nil, err
 	}
+	
 	return b, nil
 }
 
-func (b *Balances) Deduct(bopts *BalanceOpts) error {
-	b.CreatedAt = time.Now().Local().Format(time.RFC822)
-
-	avail, err := strconv.Atoi(b.Credit)
+func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
+	avail, err := strconv.ParseFloat(b.Credit, 64)
 	if err != nil {
 		return err
 	}
-	b.Credit = string(avail - bopts.Consumed)
-
-	if err := db.Store(BALANCESBUCKET, bopts.Id, b); err != nil {
+	
+	consume, cerr := strconv.ParseFloat(bopts.Consumed, 64)
+	if cerr != nil {
+		return cerr
+	}
+    
+    update_fields := make(map[string]interface{})
+	update_fields["updated_at"] = time.Now().Local().Format(time.RFC822)
+	update_fields["credit"] = strconv.FormatFloat(avail - consume, 'f', 2, 64)
+	ops := db.Options{
+		TableName:   BALANCESBUCKET,
+		Pks:         []string{},
+		Ccms:        []string{"account_id"},
+		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
+		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		PksClauses:  make(map[string]interface{}),
+		CcmsClauses: map[string]interface{}{"account_id": b.AccountId},
+	}
+	if err := db.Updatedb(ops, update_fields); err != nil {
 		return err
 	}
+	
 	return nil
 }

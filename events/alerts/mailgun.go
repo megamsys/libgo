@@ -23,7 +23,7 @@ const (
 
 type Notifier interface {
 	Notify(eva EventAction, edata EventData) error
-	satisfied() bool
+	satisfied(eva EventAction) bool
 }
 
 // Extra information about an event.
@@ -79,7 +79,10 @@ func NewMailgun(m map[string]string, n map[string]string) Notifier {
 	}
 }
 
-func (m *mailgunner) satisfied() bool {
+func (m *mailgunner) satisfied(eva EventAction) bool {
+	if eva == STATUS {
+		return false
+	}
 	return true
 }
 
@@ -94,7 +97,7 @@ func (m *mailgunner) satisfied() bool {
 		"cost":      "$12",
 }*/
 func (m *mailgunner) Notify(eva EventAction, edata EventData) error {
-	if !m.satisfied() {
+	if !m.satisfied(eva) {
 		return nil
 	}
 	edata.M[constants.NILAVU] = m.nilavu

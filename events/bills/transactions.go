@@ -17,24 +17,32 @@ package bills
 
 import (
 	"time"
-
+    "strings"
 	"github.com/megamsys/libgo/db"
+	constants "github.com/megamsys/libgo/utils"
 	"gopkg.in/yaml.v2"
+	log "github.com/Sirupsen/logrus"
 )
 
 const (
-	TRANSACTIONBUCKET = "billtransactions"
+	TRANSACTIONBUCKET = "billedhistories"
 )
 
 type BillTransactionOpts struct {
-	Id        string
-	Timestamp time.Time
+	AccountId    string
+	AssemblyId   string
+	AssemblyName string
+	Consumed     string
 }
 
 type BillTransaction struct {
-	AccountsId string `json:"AccountsId"`
-	Name       string `json:"name"`
-	CreatedAt  string
+	Id            string `json:"id" cql:"id"`
+	AccountId     string `json:"account_id" cql:"account_id"`
+	AssemblyId    string `json:"assembly_id" cql:"assembly_id"`
+	BillType      string `json:"bill_type" cql:"bill_type"`
+	BillingAmount string `json:"billing_amount" cql:"billing_amount"`
+	CurrencyType  string `json:"currency_type" cql:"currency_type"`
+	CreatedAt     string `json:"created_at" cql:"created_at"`
 }
 
 func (bt *BillTransactionOpts) String() string {
@@ -45,18 +53,29 @@ func (bt *BillTransactionOpts) String() string {
 	}
 }
 
-func NewBillTransaction(id string) (*BillTransaction, error) {
-	bt := &BillTransaction{}
-	if err := db.Fetch(TRANSACTIONBUCKET, id, bt); err != nil {
-		return nil, err
-	}
-	return bt, nil
+func NewBillTransaction(topts *BillOpts) (*BillTransaction, error) {
+	return &BillTransaction{
+		AccountId:     topts.AccountId,
+		AssemblyId:    topts.AssemblyId,
+		BillType:      "VM",
+		BillingAmount: topts.Consumed,
+		CurrencyType:  "",
+		CreatedAt:     time.Now().Local().Format(time.RFC822),
+	}, nil
 }
 
-func (bt *BillTransaction) Transact(topts *BillTransactionOpts) error {
-	bt.CreatedAt = time.Now().Local().Format(time.RFC822)
-
-	if err := db.Store(TRANSACTIONBUCKET, topts.Id, bt); err != nil {
+func (bt *BillTransaction) Transact(m map[string]string) error {
+	ops := db.Options{
+		TableName:   TRANSACTIONBUCKET,
+		Pks:         []string{"bill_type", "created_at"},
+		Ccms:        []string{"account_id", "assembly_id"},
+		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
+		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		PksClauses:  map[string]interface{}{"bill_type": bt.BillType, "created_at": bt.CreatedAt},
+		CcmsClauses: map[string]interface{}{"account_id": bt.AccountId, "assembly_id": bt.AssemblyId},
+	}
+	if err := db.Storedb(ops, bt); err != nil {
+		log.Debugf(err.Error())
 		return err
 	}
 	return nil

@@ -30,12 +30,16 @@ func NewScylla(m map[string]string) Notifier {
 		}
 }
 
-func (s *Scylla) satisfied() bool {
-	return true
+func (s *Scylla) satisfied(eva EventAction) bool {
+	if eva == STATUS {
+		return true
+	}
+	return false
 }
 
+
 func (s *Scylla) Notify(eva EventAction, edata EventData) error {
-	if !s.satisfied() {
+	if !s.satisfied(eva) {
 		return nil
 	}
 	s_data := parseMapToOutputFormat(edata)

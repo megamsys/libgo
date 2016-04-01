@@ -14,38 +14,34 @@ func (m scylladbManager) IsEnabled() bool {
 	return true
 }
 
-func (m scylladbManager) Onboard(o *BillOpts) error {
+func (m scylladbManager) Onboard(o *BillOpts, mi map[string]string) error {
 	return nil
 }
 
-func (m scylladbManager) Deduct(o *BillOpts) error {
+func (m scylladbManager) Deduct(o *BillOpts, mi map[string]string) error {
 	//b, err := carton.NewBalances(o.AccountsId)
-	b, err := NewBalances(o.AccountsId)
+	b, err := NewBalances(o.AccountId, mi)
 	if err != nil {
 		return err
 	}
 	//if err = b.Deduct(&carton.BalanceOpts{
 	if err = b.Deduct(&BalanceOpts{
-		Id:        o.AccountsId,
+		Id:        o.AccountId,
 		Consumed:  o.Consumed,
-		Timestamp: o.Timestamp,
-	}); err != nil {
+	}, mi); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (m scylladbManager) Transaction(o *BillOpts) error {
+func (m scylladbManager) Transaction(o *BillOpts, mi map[string]string) error {
 	//bt, err := carton.NewBillTransaction(o.AccountsId)
-	bt, err := NewBillTransaction(o.AccountsId)
+	bt, err := NewBillTransaction(o)
 	if err != nil {
 		return err
 	}
 	//if err = bt.Transact(&carton.BillTransactionOpts{
-	if err = bt.Transact(&BillTransactionOpts{
-		Id:        o.AccountsId,
-		Timestamp: o.Timestamp,
-	}); err != nil {
+	if err = bt.Transact(mi); err != nil {
 		return err
 	}
 	return nil

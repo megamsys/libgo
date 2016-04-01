@@ -9,6 +9,7 @@ const (
 	INFOBIP = "infobip"
 	SCYLLA  = "scylla"
 	META    = "meta"
+	WHMCS   = "whmcs"
 
 	//config keys by watchers
 	TOKEN          = "token"
@@ -54,6 +55,7 @@ const (
 	EventStatus                  = "status"
 	
 	BILLMGR = "bill"
+	ADDONS  = "addons"
 	
 	PROVIDER        = "provider"
 	PROVIDER_ONE    = "one"
