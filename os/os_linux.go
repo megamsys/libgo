@@ -11,6 +11,7 @@ var (
 	// osReleaseFile is the name of the file that is read in order to determine
 	// the linux type release version.
 	osReleaseFile = "/etc/os-release"
+	osFile				= "/etc/redhat-release"
 	osOnce        sync.Once
 	os            OSType // filled in by the first call to hostOS
 )
@@ -31,10 +32,18 @@ var defaultVersionIDs = map[string]string{
 }
 
 func updateOS(f string) (OSType, error) {
-	values, err := ReadOSRelease(f)
+values := make(map[string]string)
+if _, err := ioutil.ReadFile(f); err == nil {
+	values, err = ReadOSRelease(f)
 	if err != nil {
 		return Unknown, err
 	}
+}else{
+	values, err = ReadRelease(osFile)
+	if err != nil{
+		return Unknown, err
+	}
+}
 	switch values["ID"] {
 	case strings.ToLower(Ubuntu.String()):
 		return Ubuntu, nil
@@ -66,6 +75,30 @@ func ReadOSRelease(f string) (map[string]string, error) {
 		}
 		values[c[0]] = strings.Trim(c[1], "\t '\"")
 	}
+	id, ok := values["ID"]
+	if !ok {
+		return nil, errors.New("OS release file is missing ID")
+	}
+	if _, ok := values["VERSION_ID"]; !ok {
+		values["VERSION_ID"], ok = defaultVersionIDs[id]
+		if !ok {
+			return nil, errors.New("OS release file is missing VERSION_ID")
+		}
+	}
+	return values, nil
+}
+
+// ReadRelease parses the information in the redhat-release file.
+
+func ReadRelease (f string) (map[string]string, error){
+	stream, err := ioutil.ReadFile(osFile);
+	if err != nil {
+		return nil, err
+	}
+	values := make(map[string]string)
+	releaseDetail := strings.Split(string(stream)," ")
+	values["ID"] = releaseDetail[0]
+	values["VERSION_ID"] = releaseDetail[2]
 	id, ok := values["ID"]
 	if !ok {
 		return nil, errors.New("OS release file is missing ID")
