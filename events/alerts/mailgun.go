@@ -113,7 +113,7 @@ func (m *mailgunner) Notify(eva EventAction, edata EventData) error {
 
 func (m *mailgunner) Send(msg string, sender string, subject string, to string) error {
 	if len(strings.TrimSpace(sender)) <= 0 {
-		sender = "Kishore CEO <nkishore@megam.io>"
+		sender = "OYA <support@megamafrica.com>"
 	}
 	mg := mailgun.NewMailgun(m.domain, m.api_key, "")
 	g := mailgun.NewMessage(
