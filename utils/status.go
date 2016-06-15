@@ -49,22 +49,26 @@ func (s Status) Event_type() string {
 		return ONEINSTANCEDESTROYINGTYPE
 	case NUKED:
 		return ONEINSTANCEDELETEDTYPE
-	case COOKBOOKSUCCESS: 
-	    return 	COOKBOOKSUCCESSTYPE	
-	case COOKBOOKFAILURE: 
-	    return 	COOKBOOKFAILURETYPE	  
-	case AUTHKEYSSUCCESS: 
-	    return 	AUTHKEYSSUCCESSTYPE	
-	case AUTHKEYSFAILURE: 
-	    return 	AUTHKEYSFAILURETYPE	   
-	case INSTANCEIPSSUCCESS: 
-	    return 	INSTANCEIPSSUCCESSTYPE	
-	case INSTANCEIPSFAILURE: 
-	    return 	INSTANCEIPSFAILURETYPE	
-	case CONTAINERNETWORKSUCCESS: 
-	    return 	CONTAINERNETWORKSUCCESSTYPE	
-	case CONTAINERNETWORKFAILURE: 
-	    return 	CONTAINERNETWORKFAILURETYPE	               
+	case SNAPSHOTTING:
+		return ONEINSTANCESNAPSHOTTINGTYPE
+	case SNAPSHOTTED:
+		return ONEINSTANCESNAPSHOTTEDTYPE
+	case COOKBOOKSUCCESS:
+	    return 	COOKBOOKSUCCESSTYPE
+	case COOKBOOKFAILURE:
+	    return 	COOKBOOKFAILURETYPE
+	case AUTHKEYSSUCCESS:
+	    return 	AUTHKEYSSUCCESSTYPE
+	case AUTHKEYSFAILURE:
+	    return 	AUTHKEYSFAILURETYPE
+	case INSTANCEIPSSUCCESS:
+	    return 	INSTANCEIPSSUCCESSTYPE
+	case INSTANCEIPSFAILURE:
+	    return 	INSTANCEIPSFAILURETYPE
+	case CONTAINERNETWORKSUCCESS:
+	    return 	CONTAINERNETWORKSUCCESSTYPE
+	case CONTAINERNETWORKFAILURE:
+	    return 	CONTAINERNETWORKFAILURETYPE
 	case ERROR:
 		return ONEINSTANCEERRORTYPE
 	default:
@@ -99,28 +103,29 @@ func (s Status) Description(name string) string {
 		return "destroying process initializing on " + name + ".."
 	case NUKED:
 		return name + " was removed.."
+	case SNAPSHOTTING:
+		return "snapshotting process initializing on " + name + ".."
+	case SNAPSHOTTED:
+		return name + " was snapcreated.."
 	case COOKBOOKSUCCESS:
-	    return "chef cookbooks are successfully downloaded.."	
+	    return "chef cookbooks are successfully downloaded.."
 	case COOKBOOKFAILURE:
-	    return error_common + "downloading cookbooks on " + name + ".."	    
+	    return error_common + "downloading cookbooks on " + name + ".."
 	case AUTHKEYSSUCCESS:
-	    return "SSH keys are updated on your " + name	
+	    return "SSH keys are updated on your " + name
 	case AUTHKEYSFAILURE:
-	    return error_common + "updating Ssh keys on " + name + ".."	  
+	    return error_common + "updating Ssh keys on " + name + ".."
 	case INSTANCEIPSSUCCESS:
-	    return "Private and public ips are updated on your " + name	
+	    return "Private and public ips are updated on your " + name
 	case INSTANCEIPSFAILURE:
-	    return error_common + "updating private and public ips on " + name + ".."	 
+	    return error_common + "updating private and public ips on " + name + ".."
 	case CONTAINERNETWORKSUCCESS:
-	    return "Private and public ips are updated on your " + name	
+	    return "Private and public ips are updated on your " + name
 	case CONTAINERNETWORKFAILURE:
-	    return error_common + "updating private and public ips on " + name + ".."	               	
+	    return error_common + "updating private and public ips on " + name + ".."
 	case ERROR:
 		return "oops something went wrong on " + name + ".."
 	default:
 		return "arrgh"
 	}
 }
-
-
-

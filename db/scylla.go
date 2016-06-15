@@ -80,5 +80,3 @@ func Deletedb(tinfo Options, data interface{}) error {
 	}
 	return nil
 }
-
-
