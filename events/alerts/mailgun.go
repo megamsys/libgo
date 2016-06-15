@@ -19,6 +19,8 @@ const (
 	INVOICE
 	TRANSACTION
 	DESCRIPTION
+	SNAPSHOTTING
+	SNAPSHOTTED
 )
 
 type Notifier interface {
@@ -53,7 +55,11 @@ func (v *EventAction) String() string {
 	case BALANCE:
 		return "balance"
 	case DESCRIPTION:
-		return "description"	
+		return "description"
+	case SNAPSHOTTING:
+		return "snapshotting"
+	case SNAPSHOTTED:
+		return "snapshotted"
 	default:
 		return "arrgh"
 	}
@@ -149,6 +155,10 @@ func subject(eva EventAction) string {
 		sub = "Up!"
 	case DESTROYED:
 		sub = "Nuked"
+	case SNAPSHOTTING:
+		sub = "Disk saving!"
+	case SNAPSHOTTED:
+		sub = "Ahoy. VM saved"
 	default:
 		break
 	}

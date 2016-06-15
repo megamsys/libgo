@@ -2,7 +2,7 @@ package utils
 
 
 const (
-	
+
 	//keys for watchers
 	MAILGUN = "mailgun"
 	SLACK   = "slack"
@@ -21,12 +21,12 @@ const (
 	API_KEY        = "api_key"
 	DOMAIN         = "domain"
 	PIGGYBANKS     = "piggybanks"
-	
+
 	HOME           = "home"
 	DIR            = "dir"
 	SCYLLAHOST     = "scylla_host"
 	SCYLLAKEYSPACE = "scylla_keyspace"
-	
+
 	EVENT_TYPE      = "event_type"
 	ACCOUNT_ID     = "account_id"
 	ASSEMBLY_ID    = "assembly_id"
@@ -47,16 +47,16 @@ const (
 	ENDTIME   = "endtime"
 	//STATUS    = "status"
 	//DESCRIPTION = "description"
-	
+
 	EventMachine                 = "machine"
 	EventContainer               = "container"
 	EventBill                    = "bill"
 	EventUser                    = "user"
 	EventStatus                  = "status"
-	
+
 	BILLMGR = "bill"
 	ADDONS  = "addons"
-	
+
 	PROVIDER        = "provider"
 	PROVIDER_ONE    = "one"
 	PROVIDER_DOCKER = "docker"
@@ -77,17 +77,19 @@ const (
 	DESTROYING   = "destroying"
 	NUKED        = "nuked"
 	ERROR        = "error"
-	
+	SNAPSHOTTING   = "snapshotting"
+	SNAPSHOTTED    = "snapshotted"
+
 	COOKBOOKSUCCESS = "cookbook_success"
 	COOKBOOKFAILURE = "cookbook_failure"
 	AUTHKEYSSUCCESS = "authkeys_success"
 	AUTHKEYSFAILURE = "authkeys_failure"
 	INSTANCEIPSSUCCESS = "ips_success"
 	INSTANCEIPSFAILURE = "ips_failure"
-	
+
 	CONTAINERNETWORKSUCCESS = "container_network_success"
 	CONTAINERNETWORKFAILURE = "container_network_failure"
-	
+
 	// StatusLaunching is the initial status of a box
 	// it should transition shortly to a more specific status
 	StatusLaunching = Status(LAUNCHING)
@@ -111,7 +113,7 @@ const (
 
 	StatusStopping = Status(STOPPING)
 	StatusStopped  = Status(STOPPED)
-	
+
 	StatusRestarting = Status(RESTARTING)
 	StatusRestarted  = Status(RESTARTED)
 
@@ -120,17 +122,21 @@ const (
 	StatusDestroying = Status(DESTROYING)
 	StatusNuked      = Status(NUKED)
 
+	StatusSnapCreating = Status(SNAPSHOTTING)
+	StatusSnapCreated = Status(SNAPSHOTTED)
+
+
 	// StatusError is the status for units that failed to start, because of
 	// a box error.
 	StatusError = Status(ERROR)
-	
+
 	StatusCookbookSuccess = Status(COOKBOOKSUCCESS)
 	StatusCookbookFailure = Status(COOKBOOKFAILURE)
 	StatusAuthkeysSuccess = Status(AUTHKEYSSUCCESS)
 	StatusAuthkeysFailure = Status(AUTHKEYSFAILURE)
 	StatusIpsSuccess = Status(INSTANCEIPSSUCCESS)
 	StatusIpsFailure = Status(INSTANCEIPSFAILURE)
-	
+
 	StatusContainerNetworkSuccess = Status(CONTAINERNETWORKSUCCESS)
 	StatusContainerNetworkFailure = Status(CONTAINERNETWORKFAILURE)
 
@@ -153,15 +159,17 @@ const (
 	ONEINSTANCERESIZINGTYPE      = "compute.instance.resizing"
 	ONEINSTANCERESIZEDTYPE       = "compute.instance.resized"
 	ONEINSTANCEERRORTYPE         = "compute.instance.error"
-	
+	ONEINSTANCESNAPSHOTTINGTYPE  = "compute.instance.snapshotting"
+	ONEINSTANCESNAPSHOTTEDTYPE   = "compute.instance.snapshotted"
+
 	COOKBOOKSUCCESSTYPE          = "compute.instance.cookbook.download.success"
 	COOKBOOKFAILURETYPE          = "compute.instance.cookbook.download.failure"
 	AUTHKEYSSUCCESSTYPE          = "compute.instance.authkeys.success"
 	AUTHKEYSFAILURETYPE          = "compute.instance.authkeys.failure"
 	INSTANCEIPSSUCCESSTYPE       = "net.instance.ip.update.success"
 	INSTANCEIPSFAILURETYPE       = "net.instance.ip.update.failure"
-	
+
 	CONTAINERNETWORKSUCCESSTYPE      = "net.container.ip.allocate.success"
 	CONTAINERNETWORKFAILURETYPE      = "net.container.ip.allocate.failure"
-	
+
 )
