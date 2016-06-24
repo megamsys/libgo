@@ -74,7 +74,7 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 		"country":      "IN",
 		"phonenumber":  "981999000",
 		"password2":    string(sDec),
-		"customfields": GetBase64(map[string]string{"vertice_email": acc.Email, "vertice_apikey": acc.ApiKey}),
+		"customfields": GetBase64(map[string]string{m[constants.VERTICE_EMAIL]: acc.Email, m[constants.VERTICE_APIKEY]: acc.ApiKey}),
 	}
 
 	_, res, _ := client.Accounts.Create(a)

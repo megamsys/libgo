@@ -21,6 +21,8 @@ const (
 	API_KEY        = "api_key"
 	DOMAIN         = "domain"
 	PIGGYBANKS     = "piggybanks"
+        VERTICE_EMAIL  = "vertice_email"
+        VERTICE_APIKEY = "vertice_apikey"
 
 	HOME           = "home"
 	DIR            = "dir"
