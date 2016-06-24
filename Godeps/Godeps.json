@@ -1,7 +1,7 @@
 {
 	"ImportPath": "github.com/megamsys/libgo",
 	"GoVersion": "go1.6",
-	"GodepVersion": "v60",
+	"GodepVersion": "v74",
 	"Packages": [
 		"./..."
 	],
@@ -12,20 +12,20 @@
 		},
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.10.0",
-			"Rev": "4b6ea7319e214d98c938f12692336f7ca9348d6b"
+			"Comment": "v0.10.0-19-gf3cfb45",
+			"Rev": "f3cfb454f4c209e6668c95216c4744b8fddb2356"
 		},
 		{
 			"ImportPath": "github.com/golang/protobuf/proto",
-			"Rev": "8d92cf5fc15a4382f8964b08e1f42a75c0591aa3"
+			"Rev": "0c1f6d65b5a189c2250d10e71a5506f06f9fa0a0"
 		},
 		{
 			"ImportPath": "github.com/golang/snappy",
-			"Rev": "5f1c01d9f64b941dd9582c638279d046eda6ca31"
+			"Rev": "d9eb7a3d35ec988b8585d4a0068e462c27d28380"
 		},
 		{
 			"ImportPath": "github.com/google/btree",
-			"Rev": "cc6329d4279e3f025a53a83c397d2339b5705c45"
+			"Rev": "7d79101e329e5a3adf994758c578dab82b90c017"
 		},
 		{
 			"ImportPath": "github.com/hailocab/go-hostpool",
@@ -33,11 +33,7 @@
 		},
 		{
 			"ImportPath": "github.com/mailgun/mailgun-go",
-			"Rev": "01bd6a648bb5d95d5f6ebd190fee8bb4158d0339"
-		},
-		{
-			"ImportPath": "github.com/mbanzon/simplehttp",
-			"Rev": "ed64292224debb8a65122f3c2b71d4cd514bc48b"
+			"Rev": "a98c4eecda3e6a36bd804ae80e9a4f8edaa6cd99"
 		},
 		{
 			"ImportPath": "github.com/megamsys/gocassa",
@@ -74,24 +70,28 @@
 			"Rev": "9dc061533423ba640a55f8504946b3fd10f4f42c"
 		},
 		{
+			"ImportPath": "github.com/megamsys/whmcs_go/whmcs",
+			"Rev": "8e39b40def1835104b7de2a8d33bd88de7333028"
+		},
+		{
 			"ImportPath": "github.com/mitchellh/mapstructure",
 			"Rev": "d2dd0262208475919e1a362f675cfc0e7c10e905"
 		},
 		{
 			"ImportPath": "github.com/sajari/fuzzy",
-			"Rev": "32e027c1cb8f7545f38f14540b5004afcad0afb8"
+			"Rev": "243c923763cac789d1196949a834ca698dbd7a28"
 		},
 		{
 			"ImportPath": "github.com/tsuru/commandmocker",
-			"Rev": "f34631e0435b1e8aa2402dfea2e363118b926a43"
+			"Rev": "730e45a4c5504d497aa3559a3638a5b0e0f27d53"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/ssh/terminal",
-			"Rev": "c197bcf24cde29d3f73c7b4ac6fd41f4384e8af6"
+			"Rev": "811831de4c4dd03a0b8737233af3b36852386373"
 		},
 		{
 			"ImportPath": "golang.org/x/sys/unix",
-			"Rev": "9d4e42a20653790449273b3c85e67d6d8bae6e2e"
+			"Rev": "62bee037599929a6e9146f29d10dd5208c43507d"
 		},
 		{
 			"ImportPath": "gopkg.in/check.v1",
@@ -99,6 +99,7 @@
 		},
 		{
 			"ImportPath": "gopkg.in/inf.v0",
+			"Comment": "v0.9.0",
 			"Rev": "3887ee99ecf07df5b447e9b00d9c0b2adaa9f3e4"
 		},
 		{
