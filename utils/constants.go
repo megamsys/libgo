@@ -47,6 +47,10 @@ const (
 	ENDTIME   = "endtime"
 	//STATUS    = "status"
 	//DESCRIPTION = "description"
+	IPV4PUB        = "ipv4public"
+	IPV4PRI        = "ipv4private"
+	IPV6PRI				 = "ipv6private"
+	IPV6PUB        = "ipv6public"
 
 	EventMachine                 = "machine"
 	EventContainer               = "container"
