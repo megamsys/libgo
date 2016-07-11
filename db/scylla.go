@@ -3,6 +3,7 @@ package db
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/cmd"
+	"fmt"
 )
 
 type Options struct {
@@ -33,6 +34,7 @@ func newDBConn(ops Options) (*ScyllaDB, error) {
 }
 
 func newScyllaTable(ops Options, data interface{}) *ScyllaTable {
+	fmt.Printf("%#v",data)
 	t, err := newDBConn(ops)
 	if err != nil {
 		return nil
@@ -53,6 +55,19 @@ func Fetchdb(tinfo Options, data interface{}) error {
 	}
 	return nil
 }
+
+func FetchListdb(tinfo Options, limit int,dat, data interface{}) error {
+	d := newScyllaTable(tinfo, dat)
+	if d != nil {
+		//err := d.read(ScyllaWhere{Clauses: tinfo.Clauses}, data)
+		err := d.readMulti(tinfo.PksClauses, limit, data)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 
 func Storedb(tinfo Options, data interface{}) error {
 	t := newScyllaTable(tinfo, data)
