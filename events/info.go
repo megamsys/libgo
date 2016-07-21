@@ -2,24 +2,24 @@ package events
 
 import (
 	"encoding/json"
-	"strconv"
-	"time"
+	"github.com/megamsys/libgo/events/alerts"
 	"github.com/megamsys/libgo/pairs"
 	constants "github.com/megamsys/libgo/utils"
-	"github.com/megamsys/libgo/events/alerts"
+	"strconv"
+	"time"
 )
 
 const (
-	timePrecision  time.Duration = 10 * time.Millisecond // 10ms, i.e. 0.01s	
+	timePrecision time.Duration = 10 * time.Millisecond // 10ms, i.e. 0.01s
 )
 
 type StoredEvent struct {
-	Id         string         `json:"id"`
-	AccountsId string         `json:"AccountsId" riak:"index"`
-	Type       string         `json:"type"`
-	Action     string         `json:"action"`
+	Id         string          `json:"id"`
+	AccountsId string          `json:"AccountsId" riak:"index"`
+	Type       string          `json:"type"`
+	Action     string          `json:"action"`
 	Inputs     pairs.JsonPairs `json:"inputs"`
-	CreatedAt  string         `json:"created_at"`
+	CreatedAt  string          `json:"created_at"`
 }
 
 func NewParseEvent(b []byte) (*StoredEvent, error) {
@@ -79,7 +79,6 @@ func (e *Event) String() string {
 // events may fall. The Event field EventType is populated by this enum.
 type EventType string
 
-
 type EventChannel struct {
 	// Watch ID. Can be used by the caller to request cancellation of watch events.
 	watchId int
@@ -102,7 +101,7 @@ func toEventType(t string) EventType {
 	case "user":
 		return constants.EventUser
 	case "status":
-	    return constants.EventStatus	
+		return constants.EventStatus
 	default:
 		return ""
 	}

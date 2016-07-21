@@ -11,6 +11,11 @@ import (
 	whmcs "github.com/megamsys/whmcs_go/whmcs"
 	"strings"
 	"time"
+	"bytes"
+	"strconv"
+	"encoding/base64"
+	"os"
+	"io"
 )
 
 const (
@@ -57,18 +62,19 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 
 	client := whmcs.NewClient(nil, m[constants.DOMAIN])
 	a := map[string]string{
-		"username":    m[constants.USERNAME],
-		"password":    GetMD5Hash(m[constants.PASSWORD]),
-		"firstname":   acc.FirstName,
-		"lastname":    acc.FirstName,
-		"email":       acc.Email,
-		"address1":    "Dummy address",
-		"city":        "Dummy city",
-		"state":       "Dummy state",
-		"postcode":    "00001",
-		"country":     "IN",
-		"phonenumber": "981999000",
-		"password2":   string(sDec),
+		"username":     m[constants.USERNAME],
+		"password":     GetMD5Hash(m[constants.PASSWORD]),
+		"firstname":    acc.FirstName,
+		"lastname":     acc.FirstName,
+		"email":        acc.Email,
+		"address1":     "Dummy address",
+		"city":         "Dummy city",
+		"state":        "Dummy state",
+		"postcode":     "00001",
+		"country":      "IN",
+		"phonenumber":  "981999000",
+		"password2":    string(sDec),
+		"customfields": GetBase64(map[string]string{m[constants.VERTICE_EMAIL]: acc.Email, m[constants.VERTICE_APIKEY]: acc.ApiKey}),
 	}
 
 	_, res, _ := client.Accounts.Create(a)
@@ -82,7 +88,7 @@ func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) error {
 		ProviderName: constants.WHMCS,
 		AccountId:    o.AccountId,
 	}
-	
+
 	err := add.Get(m)
 	if err != nil {
 		return err
@@ -127,6 +133,25 @@ func GetMD5Hash(text string) string {
 	hasher := md5.New()
 	hasher.Write([]byte(text))
 	return hex.EncodeToString(hasher.Sum(nil))
+}
+
+func GetBase64(dummymap map[string]string) string {
+	var dummyVar string
+	for key, value := range dummymap {
+		klen := strconv.Itoa(len(key))
+		vlen := strconv.Itoa(len(value))
+		dummyVar += "s:" + klen + ":" + strconv.Quote(key) + ";" + "s:" + vlen + ":" + strconv.Quote(value) + ";"
+	}
+	kvlen := strconv.Itoa(len(dummymap))
+	dummyVar1 := "a:" + kvlen + ":" + "{" + dummyVar + "}"
+	input := []byte(dummyVar1)
+	var outBuffer bytes.Buffer
+	writer := io.MultiWriter(&outBuffer, os.Stdout)
+	encoder := base64.NewEncoder(base64.StdEncoding, writer)
+	encoder.Write(input)
+	encoder.Close()
+	res := outBuffer.String()
+	return res
 }
 
 func onboardNotify(email string, r string, m map[string]string) error {

@@ -27,7 +27,17 @@ func (self *Machine) Watch(eventsChannel *EventChannel) error {
 					if err != nil {
 						log.Warningf("Failed to process watch event: %v", err)
 					}
-				}
+				case event.EventAction == alerts.SNAPSHOTTING:
+						err := self.snapcreate(event)
+						if err != nil {
+							log.Warningf("Failed to process watch event: %v", err)
+						}
+				case event.EventAction == alerts.SNAPSHOTTED:
+						err := self.snapdone(event)
+						if err != nil {
+							log.Warningf("Failed to process watch event: %v", err)
+						}
+				 }
 			case <-self.stop:
 				log.Info("machine watcher exiting")
 				return
@@ -48,5 +58,13 @@ func (self *Machine) create(evt *Event) error {
 }
 
 func (self *Machine) destroy() error {
+	return nil
+}
+
+func (self *Machine) snapcreate(evt *Event) error {
+	return nil
+}
+
+func (self *Machine) snapdone(evt *Event) error {
 	return nil
 }
