@@ -21,8 +21,8 @@ const (
 	API_KEY        = "api_key"
 	DOMAIN         = "domain"
 	PIGGYBANKS     = "piggybanks"
-        VERTICE_EMAIL  = "vertice_email"
-        VERTICE_APIKEY = "vertice_apikey"
+  VERTICE_EMAIL  = "vertice_email"
+  VERTICE_APIKEY = "vertice_apikey"
 
 	HOME           = "home"
 	DIR            = "dir"
@@ -86,6 +86,16 @@ const (
 	SNAPSHOTTING   = "snapshotting"
 	SNAPSHOTTED    = "snapshotted"
 
+	DNSNETWORKCREATING = "dnscreating"
+	DNSNETWORKCREATED  = "dnscreated"
+	DNSNETWORKSKIPPED  = "dnsskipped"
+	CLONING = "cloning"
+	CLONED = "cloned"
+	BUILDSTARTING = "buildstarting"
+	BUILDSTARTED = "buildstarted"
+	SERVICESTARTING = "servicestarting"
+	SERVICESTARTIED = "servicestarted"
+
 	COOKBOOKSUCCESS = "cookbook_success"
 	COOKBOOKFAILURE = "cookbook_failure"
 	AUTHKEYSSUCCESS = "authkeys_success"
@@ -142,6 +152,16 @@ const (
 	StatusAuthkeysFailure = Status(AUTHKEYSFAILURE)
 	StatusIpsSuccess = Status(INSTANCEIPSSUCCESS)
 	StatusIpsFailure = Status(INSTANCEIPSFAILURE)
+
+	StatusNetworkCreating = Status(DNSNETWORKCREATING)
+	StatusNetworkCreated  = Status(DNSNETWORKCREATED)
+	StatusNetworkSkipped  = Status(DNSNETWORKSKIPPED)
+	StatusCloning = Status(CLONING)
+	StatusCloned  = Status(CLONED)
+	StatusBuildStarting = Status(BUILDSTARTING)
+	StatusBuildStarted = Status(BUILDSTARTED)
+	StatusServiceStarting = Status(SERVICESTARTING)
+	StatusServiceStarted = Status(SERVICESTARTIED)
 
 	StatusContainerNetworkSuccess = Status(CONTAINERNETWORKSUCCESS)
 	StatusContainerNetworkFailure = Status(CONTAINERNETWORKFAILURE)

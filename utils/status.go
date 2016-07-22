@@ -69,6 +69,15 @@ func (s Status) Event_type() string {
 	    return 	CONTAINERNETWORKSUCCESSTYPE
 	case CONTAINERNETWORKFAILURE:
 	    return 	CONTAINERNETWORKFAILURETYPE
+	case DNSNETWORKCREATING:
+			return DNSNETWORKCREATING
+	case DNSNETWORKCREATED:
+			return DNSNETWORKCREATED
+	case DNSNETWORKSKIPPED
+			return DNSNETWORKSKIPPED
+
+
+
 	case ERROR:
 		return ONEINSTANCEERRORTYPE
 	default:
@@ -109,6 +118,12 @@ func (s Status) Description(name string) string {
 		return name + " was snapcreated.."
 	case COOKBOOKSUCCESS:
 	    return "chef cookbooks are successfully downloaded.."
+		case DNSNETWORKCREATING:
+				return "dns CName creating " + name + ".."
+	case DNSNETWORKCREATED:
+			return "dns CName created successfully " + name + ".."
+		case DNSNETWORKSKIPPED:
+				return "dns CName skipped " + name + ".."
 	case COOKBOOKFAILURE:
 	    return error_common + "downloading cookbooks on " + name + ".."
 	case AUTHKEYSSUCCESS:
