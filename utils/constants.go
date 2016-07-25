@@ -1,6 +1,5 @@
 package utils
 
-
 const (
 
 	//keys for watchers
@@ -21,19 +20,22 @@ const (
 	API_KEY        = "api_key"
 	DOMAIN         = "domain"
 	PIGGYBANKS     = "piggybanks"
-        VERTICE_EMAIL  = "vertice_email"
-        VERTICE_APIKEY = "vertice_apikey"
+	VERTICE_EMAIL  = "vertice_email"
+	VERTICE_APIKEY = "vertice_apikey"
+	USERMAIL       = "email"
+	STATUS         = "status"
 
 	HOME           = "home"
 	DIR            = "dir"
 	SCYLLAHOST     = "scylla_host"
 	SCYLLAKEYSPACE = "scylla_keyspace"
 
-	EVENT_TYPE      = "event_type"
-	ACCOUNT_ID     = "account_id"
-	ASSEMBLY_ID    = "assembly_id"
-	DATA		   = "data"
-	CREATED_AT     = "created_at"
+	EVENT_TYPE  = "event_type"
+	ACCOUNT_ID  = "account_id"
+	ASSEMBLY_ID = "assembly_id"
+	DATA        = "data"
+	CREATED_AT  = "created_at"
+
 
 	//args for notification
 	NILAVU    = "nilavu"
@@ -49,16 +51,16 @@ const (
 	ENDTIME   = "endtime"
 	//STATUS    = "status"
 	//DESCRIPTION = "description"
-	IPV4PUB        = "ipv4public"
-	IPV4PRI        = "ipv4private"
-	IPV6PRI				 = "ipv6private"
-	IPV6PUB        = "ipv6public"
+	IPV4PUB = "ipv4public"
+	IPV4PRI = "ipv4private"
+	IPV6PRI = "ipv6private"
+	IPV6PUB = "ipv6public"
 
-	EventMachine                 = "machine"
-	EventContainer               = "container"
-	EventBill                    = "bill"
-	EventUser                    = "user"
-	EventStatus                  = "status"
+	EventMachine   = "machine"
+	EventContainer = "container"
+	EventBill      = "bill"
+	EventUser      = "user"
+	EventStatus    = "status"
 
 	BILLMGR = "bill"
 	ADDONS  = "addons"
@@ -67,34 +69,36 @@ const (
 	PROVIDER_ONE    = "one"
 	PROVIDER_DOCKER = "docker"
 
-	LAUNCHING    = "launching"
-	LAUNCHED     = "launched"
-	BOOTSTRAPPED = "bootstrapped"
+	LAUNCHING     = "launching"
+	LAUNCHED      = "launched"
+	BOOTSTRAPPED  = "bootstrapped"
 	BOOTSTRAPPING = "bootstrapping"
-	STATEUP      = "stateup"
-	RUNNING      = "running"
-	STARTING     = "starting"
-	STARTED      = "started"
-	STOPPING     = "stopping"
-	STOPPED      = "stopped"
-	RESTARTING     = "restarting"
-	RESTARTED      = "restarted"
-	UPGRADED     = "upgraded"
-	DESTROYING   = "destroying"
-	NUKED        = "nuked"
-	ERROR        = "error"
-	SNAPSHOTTING   = "snapshotting"
-	SNAPSHOTTED    = "snapshotted"
+	STATEUP       = "stateup"
+	RUNNING       = "running"
+	STARTING      = "starting"
+	STARTED       = "started"
+	STOPPING      = "stopping"
+	STOPPED       = "stopped"
+	RESTARTING    = "restarting"
+	RESTARTED     = "restarted"
+	UPGRADED      = "upgraded"
+	DESTROYING    = "destroying"
+	NUKED         = "nuked"
+	ERROR         = "error"
+	SNAPSHOTTING  = "snapshotting"
+	SNAPSHOTTED   = "snapshotted"
 
-	COOKBOOKSUCCESS = "cookbook_success"
-	COOKBOOKFAILURE = "cookbook_failure"
-	AUTHKEYSSUCCESS = "authkeys_success"
-	AUTHKEYSFAILURE = "authkeys_failure"
+	COOKBOOKSUCCESS    = "cookbook_success"
+	COOKBOOKFAILURE    = "cookbook_failure"
+	AUTHKEYSSUCCESS    = "authkeys_success"
+	AUTHKEYSFAILURE    = "authkeys_failure"
 	INSTANCEIPSSUCCESS = "ips_success"
 	INSTANCEIPSFAILURE = "ips_failure"
 
 	CONTAINERNETWORKSUCCESS = "container_network_success"
 	CONTAINERNETWORKFAILURE = "container_network_failure"
+
+
 
 	// StatusLaunching is the initial status of a box
 	// it should transition shortly to a more specific status
@@ -104,7 +108,7 @@ const (
 	StatusLaunched = Status(LAUNCHED)
 
 	// StatusBootstrapped is the status for box after being booted by the agent in cloud
-	StatusBootstrapped = Status(BOOTSTRAPPED)
+	StatusBootstrapped  = Status(BOOTSTRAPPED)
 	StatusBootstrapping = Status(BOOTSTRAPPING)
 
 	// Stateup is the status of the which is moving up in the state in cloud.
@@ -129,8 +133,7 @@ const (
 	StatusNuked      = Status(NUKED)
 
 	StatusSnapCreating = Status(SNAPSHOTTING)
-	StatusSnapCreated = Status(SNAPSHOTTED)
-
+	StatusSnapCreated  = Status(SNAPSHOTTED)
 
 	// StatusError is the status for units that failed to start, because of
 	// a box error.
@@ -140,11 +143,13 @@ const (
 	StatusCookbookFailure = Status(COOKBOOKFAILURE)
 	StatusAuthkeysSuccess = Status(AUTHKEYSSUCCESS)
 	StatusAuthkeysFailure = Status(AUTHKEYSFAILURE)
-	StatusIpsSuccess = Status(INSTANCEIPSSUCCESS)
-	StatusIpsFailure = Status(INSTANCEIPSFAILURE)
+	StatusIpsSuccess      = Status(INSTANCEIPSSUCCESS)
+	StatusIpsFailure      = Status(INSTANCEIPSFAILURE)
 
 	StatusContainerNetworkSuccess = Status(CONTAINERNETWORKSUCCESS)
 	StatusContainerNetworkFailure = Status(CONTAINERNETWORKFAILURE)
+
+
 
 	ONEINSTANCELAUNCHINGTYPE     = "compute.instance.launching"
 	ONEINSTANCEBOOTSTRAPPINGTYPE = "compute.instance.bootstrapping"
@@ -168,14 +173,13 @@ const (
 	ONEINSTANCESNAPSHOTTINGTYPE  = "compute.instance.snapshotting"
 	ONEINSTANCESNAPSHOTTEDTYPE   = "compute.instance.snapshotted"
 
-	COOKBOOKSUCCESSTYPE          = "compute.instance.cookbook.download.success"
-	COOKBOOKFAILURETYPE          = "compute.instance.cookbook.download.failure"
-	AUTHKEYSSUCCESSTYPE          = "compute.instance.authkeys.success"
-	AUTHKEYSFAILURETYPE          = "compute.instance.authkeys.failure"
-	INSTANCEIPSSUCCESSTYPE       = "net.instance.ip.update.success"
-	INSTANCEIPSFAILURETYPE       = "net.instance.ip.update.failure"
+	COOKBOOKSUCCESSTYPE    = "compute.instance.cookbook.download.success"
+	COOKBOOKFAILURETYPE    = "compute.instance.cookbook.download.failure"
+	AUTHKEYSSUCCESSTYPE    = "compute.instance.authkeys.success"
+	AUTHKEYSFAILURETYPE    = "compute.instance.authkeys.failure"
+	INSTANCEIPSSUCCESSTYPE = "net.instance.ip.update.success"
+	INSTANCEIPSFAILURETYPE = "net.instance.ip.update.failure"
 
-	CONTAINERNETWORKSUCCESSTYPE      = "net.container.ip.allocate.success"
-	CONTAINERNETWORKFAILURETYPE      = "net.container.ip.allocate.failure"
-
+	CONTAINERNETWORKSUCCESSTYPE = "net.container.ip.allocate.success"
+	CONTAINERNETWORKFAILURETYPE = "net.container.ip.allocate.failure"
 )

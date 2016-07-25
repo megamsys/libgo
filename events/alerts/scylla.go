@@ -33,6 +33,8 @@ func (s *Scylla) Notify(eva EventAction, edata EventData) error {
 		return s.NotifyBill(eva, edata)
 	} else if et[0] == "storage" {
 		return s.NotifyStorage(eva, edata)
+	} else if et[0] == "obc" {
+		return s.NotifyOBC(eva, edata)
 	} else {
 		return s.NotifyContainer(eva, edata)
 	}
