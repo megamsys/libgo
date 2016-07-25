@@ -71,7 +71,8 @@ const (
 	LAUNCHED     = "launched"
 	BOOTSTRAPPED = "bootstrapped"
 	BOOTSTRAPPING = "bootstrapping"
-	STATEUP      = "stateup"
+	STATEUPPING   = "stateupping"
+	STATEUPPED    = "stateupped"
 	RUNNING      = "running"
 	STARTING     = "starting"
 	STARTED      = "started"
@@ -86,23 +87,29 @@ const (
 	SNAPSHOTTING   = "snapshotting"
 	SNAPSHOTTED    = "snapshotted"
 
-	DNSNETWORKCREATING = "dnscreating"
-	DNSNETWORKCREATED  = "dnscreated"
-	DNSNETWORKSKIPPED  = "dnsskipped"
-	CLONING = "cloning"
-	CLONED = "cloned"
+	DNSNETWORKCREATING = "dnscnamecreating"
+	DNSNETWORKCREATED  = "dnscnamecreated"
+	DNSNETWORKSKIPPED  = "dnscnameskipped"
+	CLONING = "gitcloning"
+	CLONED = "gitcloned"
+	CHEFSOLODOWNLOADING = "chefsolodownloading"
+	CHEFSOLODOWNLOADED = "chefsolodownloaded"
 	BUILDSTARTING = "buildstarting"
-	BUILDSTARTED = "buildstarted"
+	BUILDSTOPPED = "buildstopped"
 	SERVICESTARTING = "servicestarting"
-	SERVICESTARTIED = "servicestarted"
+	SERVICESTOPPED = "servicestopped"
 
-	COOKBOOKSUCCESS = "cookbook_success"
+	COOKBOOKDOWNLOADING = "cookbook_downloading"
+	COOKBOOKDOWNLOADED = "cookbook_downloaded"
 	COOKBOOKFAILURE = "cookbook_failure"
-	AUTHKEYSSUCCESS = "authkeys_success"
+	AUTHKEYSUPDATING = "authkeys_updating"
+	AUTHKEYSUPDATED = "authkeys_updated"
 	AUTHKEYSFAILURE = "authkeys_failure"
-	INSTANCEIPSSUCCESS = "ips_success"
+	INSTANCEIPSUPDATING = "ips_updating"
+	INSTANCEIPSUPDATED = "ips_updated"
 	INSTANCEIPSFAILURE = "ips_failure"
-
+	CHEFCONFIGSETUPPING = "chefconfigsetupping"
+	CHEFCONFIGSETUPPED = "chefconfigsetupped"
 	CONTAINERNETWORKSUCCESS = "container_network_success"
 	CONTAINERNETWORKFAILURE = "container_network_failure"
 
@@ -119,7 +126,8 @@ const (
 
 	// Stateup is the status of the which is moving up in the state in cloud.
 	// Sent by vertice to gulpd when it received StatusBootstrapped.
-	StatusStateup = Status(STATEUP)
+	StatusStateupping = Status(STATEUPPING)
+	StatusStateupped = Status(STATEUPPED)
 
 	//fully up instance
 	StatusRunning = Status(RUNNING)
@@ -146,12 +154,19 @@ const (
 	// a box error.
 	StatusError = Status(ERROR)
 
-	StatusCookbookSuccess = Status(COOKBOOKSUCCESS)
+	StatusCookbookDownloading = Status(COOKBOOKDOWNLOADING)
+	StatusCookbookDownloaded = Status(COOKBOOKDOWNLOADED)
 	StatusCookbookFailure = Status(COOKBOOKFAILURE)
-	StatusAuthkeysSuccess = Status(AUTHKEYSSUCCESS)
+	StatusAuthkeysUpdating = Status(AUTHKEYSUPDATING)
+	StatusAuthkeysUpdated = Status(AUTHKEYSUPDATED)
 	StatusAuthkeysFailure = Status(AUTHKEYSFAILURE)
-	StatusIpsSuccess = Status(INSTANCEIPSSUCCESS)
+	StatusIpsUpdating = Status(INSTANCEIPSUPDATING)
+	StatusIpsUpdated = Status(INSTANCEIPSUPDATED)
 	StatusIpsFailure = Status(INSTANCEIPSFAILURE)
+	StatusChefConfigSetupping = Status(CHEFCONFIGSETUPPING)
+	StatusChefConfigSetupped = Status(CHEFCONFIGSETUPPED)
+	StatusChefsoloDownloading = Status(CHEFSOLODOWNLOADING)
+	StatusChefsoloDownloaded = Status(CHEFSOLODOWNLOADED)
 
 	StatusNetworkCreating = Status(DNSNETWORKCREATING)
 	StatusNetworkCreated  = Status(DNSNETWORKCREATED)
@@ -159,17 +174,31 @@ const (
 	StatusCloning = Status(CLONING)
 	StatusCloned  = Status(CLONED)
 	StatusBuildStarting = Status(BUILDSTARTING)
-	StatusBuildStarted = Status(BUILDSTARTED)
+	StatusBuildStoped = Status(BUILDSTOPPED)
 	StatusServiceStarting = Status(SERVICESTARTING)
-	StatusServiceStarted = Status(SERVICESTARTIED)
+	StatusServiceStopped = Status(SERVICESTOPPED)
 
 	StatusContainerNetworkSuccess = Status(CONTAINERNETWORKSUCCESS)
 	StatusContainerNetworkFailure = Status(CONTAINERNETWORKFAILURE)
 
-	ONEINSTANCELAUNCHINGTYPE     = "compute.instance.launching"
+	ONEINSTANCELAUNCHINGTYPE = "compute.instance.launching"
+	ONEINSTANCECHEFCONFIGSETUPPING = "compute.instance.chefconfigsetupping"
+	ONEINSTANCECHEFCONFIGSETUPPED = "compute.instance.chefconfigsetupped"
+	ONEINSTANCEGITCLONING = "compute.instance.gitcloning"
+	ONEINSTANCEGITCLONED = "compute.instance.gitcloned"
+	ONEINSTANCECHEFSOLODOWNLOADING = "compute.instance.chefsolodownlading"
+	ONEINSTANCECHEFSOLODOWNLOADED = "compute.instance.chefsolodownladed"
+	ONEINSTANCEBUILDSTARTING = "compute.instance.buildstarting"
+	ONEINSTANCEBUILDSTOPPED = "compute.instance.buildstopped"
+	ONEINSTANCESERVICESTARTING = "compute.instance.servicestarting"
+	ONEINSTANCESERVICESTOPPED = "compute.instance.servicestopped"
+	ONEINSTANCEDNSCNAMING    = "compute.instance.dnscnaming"
+	ONEINSTANCEDNSCNAMED     = "compute.instance.dnscnamed"
+	ONEINSTANCEDNSNETWORKSKIPPED = "compute.instance.dnscnameskipped"
 	ONEINSTANCEBOOTSTRAPPINGTYPE = "compute.instance.bootstrapping"
 	ONEINSTANCEBOOTSTRAPPEDTYPE  = "compute.instance.bootstrapped"
-	ONEINSTANCESTATEUPTYPE       = "compute.instance.stateup"
+	ONEINSTANCESTATEUPPINGTYPE   = "compute.instance.stateupping"
+	ONEINSTANCESTATEUPPEDTYPE    = "compute.instance.stateupped"
 	ONEINSTANCERUNNINGTYPE       = "compute.instance.running"
 	ONEINSTANCELAUNCHEDTYPE      = "compute.instance.launched"
 	ONEINSTANCEEXISTSTYPE        = "compute.instance.exists"
@@ -188,12 +217,15 @@ const (
 	ONEINSTANCESNAPSHOTTINGTYPE  = "compute.instance.snapshotting"
 	ONEINSTANCESNAPSHOTTEDTYPE   = "compute.instance.snapshotted"
 
-	COOKBOOKSUCCESSTYPE          = "compute.instance.cookbook.download.success"
+	COOKBOOKDOWNLOADINGTYPE      = "compute.instance.cookbook.downloading"
+	COOKBOOKDOWNLOADEDTYPE      = "compute.instance.cookbook.downloaded"
 	COOKBOOKFAILURETYPE          = "compute.instance.cookbook.download.failure"
-	AUTHKEYSSUCCESSTYPE          = "compute.instance.authkeys.success"
+	AUTHKEYSUPDATINGTYPE         = "compute.instance.authkeys.updating"
+	AUTHKEYSUPDATEDTYPE          = "compute.instance.authkeys.updated"
 	AUTHKEYSFAILURETYPE          = "compute.instance.authkeys.failure"
-	INSTANCEIPSSUCCESSTYPE       = "net.instance.ip.update.success"
-	INSTANCEIPSFAILURETYPE       = "net.instance.ip.update.failure"
+	INSTANCEIPSUPDATINGTYPE       = "compute.instance.ip.updating"
+	INSTANCEIPSUPDATEDTYPE       = "compute.instance.ip.updated"
+	INSTANCEIPSFAILURETYPE       = "compute.instance.ip.update.failure"
 
 	CONTAINERNETWORKSUCCESSTYPE      = "net.container.ip.allocate.success"
 	CONTAINERNETWORKFAILURETYPE      = "net.container.ip.allocate.failure"

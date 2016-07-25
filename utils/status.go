@@ -29,10 +29,14 @@ func (s Status) Event_type() string {
 		return ONEINSTANCELAUNCHINGTYPE
 	case LAUNCHED:
 		return ONEINSTANCELAUNCHEDTYPE
+	case BOOTSTRAPPING:
+		return ONEINSTANCEBOOTSTRAPPINGTYPE
 	case BOOTSTRAPPED:
 		return ONEINSTANCEBOOTSTRAPPEDTYPE
-	case STATEUP:
-		return ONEINSTANCESTATEUPTYPE
+	case STATEUPPING:
+		return ONEINSTANCESTATEUPPINGTYPE
+	case STATEUPPED:
+		return ONEINSTANCESTATEUPPEDTYPE
 	case RUNNING:
 		return ONEINSTANCERUNNINGTYPE
 	case STARTING:
@@ -53,16 +57,28 @@ func (s Status) Event_type() string {
 		return ONEINSTANCESNAPSHOTTINGTYPE
 	case SNAPSHOTTED:
 		return ONEINSTANCESNAPSHOTTEDTYPE
-	case COOKBOOKSUCCESS:
-	    return 	COOKBOOKSUCCESSTYPE
+	case COOKBOOKDOWNLOADING:
+	    return 	COOKBOOKDOWNLOADINGTYPE
+	case COOKBOOKDOWNLOADED:
+	    return 	COOKBOOKDOWNLOADEDTYPE
 	case COOKBOOKFAILURE:
 	    return 	COOKBOOKFAILURETYPE
-	case AUTHKEYSSUCCESS:
-	    return 	AUTHKEYSSUCCESSTYPE
+	case CHEFSOLODOWNLOADING:
+			return CHEFSOLODOWNLOADING
+	case AUTHKEYSUPDATING:
+	    return 	AUTHKEYSUPDATINGTYPE
+	case AUTHKEYSUPDATED:
+			return 	AUTHKEYSUPDATEDTYPE
 	case AUTHKEYSFAILURE:
 	    return 	AUTHKEYSFAILURETYPE
-	case INSTANCEIPSSUCCESS:
-	    return 	INSTANCEIPSSUCCESSTYPE
+	case CHEFCONFIGSETUPPING:
+			return ONEINSTANCECHEFCONFIGSETUPPING
+	case CHEFCONFIGSETUPPED:
+			return ONEINSTANCECHEFCONFIGSETUPPED
+	case INSTANCEIPSUPDATING:
+	    return 	INSTANCEIPSUPDATINGTYPE
+	case INSTANCEIPSUPDATED:
+		  return 	INSTANCEIPSUPDATEDTYPE
 	case INSTANCEIPSFAILURE:
 	    return 	INSTANCEIPSFAILURETYPE
 	case CONTAINERNETWORKSUCCESS:
@@ -70,13 +86,15 @@ func (s Status) Event_type() string {
 	case CONTAINERNETWORKFAILURE:
 	    return 	CONTAINERNETWORKFAILURETYPE
 	case DNSNETWORKCREATING:
-			return DNSNETWORKCREATING
+			return ONEINSTANCEDNSCNAMING
 	case DNSNETWORKCREATED:
-			return DNSNETWORKCREATED
-	case DNSNETWORKSKIPPED
-			return DNSNETWORKSKIPPED
-
-
+			return ONEINSTANCEDNSCNAMED
+	case DNSNETWORKSKIPPED:
+			return ONEINSTANCEDNSNETWORKSKIPPED
+	case CLONING:
+			return ONEINSTANCEGITCLONING
+	case CLONED:
+			return ONEINSTANCEGITCLONED
 
 	case ERROR:
 		return ONEINSTANCEERRORTYPE
@@ -89,57 +107,79 @@ func (s Status) Description(name string) string {
 	error_common := "Oops something went wrong on"
 	switch s.String() {
 	case LAUNCHING:
-		return "your " + name + " machine is initializing.."
+		return "Your " + name + " machine is initializing.."
 	case LAUNCHED:
 		return "Machine " + name + " was initialized on cloud.."
+	case BOOTSTRAPPING:
+		return name + " was bootstrapping.."
 	case BOOTSTRAPPED:
-		return name + " was booted.."
-	case STATEUP:
-		return "moving up in the state of " + name + ".."
+		return name + " was bootstrapped.."
+	case STATEUPPING:
+		return name + " is stateupping.."
+	case STATEUPPED:
+		return name + " is stateupped.."
 	case RUNNING:
 		return name + " is running.."
+	case CHEFSOLODOWNLOADING:
+			return "Chefsolo Downloading .."
+	case CHEFSOLODOWNLOADED:
+			return "Chefsolo Downloaded .."
 	case STARTING:
-		return "starting process initializing on " + name + ".."
+		return "Starting process initializing on " + name + ".."
 	case STARTED:
 		return name + " was started.."
 	case STOPPING:
-		return "stopping process initializing on " + name + ".."
+		return "Stopping process initializing on " + name + ".."
 	case STOPPED:
 		return name + " was stopped.."
 	case UPGRADED:
 		return name + " was upgraded.."
 	case DESTROYING:
-		return "destroying process initializing on " + name + ".."
+		return "Destroying process initializing on " + name + ".."
 	case NUKED:
 		return name + " was removed.."
 	case SNAPSHOTTING:
-		return "snapshotting process initializing on " + name + ".."
+		return "Snapshotting process initializing on " + name + ".."
 	case SNAPSHOTTED:
 		return name + " was snapcreated.."
-	case COOKBOOKSUCCESS:
-	    return "chef cookbooks are successfully downloaded.."
-		case DNSNETWORKCREATING:
-				return "dns CName creating " + name + ".."
-	case DNSNETWORKCREATED:
-			return "dns CName created successfully " + name + ".."
-		case DNSNETWORKSKIPPED:
-				return "dns CName skipped " + name + ".."
+	case COOKBOOKDOWNLOADING:
+	    return "Chef cookbooks are downloading.."
+	case COOKBOOKDOWNLOADED:
+	    return "Chef cookbooks are successfully downloaded.."
 	case COOKBOOKFAILURE:
-	    return error_common + "downloading cookbooks on " + name + ".."
-	case AUTHKEYSSUCCESS:
-	    return "SSH keys are updated on your " + name
+			return error_common + "Downloading Cookbooks on " + name + ".."
+	case CHEFCONFIGSETUPPING:
+			return "Chef config setupping .."
+	case CHEFCONFIGSETUPPED:
+			return "Chef config setupped .."
+	case CLONING:
+				return "Cloning your git repository .."
+	case CLONED:
+				return "Cloned your git repository .."
+	case DNSNETWORKCREATING:
+			return "DNS CNAME creating " + name + ".."
+	case DNSNETWORKCREATED:
+			return "DNS CNAME created successfully " + name + ".."
+	case DNSNETWORKSKIPPED:
+			return "DNS CNAME skipped " + name + ".."
+	case AUTHKEYSUPDATING:
+	    return "SSH keys are updating on your " + name
+	case AUTHKEYSUPDATED:
+		  return "SSH keys are updated on your " + name
 	case AUTHKEYSFAILURE:
-	    return error_common + "updating Ssh keys on " + name + ".."
-	case INSTANCEIPSSUCCESS:
-	    return "Private and public ips are updated on your " + name
+	    return error_common + "Updating Ssh keys on " + name + ".."
+	case INSTANCEIPSUPDATING:
+	    return "Private and public ips are updating on your " + name
+	case INSTANCEIPSUPDATED:
+			return "Private and public ips are updated on your " + name
 	case INSTANCEIPSFAILURE:
-	    return error_common + "updating private and public ips on " + name + ".."
+	    return error_common + "Updating private and public ips on " + name + ".."
 	case CONTAINERNETWORKSUCCESS:
 	    return "Private and public ips are updated on your " + name
 	case CONTAINERNETWORKFAILURE:
-	    return error_common + "updating private and public ips on " + name + ".."
+	    return error_common + "Updating private and public ips on " + name + ".."
 	case ERROR:
-		return "oops something went wrong on " + name + ".."
+		return "Oops something went wrong on " + name + ".."
 	default:
 		return "arrgh"
 	}
