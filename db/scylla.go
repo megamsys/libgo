@@ -39,7 +39,7 @@ func newScyllaTable(ops Options, data interface{}) *ScyllaTable {
 	if err != nil {
 		return nil
 	}
-	log.Debugf("%s (%s, %s)", cmd.Colorfy("  > [scylla] fetch", "blue", "", "bold"), ops.TableName)
+	log.Debugf("%s (%s)", cmd.Colorfy("  > [scylla] fetch", "blue", "", "bold"),ops.TableName)
 	tbl := t.table(ops.TableName, ops.Pks, ops.Ccms, data)
 	return tbl
 }
