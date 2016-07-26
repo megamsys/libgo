@@ -1,8 +1,8 @@
 package db
 
 import (
-	"fmt"
-	//"github.com/megamsys/gocassa"
+//	"fmt"
+//  "github.com/megamsys/gocassa"
 	"testing"
 	"gopkg.in/check.v1"
 )
@@ -39,7 +39,7 @@ func (s *S) TestGetRecord(c *check.C) {
 		fmt.Println(cus)
 	c.Assert(err, check.NotNil)
 }
-*/
+
 func (s *S) TestGetListOfRecords(c *check.C) {
 	cus := &[]Customer{}
   cu := &Customer{}
@@ -55,7 +55,7 @@ func (s *S) TestGetListOfRecords(c *check.C) {
 		err := FetchListdb(ops,20, cu,cus)
 		fmt.Println(cus)
 	c.Assert(err, check.NotNil)
-}
+}*/
 
 /*
 func (s *S) TestInsterRecords(c *check.C) {
