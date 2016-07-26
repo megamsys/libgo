@@ -241,7 +241,4 @@ const (
 
 	CONTAINERNETWORKSUCCESSTYPE      = "net.container.ip.allocate.success"
 	CONTAINERNETWORKFAILURETYPE      = "net.container.ip.allocate.failure"
-
-	CONTAINERNETWORKSUCCESSTYPE = "net.container.ip.allocate.success"
-	CONTAINERNETWORKFAILURETYPE = "net.container.ip.allocate.failure"
 )
