@@ -71,8 +71,8 @@ const (
 	LAUNCHED     = "launched"
 	BOOTSTRAPPED = "bootstrapped"
 	BOOTSTRAPPING = "bootstrapping"
-	STATEUPPING   = "stateupping"
-	STATEUPPED    = "stateupped"
+	STATEUPPING   = "stateup_starting"
+	STATEUPPED    = "stateup_started"
 	RUNNING      = "running"
 	STARTING     = "starting"
 	STARTED      = "started"
@@ -87,13 +87,15 @@ const (
 	SNAPSHOTTING   = "snapshotting"
 	SNAPSHOTTED    = "snapshotted"
 
+	VNCHOSTUPDATING = "vnchostupdating"
+	VNCHOSTUPDATED = "vnchostupdated"
 	DNSNETWORKCREATING = "dnscnamecreating"
 	DNSNETWORKCREATED  = "dnscnamecreated"
 	DNSNETWORKSKIPPED  = "dnscnameskipped"
 	CLONING = "gitcloning"
 	CLONED = "gitcloned"
-	CHEFSOLODOWNLOADING = "chefsolodownloading"
-	CHEFSOLODOWNLOADED = "chefsolodownloaded"
+	CHEFSOLOSTARTING = "chefsolostarting"
+	CHEFSOLOFINISHED = "chefsolofinished"
 	BUILDSTARTING = "buildstarting"
 	BUILDSTOPPED = "buildstopped"
 	SERVICESTARTING = "servicestarting"
@@ -108,8 +110,8 @@ const (
 	INSTANCEIPSUPDATING = "ips_updating"
 	INSTANCEIPSUPDATED = "ips_updated"
 	INSTANCEIPSFAILURE = "ips_failure"
-	CHEFCONFIGSETUPPING = "chefconfigsetupping"
-	CHEFCONFIGSETUPPED = "chefconfigsetupped"
+	CHEFCONFIGSETUPSTARTING = "chefconfigsetup_starting"
+	CHEFCONFIGSETUPSTARTED = "chefconfigsetup_started"
 	CONTAINERNETWORKSUCCESS = "container_network_success"
 	CONTAINERNETWORKFAILURE = "container_network_failure"
 
@@ -129,6 +131,8 @@ const (
 	StatusStateupping = Status(STATEUPPING)
 	StatusStateupped = Status(STATEUPPED)
 
+	StatusVncHostUpdating = Status(VNCHOSTUPDATING)
+	StatusVncHostUpdated = Status(VNCHOSTUPDATED)
 	//fully up instance
 	StatusRunning = Status(RUNNING)
 
@@ -163,10 +167,10 @@ const (
 	StatusIpsUpdating = Status(INSTANCEIPSUPDATING)
 	StatusIpsUpdated = Status(INSTANCEIPSUPDATED)
 	StatusIpsFailure = Status(INSTANCEIPSFAILURE)
-	StatusChefConfigSetupping = Status(CHEFCONFIGSETUPPING)
-	StatusChefConfigSetupped = Status(CHEFCONFIGSETUPPED)
-	StatusChefsoloDownloading = Status(CHEFSOLODOWNLOADING)
-	StatusChefsoloDownloaded = Status(CHEFSOLODOWNLOADED)
+	StatusChefConfigSetupping = Status(CHEFCONFIGSETUPSTARTING)
+	StatusChefConfigSetupped = Status(CHEFCONFIGSETUPSTARTED)
+	StatusChefsoloStarting = Status(CHEFSOLOSTARTING)
+	StatusChefsoloFinished = Status(CHEFSOLOFINISHED)
 
 	StatusNetworkCreating = Status(DNSNETWORKCREATING)
 	StatusNetworkCreated  = Status(DNSNETWORKCREATED)
@@ -182,12 +186,14 @@ const (
 	StatusContainerNetworkFailure = Status(CONTAINERNETWORKFAILURE)
 
 	ONEINSTANCELAUNCHINGTYPE = "compute.instance.launching"
-	ONEINSTANCECHEFCONFIGSETUPPING = "compute.instance.chefconfigsetupping"
-	ONEINSTANCECHEFCONFIGSETUPPED = "compute.instance.chefconfigsetupped"
+	ONEINSTANCEVNCHOSTUPDATING = "compute.instance.vnchostupdating"
+	ONEINSTANCEVNCHOSTUPDATED = "compute.instance.vnchostupdated"
+	ONEINSTANCECHEFCONFIGSETUPSTARTING = "compute.instance.chefconfigsetupstarting"
+	ONEINSTANCECHEFCONFIGSETUPSTARTED = "compute.instance.chefconfigsetupstarted"
 	ONEINSTANCEGITCLONING = "compute.instance.gitcloning"
 	ONEINSTANCEGITCLONED = "compute.instance.gitcloned"
-	ONEINSTANCECHEFSOLODOWNLOADING = "compute.instance.chefsolodownlading"
-	ONEINSTANCECHEFSOLODOWNLOADED = "compute.instance.chefsolodownladed"
+	ONEINSTANCECHEFSOLOSTARTING = "compute.instance.chefsolostarting"
+	ONEINSTANCECHEFSOLOFINISHED = "compute.instance.chefsolofinished"
 	ONEINSTANCEBUILDSTARTING = "compute.instance.buildstarting"
 	ONEINSTANCEBUILDSTOPPED = "compute.instance.buildstopped"
 	ONEINSTANCESERVICESTARTING = "compute.instance.servicestarting"
@@ -197,8 +203,8 @@ const (
 	ONEINSTANCEDNSNETWORKSKIPPED = "compute.instance.dnscnameskipped"
 	ONEINSTANCEBOOTSTRAPPINGTYPE = "compute.instance.bootstrapping"
 	ONEINSTANCEBOOTSTRAPPEDTYPE  = "compute.instance.bootstrapped"
-	ONEINSTANCESTATEUPPINGTYPE   = "compute.instance.stateupping"
-	ONEINSTANCESTATEUPPEDTYPE    = "compute.instance.stateupped"
+	ONEINSTANCESTATEUPPINGTYPE   = "compute.instance.stateupstarting"
+	ONEINSTANCESTATEUPPEDTYPE    = "compute.instance.stateupstarted"
 	ONEINSTANCERUNNINGTYPE       = "compute.instance.running"
 	ONEINSTANCELAUNCHEDTYPE      = "compute.instance.launched"
 	ONEINSTANCEEXISTSTYPE        = "compute.instance.exists"

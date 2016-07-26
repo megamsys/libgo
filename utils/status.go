@@ -63,18 +63,24 @@ func (s Status) Event_type() string {
 	    return 	COOKBOOKDOWNLOADEDTYPE
 	case COOKBOOKFAILURE:
 	    return 	COOKBOOKFAILURETYPE
-	case CHEFSOLODOWNLOADING:
-			return CHEFSOLODOWNLOADING
+	case CHEFSOLOSTARTING:
+			return ONEINSTANCECHEFSOLOSTARTING
+	case CHEFSOLOFINISHED:
+			return ONEINSTANCECHEFSOLOFINISHED
+	case VNCHOSTUPDATING:
+			return ONEINSTANCEVNCHOSTUPDATING
+	case VNCHOSTUPDATED:
+			return ONEINSTANCEVNCHOSTUPDATING
 	case AUTHKEYSUPDATING:
 	    return 	AUTHKEYSUPDATINGTYPE
 	case AUTHKEYSUPDATED:
 			return 	AUTHKEYSUPDATEDTYPE
 	case AUTHKEYSFAILURE:
 	    return 	AUTHKEYSFAILURETYPE
-	case CHEFCONFIGSETUPPING:
-			return ONEINSTANCECHEFCONFIGSETUPPING
-	case CHEFCONFIGSETUPPED:
-			return ONEINSTANCECHEFCONFIGSETUPPED
+	case CHEFCONFIGSETUPSTARTING:
+			return ONEINSTANCECHEFCONFIGSETUPSTARTING
+	case CHEFCONFIGSETUPSTARTED:
+			return ONEINSTANCECHEFCONFIGSETUPSTARTED
 	case INSTANCEIPSUPDATING:
 	    return 	INSTANCEIPSUPDATINGTYPE
 	case INSTANCEIPSUPDATED:
@@ -110,6 +116,10 @@ func (s Status) Description(name string) string {
 		return "Your " + name + " machine is initializing.."
 	case LAUNCHED:
 		return "Machine " + name + " was initialized on cloud.."
+	case VNCHOSTUPDATING:
+		return name + " vnc_host is updating.."
+	case VNCHOSTUPDATED:
+		return name + " vnc_host is updated.."
 	case BOOTSTRAPPING:
 		return name + " was bootstrapping.."
 	case BOOTSTRAPPED:
@@ -120,10 +130,10 @@ func (s Status) Description(name string) string {
 		return name + " is stateupped.."
 	case RUNNING:
 		return name + " is running.."
-	case CHEFSOLODOWNLOADING:
-			return "Chefsolo Downloading .."
-	case CHEFSOLODOWNLOADED:
-			return "Chefsolo Downloaded .."
+	case CHEFSOLOSTARTING:
+			return "Chefsolo starting .."
+	case CHEFSOLOFINISHED:
+			return "Chefsolo finished .."
 	case STARTING:
 		return "Starting process initializing on " + name + ".."
 	case STARTED:
@@ -148,10 +158,10 @@ func (s Status) Description(name string) string {
 	    return "Chef cookbooks are successfully downloaded.."
 	case COOKBOOKFAILURE:
 			return error_common + "Downloading Cookbooks on " + name + ".."
-	case CHEFCONFIGSETUPPING:
-			return "Chef config setupping .."
-	case CHEFCONFIGSETUPPED:
-			return "Chef config setupped .."
+	case CHEFCONFIGSETUPSTARTING:
+			return "Chef config setup_starting .."
+	case CHEFCONFIGSETUPSTARTED:
+			return "Chef config setup_started .."
 	case CLONING:
 				return "Cloning your git repository .."
 	case CLONED:
