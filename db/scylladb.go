@@ -60,6 +60,11 @@ func (sy *ScyllaDB) table(name string, pks []string, ccms []string, out interfac
 	return &ScyllaTable{T: sy.KS.MultimapMultiKeyTable(name, pks, ccms, out)}
 }
 
+func (sy *ScyllaDB) Close() {
+	log.Debugf(cmd.Colorfy("  > [scylla] Connection close", "blue", "", "bold"))
+	sy.KS.Close()
+}
+
 func (st *ScyllaTable) read(fields, ids map[string]interface{}, out interface{}) error {
 	log.Debugf(cmd.Colorfy("  > [scylla] read", "blue", "", "bold"))
 	op := gocassa.Options{AllowFiltering: true}

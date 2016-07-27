@@ -33,22 +33,20 @@ func newDBConn(ops Options) (*ScyllaDB, error) {
 	return r, nil
 }
 
-func newScyllaTable(ops Options, data interface{}) *ScyllaTable {
+func (t *ScyllaDB) newScyllaTable(ops Options, data interface{}) *ScyllaTable {
 	fmt.Printf("%#v",data)
-	t, err := newDBConn(ops)
-	if err != nil {
-		return nil
-	}
 	log.Debugf("%s (%s)", cmd.Colorfy("  > [scylla] fetch", "blue", "", "bold"),ops.TableName)
 	tbl := t.table(ops.TableName, ops.Pks, ops.Ccms, data)
 	return tbl
 }
 
 func Fetchdb(tinfo Options, data interface{}) error {
-	d := newScyllaTable(tinfo, data)
+	t, err := newDBConn(tinfo)
+	defer t.Close()
+	d := t.newScyllaTable(tinfo, data)
 	if d != nil {
 		//err := d.read(ScyllaWhere{Clauses: tinfo.Clauses}, data)
-		err := d.read(tinfo.PksClauses, tinfo.CcmsClauses, data)
+		err = d.read(tinfo.PksClauses, tinfo.CcmsClauses, data)
 		if err != nil {
 			return err
 		}
@@ -57,10 +55,12 @@ func Fetchdb(tinfo Options, data interface{}) error {
 }
 
 func FetchListdb(tinfo Options, limit int,dat, data interface{}) error {
-	d := newScyllaTable(tinfo, dat)
+	t, err := newDBConn(tinfo)
+	defer t.Close()
+	d := t.newScyllaTable(tinfo, dat)
 	if d != nil {
 		//err := d.read(ScyllaWhere{Clauses: tinfo.Clauses}, data)
-		err := d.readMulti(tinfo.PksClauses, limit, data)
+		err = d.readMulti(tinfo.PksClauses, limit, data)
 		if err != nil {
 			return err
 		}
@@ -70,8 +70,10 @@ func FetchListdb(tinfo Options, limit int,dat, data interface{}) error {
 
 
 func Storedb(tinfo Options, data interface{}) error {
-	t := newScyllaTable(tinfo, data)
-	err := t.insert(data)
+	c, err := newDBConn(tinfo)
+	defer c.Close()
+	t := c.newScyllaTable(tinfo, data)
+	err = t.insert(data)
 	if err != nil {
 		return err
 	}
@@ -79,8 +81,10 @@ func Storedb(tinfo Options, data interface{}) error {
 }
 
 func Updatedb(tinfo Options, data map[string]interface{}) error {
-	t := newScyllaTable(tinfo, data)
-	err := t.update(tinfo, data)
+	c, err := newDBConn(tinfo)
+	defer c.Close()
+	t := c.newScyllaTable(tinfo, data)
+	err = t.update(tinfo, data)
 	if err != nil {
 		return err
 	}
@@ -88,8 +92,10 @@ func Updatedb(tinfo Options, data map[string]interface{}) error {
 }
 
 func Deletedb(tinfo Options, data interface{}) error {
-	t := newScyllaTable(tinfo, data)
-	err := t.deleterow(tinfo)
+	c, err := newDBConn(tinfo)
+	defer c.Close()
+	t := c.newScyllaTable(tinfo, data)
+	err = t.deleterow(tinfo)
 	if err != nil {
 		return err
 	}
