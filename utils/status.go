@@ -58,50 +58,73 @@ func (s Status) Event_type() string {
 	case SNAPSHOTTED:
 		return ONEINSTANCESNAPSHOTTEDTYPE
 	case COOKBOOKDOWNLOADING:
-	    return 	COOKBOOKDOWNLOADINGTYPE
+		return COOKBOOKDOWNLOADINGTYPE
 	case COOKBOOKDOWNLOADED:
-	    return 	COOKBOOKDOWNLOADEDTYPE
+		return COOKBOOKDOWNLOADEDTYPE
 	case COOKBOOKFAILURE:
-	    return 	COOKBOOKFAILURETYPE
+		return COOKBOOKFAILURETYPE
 	case CHEFSOLOSTARTING:
-			return ONEINSTANCECHEFSOLOSTARTING
+		return ONEINSTANCECHEFSOLOSTARTING
 	case CHEFSOLOFINISHED:
-			return ONEINSTANCECHEFSOLOFINISHED
+		return ONEINSTANCECHEFSOLOFINISHED
 	case VNCHOSTUPDATING:
-			return ONEINSTANCEVNCHOSTUPDATING
+		return ONEINSTANCEVNCHOSTUPDATING
 	case VNCHOSTUPDATED:
-			return ONEINSTANCEVNCHOSTUPDATING
+		return ONEINSTANCEVNCHOSTUPDATING
 	case AUTHKEYSUPDATING:
-	    return 	AUTHKEYSUPDATINGTYPE
+		return AUTHKEYSUPDATINGTYPE
 	case AUTHKEYSUPDATED:
-			return 	AUTHKEYSUPDATEDTYPE
+		return AUTHKEYSUPDATEDTYPE
 	case AUTHKEYSFAILURE:
-	    return 	AUTHKEYSFAILURETYPE
+		return AUTHKEYSFAILURETYPE
 	case CHEFCONFIGSETUPSTARTING:
-			return ONEINSTANCECHEFCONFIGSETUPSTARTING
+		return ONEINSTANCECHEFCONFIGSETUPSTARTING
 	case CHEFCONFIGSETUPSTARTED:
-			return ONEINSTANCECHEFCONFIGSETUPSTARTED
+		return ONEINSTANCECHEFCONFIGSETUPSTARTED
 	case INSTANCEIPSUPDATING:
-	    return 	INSTANCEIPSUPDATINGTYPE
+		return INSTANCEIPSUPDATINGTYPE
 	case INSTANCEIPSUPDATED:
-		  return 	INSTANCEIPSUPDATEDTYPE
+		return INSTANCEIPSUPDATEDTYPE
 	case INSTANCEIPSFAILURE:
-	    return 	INSTANCEIPSFAILURETYPE
+		return INSTANCEIPSFAILURETYPE
 	case CONTAINERNETWORKSUCCESS:
-	    return 	CONTAINERNETWORKSUCCESSTYPE
+		return CONTAINERNETWORKSUCCESSTYPE
 	case CONTAINERNETWORKFAILURE:
-	    return 	CONTAINERNETWORKFAILURETYPE
+		return CONTAINERNETWORKFAILURETYPE
+	case FETCHINGHOSTINFOS:
+		return OBCHOSTINFOSFETCHING
+	case FETCHEDHOSTINFOS:
+		return OBCHOSTINFOSSUCCESS
+	case FETCHINGHOSTCPU:
+		return OBCHOSTINFOSCPUPARSING
+	case FETCHEDHOSTCPU:
+		return OBCHOSTINFOSCPUPARSED
+	case FETCHINGHOSTRAM:
+		return OBCHOSTINFOSRAMPARSING
+	case FETCHEDHOSTRAM:
+		return OBCHOSTINFOSRAMPARSED
+	case FETCHINGHOSTOS:
+		return OBCHOSTINFOSOSPARSING
+	case FETCHEDHOSTOS:
+		return OBCHOSTINFOSOSPARSED
+	case FETCHINGHOSTDISK:
+		return OBCHOSTINFOSDISKPARSING
+	case FETCHEDHOSTDISK:
+		return OBCHOSTINFOSDISKPARSED
+	case FETCHINGHOSTNAME:
+		return OBCHOSTINFOSHOSTNAMEPARSING
+	case FETCHEDHOSTNAME:
+		return OBCHOSTINFOSHOSTNAMEPARSED
 	case DNSNETWORKCREATING:
-			return ONEINSTANCEDNSCNAMING
+		return ONEINSTANCEDNSCNAMING
 	case DNSNETWORKCREATED:
-			return ONEINSTANCEDNSCNAMED
+		return ONEINSTANCEDNSCNAMED
 	case DNSNETWORKSKIPPED:
-			return ONEINSTANCEDNSNETWORKSKIPPED
+		return ONEINSTANCEDNSNETWORKSKIPPED
 	case CLONING:
-			return ONEINSTANCEGITCLONING
+		return ONEINSTANCEGITCLONING
 	case CLONED:
-			return ONEINSTANCEGITCLONED
-
+		return ONEINSTANCEGITCLONED
 	case ERROR:
 		return ONEINSTANCEERRORTYPE
 	default:
@@ -131,9 +154,9 @@ func (s Status) Description(name string) string {
 	case RUNNING:
 		return name + " is running.."
 	case CHEFSOLOSTARTING:
-			return "Chefsolo starting .."
+		return "Chefsolo starting .."
 	case CHEFSOLOFINISHED:
-			return "Chefsolo finished .."
+		return "Chefsolo finished .."
 	case STARTING:
 		return "Starting process initializing on " + name + ".."
 	case STARTED:
@@ -153,41 +176,65 @@ func (s Status) Description(name string) string {
 	case SNAPSHOTTED:
 		return name + " was snapcreated.."
 	case COOKBOOKDOWNLOADING:
-	    return "Chef cookbooks are downloading.."
+		return "Chef cookbooks are downloading.."
 	case COOKBOOKDOWNLOADED:
-	    return "Chef cookbooks are successfully downloaded.."
+		return "Chef cookbooks are successfully downloaded.."
 	case COOKBOOKFAILURE:
-			return error_common + "Downloading Cookbooks on " + name + ".."
+		return error_common + "Downloading Cookbooks on " + name + ".."
 	case CHEFCONFIGSETUPSTARTING:
-			return "Chef config setup_starting .."
+		return "Chef config setup_starting .."
 	case CHEFCONFIGSETUPSTARTED:
-			return "Chef config setup_started .."
+		return "Chef config setup_started .."
 	case CLONING:
-				return "Cloning your git repository .."
+		return "Cloning your git repository .."
 	case CLONED:
-				return "Cloned your git repository .."
+		return "Cloned your git repository .."
 	case DNSNETWORKCREATING:
-			return "DNS CNAME creating " + name + ".."
+		return "DNS CNAME creating " + name + ".."
 	case DNSNETWORKCREATED:
-			return "DNS CNAME created successfully " + name + ".."
+		return "DNS CNAME created successfully " + name + ".."
 	case DNSNETWORKSKIPPED:
-			return "DNS CNAME skipped " + name + ".."
+		return "DNS CNAME skipped " + name + ".."
 	case AUTHKEYSUPDATING:
-	    return "SSH keys are updating on your " + name
+		return "SSH keys are updating on your " + name
 	case AUTHKEYSUPDATED:
-		  return "SSH keys are updated on your " + name
+		return "SSH keys are updated on your " + name
 	case AUTHKEYSFAILURE:
-	    return error_common + "Updating Ssh keys on " + name + ".."
+		return error_common + "Updating Ssh keys on " + name + ".."
 	case INSTANCEIPSUPDATING:
-	    return "Private and public ips are updating on your " + name
+		return "Private and public ips are updating on your " + name
 	case INSTANCEIPSUPDATED:
-			return "Private and public ips are updated on your " + name
+		return "Private and public ips are updated on your " + name
 	case INSTANCEIPSFAILURE:
-	    return error_common + "Updating private and public ips on " + name + ".."
+		return error_common + "Updating private and public ips on " + name + ".."
 	case CONTAINERNETWORKSUCCESS:
-	    return "Private and public ips are updated on your " + name
+		return "Private and public ips are updated on your " + name
 	case CONTAINERNETWORKFAILURE:
-	    return error_common + "Updating private and public ips on " + name + ".."
+		return error_common + "Updating private and public ips on " + name + ".."
+	case FETCHINGHOSTINFOS:
+		return "Fetching informations about the host(" + name + ") .."
+	case FETCHEDHOSTINFOS:
+		return "Fetched informations about host(" + name + ") successfully .."
+	case FETCHINGHOSTCPU:
+		return "Parsing host(" + name + ") CPU .."
+	case FETCHEDHOSTCPU:
+		return "Parsed host(" + name + ") CPU successfully .."
+	case FETCHINGHOSTRAM:
+		return "Parsing host(" + name + ") RAM .."
+	case FETCHEDHOSTRAM:
+		return "Parsed host(" + name + ") RAM successfully .."
+	case FETCHINGHOSTOS:
+		return "Parsing host(" + name + ") operatins system .."
+	case FETCHEDHOSTOS:
+		return "Parsed host(" + name + ") operatins system successfully .."
+	case FETCHINGHOSTDISK:
+		return "Parsing host(" + name + ") disk storage .."
+	case FETCHEDHOSTDISK:
+		return "Parsed host(" + name + ") disk storage successfully .."
+	case FETCHINGHOSTNAME:
+		return "Parsing host(" + name + ") hostname .."
+	case FETCHEDHOSTNAME:
+		return "Parsed host(" + name + ") hostname successfully .."
 	case ERROR:
 		return "Oops something went wrong on " + name + ".."
 	default:

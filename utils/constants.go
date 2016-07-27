@@ -1,6 +1,5 @@
 package utils
 
-
 const (
 
 	//keys for watchers
@@ -21,19 +20,23 @@ const (
 	API_KEY        = "api_key"
 	DOMAIN         = "domain"
 	PIGGYBANKS     = "piggybanks"
-  VERTICE_EMAIL  = "vertice_email"
-  VERTICE_APIKEY = "vertice_apikey"
+	VERTICE_EMAIL  = "vertice_email"
+	VERTICE_APIKEY = "vertice_apikey"
+	USERMAIL       = "email"
+	STATUS         = "status"
+
 
 	HOME           = "home"
 	DIR            = "dir"
 	SCYLLAHOST     = "scylla_host"
 	SCYLLAKEYSPACE = "scylla_keyspace"
 
-	EVENT_TYPE      = "event_type"
-	ACCOUNT_ID     = "account_id"
-	ASSEMBLY_ID    = "assembly_id"
-	DATA		   = "data"
-	CREATED_AT     = "created_at"
+	EVENT_TYPE  = "event_type"
+	ACCOUNT_ID  = "account_id"
+	ASSEMBLY_ID = "assembly_id"
+	DATA        = "data"
+	CREATED_AT  = "created_at"
+
 
 	//args for notification
 	NILAVU    = "nilavu"
@@ -49,16 +52,16 @@ const (
 	ENDTIME   = "endtime"
 	//STATUS    = "status"
 	//DESCRIPTION = "description"
-	IPV4PUB        = "ipv4public"
-	IPV4PRI        = "ipv4private"
-	IPV6PRI				 = "ipv6private"
-	IPV6PUB        = "ipv6public"
+	IPV4PUB = "ipv4public"
+	IPV4PRI = "ipv4private"
+	IPV6PRI = "ipv6private"
+	IPV6PUB = "ipv6public"
 
-	EventMachine                 = "machine"
-	EventContainer               = "container"
-	EventBill                    = "bill"
-	EventUser                    = "user"
-	EventStatus                  = "status"
+	EventMachine   = "machine"
+	EventContainer = "container"
+	EventBill      = "bill"
+	EventUser      = "user"
+	EventStatus    = "status"
 
 	BILLMGR = "bill"
 	ADDONS  = "addons"
@@ -67,10 +70,11 @@ const (
 	PROVIDER_ONE    = "one"
 	PROVIDER_DOCKER = "docker"
 
-	LAUNCHING    = "launching"
-	LAUNCHED     = "launched"
-	BOOTSTRAPPED = "bootstrapped"
+	LAUNCHING     = "launching"
+	LAUNCHED      = "launched"
+	BOOTSTRAPPED  = "bootstrapped"
 	BOOTSTRAPPING = "bootstrapping"
+
 	STATEUPPING   = "stateup_starting"
 	STATEUPPED    = "stateup_started"
 	RUNNING      = "running"
@@ -115,6 +119,8 @@ const (
 	CONTAINERNETWORKSUCCESS = "container_network_success"
 	CONTAINERNETWORKFAILURE = "container_network_failure"
 
+
+
 	// StatusLaunching is the initial status of a box
 	// it should transition shortly to a more specific status
 	StatusLaunching = Status(LAUNCHING)
@@ -123,7 +129,7 @@ const (
 	StatusLaunched = Status(LAUNCHED)
 
 	// StatusBootstrapped is the status for box after being booted by the agent in cloud
-	StatusBootstrapped = Status(BOOTSTRAPPED)
+	StatusBootstrapped  = Status(BOOTSTRAPPED)
 	StatusBootstrapping = Status(BOOTSTRAPPING)
 
 	// Stateup is the status of the which is moving up in the state in cloud.
@@ -151,8 +157,7 @@ const (
 	StatusNuked      = Status(NUKED)
 
 	StatusSnapCreating = Status(SNAPSHOTTING)
-	StatusSnapCreated = Status(SNAPSHOTTED)
-
+	StatusSnapCreated  = Status(SNAPSHOTTED)
 
 	// StatusError is the status for units that failed to start, because of
 	// a box error.
@@ -164,6 +169,7 @@ const (
 	StatusAuthkeysUpdating = Status(AUTHKEYSUPDATING)
 	StatusAuthkeysUpdated = Status(AUTHKEYSUPDATED)
 	StatusAuthkeysFailure = Status(AUTHKEYSFAILURE)
+
 	StatusIpsUpdating = Status(INSTANCEIPSUPDATING)
 	StatusIpsUpdated = Status(INSTANCEIPSUPDATED)
 	StatusIpsFailure = Status(INSTANCEIPSFAILURE)
@@ -235,5 +241,4 @@ const (
 
 	CONTAINERNETWORKSUCCESSTYPE      = "net.container.ip.allocate.success"
 	CONTAINERNETWORKFAILURETYPE      = "net.container.ip.allocate.failure"
-
 )
