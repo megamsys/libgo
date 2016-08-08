@@ -50,6 +50,7 @@ func (w whmcsBiller) IsEnabled() bool {
 	return w.enabled
 }
 
+
 func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 	log.Debugf("User Onboarding...")
 
@@ -58,23 +59,25 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 		return err
 	}
 
-	sDec, _ := b64.StdEncoding.DecodeString(acc.Password)
+	bacc, err := acc.convertBillAccount()
+
+	sDec, _ := b64.StdEncoding.DecodeString(bacc.Password.Password)
 
 	client := whmcs.NewClient(nil, m[constants.DOMAIN])
 	a := map[string]string{
 		"username":     m[constants.USERNAME],
 		"password":     GetMD5Hash(m[constants.PASSWORD]),
-		"firstname":    acc.FirstName,
-		"lastname":     acc.FirstName,
-		"email":        acc.Email,
+		"firstname":    bacc.Name.FirstName,
+		"lastname":     bacc.Name.LastName,
+		"email":        bacc.Email,
 		"address1":     "Dummy address",
 		"city":         "Dummy city",
 		"state":        "Dummy state",
 		"postcode":     "00001",
 		"country":      "IN",
-		"phonenumber":  "981999000",
+		"phonenumber":  bacc.Phone.Phone,
 		"password2":    string(sDec),
-		"customfields": GetBase64(map[string]string{m[constants.VERTICE_EMAIL]: acc.Email, m[constants.VERTICE_APIKEY]: acc.ApiKey}),
+		"customfields": GetBase64(map[string]string{m[constants.VERTICE_EMAIL]: bacc.Email, m[constants.VERTICE_APIKEY]: bacc.ApiKey}),
 	}
 
 	_, res, _ := client.Accounts.Create(a)
