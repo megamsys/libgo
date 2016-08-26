@@ -1,6 +1,7 @@
 package pairs
 
 import (
+	"fmt"
 	"encoding/json"
 	"strings"
 )
@@ -67,4 +68,17 @@ func (p *JsonPairs) NukeAndSet(m map[string][]string) {
 		}
 	}
 	*p = swap
+}
+
+
+//Delete old keys and update them with the new values
+func ArrayToJsonPairs(m []string) (*JsonPairs) {
+	pairs := make(JsonPairs, 0)
+	for _, k := range m {
+	pair := &JsonPair{}
+	err := json.Unmarshal([]byte(k), pair)
+	fmt.Println(err)
+	pairs = append(pairs, pair)
+	}
+	return &pairs
 }

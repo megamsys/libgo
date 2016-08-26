@@ -27,7 +27,6 @@ func (s *S) TestAccountConvertion(c *check.C) {
     States: '{"authority":"user","active":"active","blocked":"blocked","staged":"" }',
   }
   bacc, err := acc.convertBillAccount()
-  fmt.Println("*************",bacc)
   fmt.Println(err)
   c.Assert(bacc, check.NotNil)
 	c.Assert(err, check.NotNil)
