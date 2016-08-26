@@ -7,8 +7,10 @@ import (
     "time"
 	)
 
-const EVENTCONTAINER = "events_for_containers"
-
+const (
+  EVENTCONTAINER = "events_for_containers"
+  EVENTCONTAINER_JSONCLAZ = "Megam::EventsContainer"
+)
 
 type EventsContainer struct {
 	EventType   string   	`json:"event_type" cql:"event_type"`
@@ -16,6 +18,7 @@ type EventsContainer struct {
 	AssemblyId  string		`json:"assembly_id" cql:"assembly_id"`
 	Data         []string	`json:"data" cql:"data"`
 	CreatedAt   string		`json:"created_at" cql:"created_at"`
+  JsonClaz   string   `json:"json_claz" cql:"json_claz"`
 }
 
 
@@ -52,5 +55,6 @@ func parseMapToOutputContainer(edata EventData) EventsContainer{
 		AssemblyId: edata.M[constants.ASSEMBLY_ID],
 		Data: edata.D,
 		CreatedAt: time.Now().String(),
+    JsonClaz: EVENTCONTAINER_JSONCLAZ,
    	}
 }
