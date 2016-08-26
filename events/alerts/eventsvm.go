@@ -50,6 +50,6 @@ func parseMapToOutputFormat(edata EventData) EventsVm {
 		AssemblyId: edata.M[constants.ASSEMBLY_ID],
 		Data:       edata.D,
 		CreatedAt:  time.Now().String(),
-    JsonClaz: EVENT_JSONCLAZ,
+    JsonClaz: EVENTVM_JSONCLAZ,
 	}
 }
