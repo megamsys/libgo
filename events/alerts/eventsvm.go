@@ -17,7 +17,7 @@ type EventsVm struct {
 	AccountId  string   `json:"account_id" cql:"account_id"`
 	AssemblyId string   `json:"assembly_id" cql:"assembly_id"`
 	Data       []string `json:"data" cql:"data"`
-	CreatedAt  string   `json:"created_at" cql:"created_at"`
+	CreatedAt  time.Time   `json:"created_at" cql:"created_at"`
 	JsonClaz   string   `json:"json_claz" cql:"json_claz"`
 }
 
@@ -49,7 +49,7 @@ func parseMapToOutputFormat(edata EventData) EventsVm {
 		AccountId:  edata.M[constants.ACCOUNT_ID],
 		AssemblyId: edata.M[constants.ASSEMBLY_ID],
 		Data:       edata.D,
-		CreatedAt:  time.Now().String(),
+		CreatedAt:  time.Now(),
     JsonClaz: EVENTVM_JSONCLAZ,
 	}
 }
