@@ -26,6 +26,7 @@ import (
 
 const (
 	TRANSACTIONBUCKET = "billedhistories"
+	BILLJSONCLAZ      = "Megam::Billedhistories"
 )
 
 type BillTransactionOpts struct {
@@ -42,6 +43,7 @@ type BillTransaction struct {
 	BillType      string `json:"bill_type" cql:"bill_type"`
 	BillingAmount string `json:"billing_amount" cql:"billing_amount"`
 	CurrencyType  string `json:"currency_type" cql:"currency_type"`
+	JsonClaz      string `json:"json_claz" cql:"json_claz"`
 	CreatedAt     string `json:"created_at" cql:"created_at"`
 }
 
@@ -59,6 +61,7 @@ func NewBillTransaction(topts *BillOpts) (*BillTransaction, error) {
 		AssemblyId:    topts.AssemblyId,
 		BillType:      "VM",
 		BillingAmount: topts.Consumed,
+		JsonClaz: BILLJSONCLAZ,
 		CurrencyType:  "",
 		CreatedAt:     time.Now().Local().Format(time.RFC822),
 	}, nil

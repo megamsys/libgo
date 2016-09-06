@@ -61,14 +61,10 @@ func (s *Addons) Get(m map[string]string) error {
 		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
 		Keyspace:    m[constants.SCYLLAKEYSPACE],
 		PksClauses:  map[string]interface{}{PROVIDER_NAME: s.ProviderName},
-		CcmsClauses: map[string]interface{}{constants.ACCOUNT_ID: s.AccountId},	
+		CcmsClauses: map[string]interface{}{constants.ACCOUNT_ID: s.AccountId},
 	}
 	if err := ldb.Fetchdb(ops, s); err != nil {
 		return err
 	}
 	return nil
 }
-
-
-
-

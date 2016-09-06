@@ -4,6 +4,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 	ldb "github.com/megamsys/libgo/db"
 	constants "github.com/megamsys/libgo/utils"
+	"github.com/pborman/uuid"
 	"time"
 )
 
@@ -13,6 +14,7 @@ const (
 
 )
 type EventsVm struct {
+	Id         string   `json:"di" cql:"id"`
 	EventType  string   `json:"event_type" cql:"event_type"`
 	AccountId  string   `json:"account_id" cql:"account_id"`
 	AssemblyId string   `json:"assembly_id" cql:"assembly_id"`
@@ -45,6 +47,7 @@ func (s *Scylla) NotifyVm(eva EventAction, edata EventData) error {
 
 func parseMapToOutputFormat(edata EventData) EventsVm {
 	return EventsVm{
+		Id: uuid.New(),
 		EventType:  edata.M[constants.EVENT_TYPE],
 		AccountId:  edata.M[constants.ACCOUNT_ID],
 		AssemblyId: edata.M[constants.ASSEMBLY_ID],
