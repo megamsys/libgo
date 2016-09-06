@@ -63,7 +63,7 @@ func (self *Bill) skip(k string) bool {
 
 func (self *Bill) OnboardFunc(evt *Event) error {
 	log.Infof("Event:BILL:onboard")
-	
+
 	result := &bills.BillOpts{
 		AccountId: evt.EventData.M[constants.EMAIL],
 	}
@@ -124,4 +124,3 @@ func MapCopy(dst, src interface{}) {
 		dv.SetMapIndex(k, sv.MapIndex(k))
 	}
 }
-

@@ -18,7 +18,7 @@ package bills
 import (
 	"strconv"
 	"time"
-    "strings"
+  "strings"
 	"github.com/megamsys/libgo/db"
 	constants "github.com/megamsys/libgo/utils"
 	"gopkg.in/yaml.v2"
@@ -26,6 +26,7 @@ import (
 
 const (
 	BALANCESBUCKET = "balances"
+	EVENTBALANCEJSON = "Megam::Balances"
 )
 
 type BalanceOpts struct {
@@ -39,6 +40,7 @@ type Balances struct {
 	Credit    string `json:"credit" cql:"credit"`
 	CreatedAt string `json:"created_at" cql:"created_at"`
 	UpdatedAt string `json:"updated_at" cql:"updated_at"`
+	JsonClaz  string `json:"json_claz" cql:"json_claz"`
 }
 
 func (b *Balances) String() string {
@@ -66,7 +68,7 @@ func NewBalances(id string, m map[string]string) (*Balances, error) {
 	if err := db.Fetchdb(ops, b); err != nil {
 		return nil, err
 	}
-	
+
 	return b, nil
 }
 
@@ -75,12 +77,12 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 	if err != nil {
 		return err
 	}
-	
+
 	consume, cerr := strconv.ParseFloat(bopts.Consumed, 64)
 	if cerr != nil {
 		return cerr
 	}
-    
+
     update_fields := make(map[string]interface{})
 	update_fields["updated_at"] = time.Now().Local().Format(time.RFC822)
 	update_fields["credit"] = strconv.FormatFloat(avail - consume, 'f', 2, 64)
@@ -96,6 +98,6 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 	if err := db.Updatedb(ops, update_fields); err != nil {
 		return err
 	}
-	
+
 	return nil
 }
