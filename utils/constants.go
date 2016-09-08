@@ -9,6 +9,7 @@ const (
 	SCYLLA  = "scylla"
 	META    = "meta"
 	WHMCS   = "whmcs"
+	SENDER  = "sender"
 
 	//config keys by watchers
 	TOKEN          = "token"

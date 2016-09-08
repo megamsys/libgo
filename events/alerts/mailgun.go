@@ -2,8 +2,8 @@ package alerts
 
 import (
 	log "github.com/Sirupsen/logrus"
-	constants "github.com/megamsys/libgo/utils"
 	mailgun "github.com/mailgun/mailgun-go"
+	constants "github.com/megamsys/libgo/utils"
 	"strings"
 )
 
@@ -68,6 +68,7 @@ func (v *EventAction) String() string {
 type mailgunner struct {
 	api_key string
 	domain  string
+	sender  string
 	nilavu  string
 	logo    string
 	home    string
@@ -77,6 +78,7 @@ type mailgunner struct {
 func NewMailgun(m map[string]string, n map[string]string) Notifier {
 	return &mailgunner{
 		api_key: m[constants.API_KEY],
+		sender:  m[constants.SENDER],
 		domain:  m[constants.DOMAIN],
 		nilavu:  m[constants.NILAVU],
 		logo:    m[constants.LOGO],
@@ -119,7 +121,7 @@ func (m *mailgunner) Notify(eva EventAction, edata EventData) error {
 
 func (m *mailgunner) Send(msg string, sender string, subject string, to string) error {
 	if len(strings.TrimSpace(sender)) <= 0 {
-		sender = "OYA <support@megamafrica.com>"
+		sender = m.sender
 	}
 	mg := mailgun.NewMailgun(m.domain, m.api_key, "")
 	g := mailgun.NewMessage(
