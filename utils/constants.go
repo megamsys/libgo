@@ -88,7 +88,6 @@ const (
 	UPGRADED     = "upgraded"
 	DESTROYING   = "destroying"
 	NUKED        = "nuked"
-	ERROR        = "error"
 	SNAPSHOTTING   = "snapshotting"
 	SNAPSHOTTED    = "snapshotted"
 
@@ -120,6 +119,30 @@ const (
 	CONTAINERNETWORKSUCCESS = "container_network_success"
 	CONTAINERNETWORKFAILURE = "container_network_failure"
 
+  ERROR        = "error"
+	NETWORK_ERROR = "netwroking_error"
+	VMLAUNCH_ERROR = "launching_error"
+	VMBOOT_ERROR   = "vmboot_error"
+	BOOTSTRAPE_ERROR = "bootstrapping_error"
+	STATEUP_ERROR    = "stateup_error"
+  STATEDOWN_ERROR = "statedown_error"
+  VMRESUME_ERROR = "vmresume_error"
+  VMPOWEROFF_ERROR = "vmshutdown_error"
+
+  PREDEPLOY_ERROR = "perdeploy_error"
+  MANAGEMENT_ERROR = "management_error"
+
+
+	// StateLaunched is the milestone state for box after launched in cloud.
+	StateLaunched = State(LAUNCHED)
+
+	// StateBootstrapped is the milestone state for box after being booted by the agent in cloud
+	StateBootstrapped  = State(BOOTSTRAPPED)
+	//StateRunning is the milestone for fully up instance
+	StateRunning = State(RUNNING)
+
+	StatePreError   = State(PREDEPLOY_ERROR)
+	StatePostError  = State(MANAGEMENT_ERROR)
 
 
 	// StatusLaunching is the initial status of a box
@@ -160,9 +183,6 @@ const (
 	StatusSnapCreating = Status(SNAPSHOTTING)
 	StatusSnapCreated  = Status(SNAPSHOTTED)
 
-	// StatusError is the status for units that failed to start, because of
-	// a box error.
-	StatusError = Status(ERROR)
 
 	StatusCookbookDownloading = Status(COOKBOOKDOWNLOADING)
 	StatusCookbookDownloaded = Status(COOKBOOKDOWNLOADED)
@@ -191,6 +211,19 @@ const (
 
 	StatusContainerNetworkSuccess = Status(CONTAINERNETWORKSUCCESS)
 	StatusContainerNetworkFailure = Status(CONTAINERNETWORKFAILURE)
+
+	// StatusError is the status for units that failed to start, because of
+	// a box error.
+	StatusError = Status(ERROR)
+	StatusNetworkError = Status(NETWORK_ERROR)
+	StatusVmLaunchError = Status(VMLAUNCH_ERROR)
+	StatusVmBootError = Status(VMBOOT_ERROR)
+	StatusBootstrapError = Status(BOOTSTRAPE_ERROR)
+	StatusStateupError = Status(STATEUP_ERROR)
+	StatusStatedownError = Status(STATEDOWN_ERROR)
+	StatusVmStartError = Status(VMRESUME_ERROR)
+	StatusVmStopError = Status(VMPOWEROFF_ERROR)
+
 
 	ONEINSTANCELAUNCHINGTYPE = "compute.instance.launching"
 	ONEINSTANCEVNCHOSTUPDATING = "compute.instance.vnchostupdating"
