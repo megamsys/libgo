@@ -23,6 +23,12 @@ func (s Status) String() string {
 	return string(s)
 }
 
+type State string
+
+func (s State) String() string {
+	return string(s)
+}
+
 func (s Status) Event_type() string {
 	switch s.String() {
 	case LAUNCHING:
