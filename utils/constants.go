@@ -141,6 +141,8 @@ const (
 	//StateRunning is the milestone for fully up instance
 	StateRunning = State(RUNNING)
 
+	StateStopped = State(STOPPED)
+
 	StatePreError   = State(PREDEPLOY_ERROR)
 	StatePostError  = State(MANAGEMENT_ERROR)
 
