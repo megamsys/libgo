@@ -59,6 +59,11 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 		return err
 	}
 
+	org, err := AccountsOrg(o.AccountId, m)
+	if err != nil {
+		return err
+	}
+
 	bacc, err := acc.convertBillAccount()
 
 	sDec, _ := b64.StdEncoding.DecodeString(bacc.Password.Password)
@@ -77,7 +82,7 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 		"country":      "IN",
 		"phonenumber":  bacc.Phone.Phone,
 		"password2":    string(sDec),
-		"customfields": GetBase64(map[string]string{m[constants.VERTICE_EMAIL]: bacc.Email, m[constants.VERTICE_APIKEY]: bacc.ApiKey}),
+		"customfields": GetBase64(map[string]string{m[constants.VERTICE_EMAIL]: bacc.Email,m[constants.VERTICE_ORGID]: org.Id, m[constants.VERTICE_APIKEY]: bacc.ApiKey}),
 	}
 
 	_, res, _ := client.Accounts.Create(a)

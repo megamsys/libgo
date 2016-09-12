@@ -23,6 +23,7 @@ const (
 	PIGGYBANKS     = "piggybanks"
 	VERTICE_EMAIL  = "vertice_email"
 	VERTICE_APIKEY = "vertice_apikey"
+	VERTICE_ORGID  = "vertice_orgid"
 	USERMAIL       = "email"
 	STATUS         = "status"
 
