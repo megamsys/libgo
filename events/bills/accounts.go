@@ -23,7 +23,11 @@ import (
 	"strings"
 )
 
-const ACCOUNTSBUCKET = "accounts"
+const(
+	ORGANIZATIONBUCKET ="organizations"
+	ACCOUNTSBUCKET = "accounts"
+	)
+
 
 type Accounts struct {
 	Id           string `json:"id" cql:"id"`
@@ -121,7 +125,7 @@ func NewAccounts(email string, m map[string]string) (*Accounts, error) {
 	return a, nil
 }
 
-func AccountsOrg(email string, m map[string]string) (*Accounts, error) {
+func AccountsOrg(email string, m map[string]string) (*Organization, error) {
 	org := &Organization{}
 	ops := ldb.Options{
 		TableName:   ORGANIZATIONBUCKET,
