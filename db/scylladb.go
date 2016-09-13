@@ -1,8 +1,6 @@
 package db
 
 import (
-	"fmt"
-
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/gocassa"
 	"github.com/megamsys/libgo/cmd"
@@ -33,7 +31,6 @@ type ScyllaDBOpts struct {
 
 func newScyllaDB(opts ScyllaDBOpts) (*ScyllaDB, error) {
 	ks, err := connectToKeySpace(opts.KeySpaceName, opts.NodeIps, opts.Username, opts.Password)
-	fmt.Printf("-- ks %#v", ks)
 	if err != nil {
 		return nil, err
 	}
