@@ -12,7 +12,7 @@ type Scylla struct {
 
 func NewScylla(m map[string]string) Notifier {
 	return &Scylla{
-		scylla_host:     strings.Split(m[constants.SCYLLAHOST], ","),
+		scylla_host:  strings.Split(m[constants.SCYLLAHOST], ","),
 		scylla_keyspace: m[constants.SCYLLAKEYSPACE],
 	}
 }

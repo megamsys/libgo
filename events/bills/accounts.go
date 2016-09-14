@@ -16,14 +16,18 @@
 package bills
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 	ldb "github.com/megamsys/libgo/db"
 	constants "github.com/megamsys/libgo/utils"
 	"strings"
 )
 
-const ACCOUNTSBUCKET = "accounts"
+const(
+	ORGANIZATIONBUCKET ="organizations"
+	ACCOUNTSBUCKET = "accounts"
+	)
+
 
 type Accounts struct {
 	Id           string `json:"id" cql:"id"`
@@ -44,13 +48,21 @@ type BillAccounts struct {
 	Name         Name     `json:"name" cql:"name"`
 	Phone        Phone    `json:"phone" cql:"phone"`
 	Email        string   `json:"email" cql:"email"`
-	Dates        Dates   `json:"dates" cql:"dates"`
+	Dates        Dates    `json:"dates" cql:"dates"`
 	ApiKey       string   `json:"api_key" cql:"api_key"`
 	Password     Password `json:"password" cql:"password"`
 	Approval     Approval `json:"approval" cql:"approval"`
 	Suspend      Suspend  `json:"suspend" cql:"suspend"`
 	RegIpAddress string   `json:"registration_ip_address" cql:"registration_ip_address"`
 	States       States   `json:"states" cql:"states"`
+}
+
+type Organization struct {
+	Id        string `json:"id" cql:"id"`
+	AccountsId string `json:"accounts_id" cql:"accounts_id"`
+	CreatedAt string `json:"created_at" cql:"created_at"`
+	JsonClaz  string `json:"json_claz" cql:"json_claz"`
+	Name      string `json:"name" cql:"name"`
 }
 
 type Name struct {
@@ -113,25 +125,42 @@ func NewAccounts(email string, m map[string]string) (*Accounts, error) {
 	return a, nil
 }
 
-func (a *Accounts) convertBillAccount() (*BillAccounts, error) {
-	b := &BillAccounts{}
-		a.parseStringToStruct([]byte(a.Name),&b.Name)
-    a.parseStringToStruct([]byte(a.Phone),&b.Phone)
-		a.parseStringToStruct([]byte(a.Password),&b.Password)
-		a.parseStringToStruct([]byte(a.Suspend),&b.Suspend)
-		a.parseStringToStruct([]byte(a.Approval),&b.Approval)
-		a.parseStringToStruct([]byte(a.States),&b.States)
-		a.parseStringToStruct([]byte(a.Dates),&b.Dates)
-    b.Id = a.Id
-		b.Email = a.Email
-		b.ApiKey = a.ApiKey
-		b.RegIpAddress = a.RegIpAddress
-		return b,nil
+func AccountsOrg(email string, m map[string]string) (*Organization, error) {
+	org := &Organization{}
+	ops := ldb.Options{
+		TableName:   ORGANIZATIONBUCKET,
+		Pks:         []string{},
+		Ccms:        []string{"email"},
+		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
+		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		PksClauses:  make(map[string]interface{}),
+		CcmsClauses: map[string]interface{}{"email": email},
+	}
+	if err := ldb.Fetchdb(ops, org); err != nil {
+		return nil, err
+	}
+	return org, nil
 }
 
- func (a *Accounts) parseStringToStruct(b []byte,i interface{}) {
- 	err := json.Unmarshal(b,i)
- 	if err != nil {
- 		fmt.Println(err)
- 	}
- }
+func (a *Accounts) convertBillAccount() (*BillAccounts, error) {
+	b := &BillAccounts{}
+	a.parseStringToStruct([]byte(a.Name), &b.Name)
+	a.parseStringToStruct([]byte(a.Phone), &b.Phone)
+	a.parseStringToStruct([]byte(a.Password), &b.Password)
+	a.parseStringToStruct([]byte(a.Suspend), &b.Suspend)
+	a.parseStringToStruct([]byte(a.Approval), &b.Approval)
+	a.parseStringToStruct([]byte(a.States), &b.States)
+	a.parseStringToStruct([]byte(a.Dates), &b.Dates)
+	b.Id = a.Id
+	b.Email = a.Email
+	b.ApiKey = a.ApiKey
+	b.RegIpAddress = a.RegIpAddress
+	return b, nil
+}
+
+func (a *Accounts) parseStringToStruct(b []byte, i interface{}) {
+	err := json.Unmarshal(b, i)
+	if err != nil {
+		fmt.Println(err)
+	}
+}

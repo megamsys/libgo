@@ -3,7 +3,6 @@ package db
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/cmd"
-	"fmt"
 )
 
 type Options struct {
@@ -34,7 +33,6 @@ func newDBConn(ops Options) (*ScyllaDB, error) {
 }
 
 func (t *ScyllaDB) newScyllaTable(ops Options, data interface{}) *ScyllaTable {
-	fmt.Printf("%#v",data)
 	log.Debugf("%s (%s)", cmd.Colorfy("  > [scylla] fetch", "blue", "", "bold"),ops.TableName)
 	tbl := t.table(ops.TableName, ops.Pks, ops.Ccms, data)
 	return tbl
@@ -42,7 +40,11 @@ func (t *ScyllaDB) newScyllaTable(ops Options, data interface{}) *ScyllaTable {
 
 func Fetchdb(tinfo Options, data interface{}) error {
 	t, err := newDBConn(tinfo)
+	if err != nil {
+		return err
+	}
 	defer t.Close()
+
 	d := t.newScyllaTable(tinfo, data)
 	if d != nil {
 		//err := d.read(ScyllaWhere{Clauses: tinfo.Clauses}, data)
@@ -56,6 +58,9 @@ func Fetchdb(tinfo Options, data interface{}) error {
 
 func FetchListdb(tinfo Options, limit int,dat, data interface{}) error {
 	t, err := newDBConn(tinfo)
+	if err != nil {
+		return err
+	}
 	defer t.Close()
 	d := t.newScyllaTable(tinfo, dat)
 	if d != nil {
@@ -71,6 +76,9 @@ func FetchListdb(tinfo Options, limit int,dat, data interface{}) error {
 
 func Storedb(tinfo Options, data interface{}) error {
 	c, err := newDBConn(tinfo)
+	if err != nil {
+		return err
+	}
 	defer c.Close()
 	t := c.newScyllaTable(tinfo, data)
 	err = t.insert(data)
@@ -82,6 +90,9 @@ func Storedb(tinfo Options, data interface{}) error {
 
 func Updatedb(tinfo Options, data map[string]interface{}) error {
 	c, err := newDBConn(tinfo)
+	if err != nil {
+		return err
+	}
 	defer c.Close()
 	t := c.newScyllaTable(tinfo, data)
 	err = t.update(tinfo, data)
@@ -93,6 +104,9 @@ func Updatedb(tinfo Options, data map[string]interface{}) error {
 
 func Deletedb(tinfo Options, data interface{}) error {
 	c, err := newDBConn(tinfo)
+	if err != nil {
+		return err
+	}
 	defer c.Close()
 	t := c.newScyllaTable(tinfo, data)
 	err = t.deleterow(tinfo)

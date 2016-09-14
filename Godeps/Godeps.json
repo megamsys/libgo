@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/megamsys/libgo",
-	"GoVersion": "go1.6",
+	"GoVersion": "go1.7",
 	"GodepVersion": "v74",
 	"Packages": [
 		"./..."
@@ -12,12 +12,8 @@
 		},
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.10.0-19-gf3cfb45",
-			"Rev": "f3cfb454f4c209e6668c95216c4744b8fddb2356"
-		},
-		{
-			"ImportPath": "github.com/golang/protobuf/proto",
-			"Rev": "0c1f6d65b5a189c2250d10e71a5506f06f9fa0a0"
+			"Comment": "v0.10.0-38-g3ec0642",
+			"Rev": "3ec0642a7fb6488f65b06f9040adc67e3990296a"
 		},
 		{
 			"ImportPath": "github.com/golang/snappy",
@@ -33,17 +29,18 @@
 		},
 		{
 			"ImportPath": "github.com/mailgun/mailgun-go",
-			"Rev": "a98c4eecda3e6a36bd804ae80e9a4f8edaa6cd99"
+			"Comment": "v1.0.2",
+			"Rev": "369a1fa57ce6fb314e627087b9fff0db5c266c0f"
 		},
 		{
 			"ImportPath": "github.com/megamsys/gocassa",
-			"Comment": "v1.2.0-6-ga92c430",
-			"Rev": "a92c430f3488516bf1e0794f622e8890bf320f46"
+			"Comment": "v1.2.0-8-g1f20528",
+			"Rev": "1f20528f57d946d4366bb692b3a26653941efed9"
 		},
 		{
 			"ImportPath": "github.com/megamsys/gocassa/reflect",
-			"Comment": "v1.2.0-6-ga92c430",
-			"Rev": "a92c430f3488516bf1e0794f622e8890bf320f46"
+			"Comment": "v1.2.0-8-g1f20528",
+			"Rev": "1f20528f57d946d4366bb692b3a26653941efed9"
 		},
 		{
 			"ImportPath": "github.com/megamsys/gocql",
@@ -66,16 +63,17 @@
 			"Rev": "6cc8c4b282a6ba012e70b8ff9da2e4457a005d59"
 		},
 		{
-			"ImportPath": "github.com/megamsys/riakpbc",
-			"Rev": "9dc061533423ba640a55f8504946b3fd10f4f42c"
-		},
-		{
 			"ImportPath": "github.com/megamsys/whmcs_go/whmcs",
-			"Rev": "8e39b40def1835104b7de2a8d33bd88de7333028"
+			"Rev": "e7b012c072e1a0a81afb5aa6f00a4191db5a6ca2"
 		},
 		{
 			"ImportPath": "github.com/mitchellh/mapstructure",
-			"Rev": "d2dd0262208475919e1a362f675cfc0e7c10e905"
+			"Rev": "ca63d7c062ee3c9f34db231e352b60012b4fd0c1"
+		},
+		{
+			"ImportPath": "github.com/pborman/uuid",
+			"Comment": "v1.0-15-gb984ec7",
+			"Rev": "b984ec7fa9ff9e428bd0cf0abf429384dfbe3e37"
 		},
 		{
 			"ImportPath": "github.com/sajari/fuzzy",
@@ -83,15 +81,15 @@
 		},
 		{
 			"ImportPath": "github.com/tsuru/commandmocker",
-			"Rev": "730e45a4c5504d497aa3559a3638a5b0e0f27d53"
+			"Rev": "e1d28f4f616a8ce693e9c708366b515e9e4d40a7"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/ssh/terminal",
-			"Rev": "811831de4c4dd03a0b8737233af3b36852386373"
+			"Rev": "6318898455d3ac20e7e44d0a080d43f8c3ff120b"
 		},
 		{
 			"ImportPath": "golang.org/x/sys/unix",
-			"Rev": "62bee037599929a6e9146f29d10dd5208c43507d"
+			"Rev": "30de6d19a3bd89a5f38ae4028e23aaa5582648af"
 		},
 		{
 			"ImportPath": "gopkg.in/check.v1",
@@ -104,7 +102,7 @@
 		},
 		{
 			"ImportPath": "gopkg.in/yaml.v2",
-			"Rev": "a83829b6f1293c91addabc89d0571c246397bbf4"
+			"Rev": "e4d366fc3c7938e2958e662b4258c7a89e1f0e3e"
 		},
 		{
 			"ImportPath": "launchpad.net/gnuflag",
