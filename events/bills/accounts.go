@@ -130,11 +130,11 @@ func AccountsOrg(email string, m map[string]string) (*Organization, error) {
 	ops := ldb.Options{
 		TableName:   ORGANIZATIONBUCKET,
 		Pks:         []string{},
-		Ccms:        []string{"email"},
+		Ccms:        []string{"accounts_id"},
 		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
 		Keyspace:    m[constants.SCYLLAKEYSPACE],
 		PksClauses:  make(map[string]interface{}),
-		CcmsClauses: map[string]interface{}{"email": email},
+		CcmsClauses: map[string]interface{}{"accounts_id": email},
 	}
 	if err := ldb.Fetchdb(ops, org); err != nil {
 		return nil, err
