@@ -83,7 +83,7 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 		return cerr
 	}
 
-    update_fields := make(map[string]interface{})
+  update_fields := make(map[string]interface{})
 	update_fields["updated_at"] = time.Now().Local().Format(time.RFC822)
 	update_fields["credit"] = strconv.FormatFloat(avail - consume, 'f', 2, 64)
 	ops := db.Options{

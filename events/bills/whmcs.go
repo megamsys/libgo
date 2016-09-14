@@ -188,7 +188,6 @@ func getClientId(body string) string {
 }
 
 func recordStatus(email, cid, status string, mi map[string]string) error {
-
 	js := make(pairs.JsonPairs, 0)
 	m := make(map[string][]string, 2)
 	m["status"] = []string{status}
