@@ -73,6 +73,8 @@ const (
 	PROVIDER_DOCKER = "docker"
 
 	LAUNCHING     = "launching"
+	INITIALIZING  = "initializing"
+	INITIALIZED   = "initialized"
 	LAUNCHED      = "launched"
 	BOOTSTRAPPED  = "bootstrapped"
 	BOOTSTRAPPING = "bootstrapping"
@@ -135,7 +137,9 @@ const (
 
 
 	// StateLaunched is the milestone state for box after launched in cloud.
-	StateLaunched = State(LAUNCHED)
+	StateInitializing = State(INITIALIZING)
+
+	StateInitialized = State(INITIALIZED)
 
 	// StateBootstrapped is the milestone state for box after being booted by the agent in cloud
 	StateBootstrapped  = State(BOOTSTRAPPED)

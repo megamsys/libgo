@@ -85,7 +85,10 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 		"customfields": GetBase64(map[string]string{m[constants.VERTICE_EMAIL]: bacc.Email,m[constants.VERTICE_ORGID]: org.Id, m[constants.VERTICE_APIKEY]: bacc.ApiKey}),
 	}
 
-	_, res, _ := client.Accounts.Create(a)
+	_, res, err := client.Accounts.Create(a)
+	if err !=nil {
+		return err
+	}
 
 	err = onboardNotify(acc.Email, res.Body, m)
 	return err
