@@ -96,8 +96,8 @@ const (
 
 	DISKATTACHING = "disk_attaching"
 	DISKATTACHED  = "disk_attached"
-	DISKDETTACHING = "disk_dettaching"
-	DISKDETTACHED  = "disk_dettached"
+	DISKDETACHING = "disk_detaching"
+	DISKDETACHED  = "disk_detached"
 
 
 	VNCHOSTUPDATING    = "vnchostupdating"
@@ -198,8 +198,8 @@ const (
 
 	StatusDiskAttaching  = Status(DISKATTACHING)
 	StatusDiskAttached   = Status(DISKATTACHED)
-	StatusDiskDettaching = Status(DISKDETTACHING)
-	StatusDiskDettached  = Status(DISKDETTACHED)
+	StatusDiskDetaching = Status(DISKDETACHING)
+	StatusDiskDetached  = Status(DISKDETACHED)
 
 	StatusCookbookDownloading = Status(COOKBOOKDOWNLOADING)
 	StatusCookbookDownloaded  = Status(COOKBOOKDOWNLOADED)

@@ -56,6 +56,7 @@ func Fetchdb(tinfo Options, data interface{}) error {
 	return nil
 }
 
+// dat referes the structure of table and data for array of row
 func FetchListdb(tinfo Options, limit int,dat, data interface{}) error {
 	t, err := newDBConn(tinfo)
 	if err != nil {
