@@ -27,7 +27,7 @@ func (s *Scylla) satisfied(eva EventAction) bool {
 func (s *Scylla) Notify(eva EventAction, edata EventData) error {
 	value := edata.M[constants.EVENT_TYPE]
 	et := strings.Split(value, ".")
-	if et[0] == "compute" {
+	if et[0] == "compute" && et[1] == "instance"{
 		return s.NotifyVm(eva, edata)
 	} else if et[0] == "bill" {
 		return s.NotifyBill(eva, edata)
@@ -35,9 +35,10 @@ func (s *Scylla) Notify(eva EventAction, edata EventData) error {
 		return s.NotifyStorage(eva, edata)
 	} else if et[0] == "obc" {
 		return s.NotifyOBC(eva, edata)
-	} else {
+	} else if et[0] == "compute" && et[1] == "container" {
 		return s.NotifyContainer(eva, edata)
+	} else {
+		return nil
 	}
-
 	return nil
 }

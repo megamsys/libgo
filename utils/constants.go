@@ -77,6 +77,9 @@ const (
 	BOOTSTRAPPED  = "bootstrapped"
 	BOOTSTRAPPING = "bootstrapping"
 
+	CONTAINERINITIALIZING = "containerinitializing"
+	CONTAINERINITIALIZED  = "containerinitialized"
+
 	STATEUPPING    = "stateup_starting"
 	STATEUPPED     = "stateup_started"
 	RUNNING        = "running"
@@ -107,8 +110,8 @@ const (
 	DNSNETWORKSKIPPED  = "dnscnameskipped"
 	CLONING            = "gitcloning"
 	CLONED             = "gitcloned"
-	CHEFSOLOSTARTING   = "chefsolostarting"
-	CHEFSOLOFINISHED   = "chefsolofinished"
+	APPDEPLOYING       = "appdeploying"
+	APPDEPLOYED        = "appdeployed"
 	BUILDSTARTING      = "buildstarting"
 	BUILDSTOPPED       = "buildstopped"
 	SERVICESTARTING    = "servicestarting"
@@ -128,6 +131,22 @@ const (
 	CONTAINERNETWORKSUCCESS = "container_network_success"
 	CONTAINERNETWORKFAILURE = "container_network_failure"
 
+	CONTAINERLAUNCHING      = "containerlaunching"
+  CONTAINERBOOTSTRAPPING  = "containerbootstrapping"
+  CONTAINERBOOTSTRAPPED   = "containerbootstrapped"
+  CONTAINERLAUNCHED       = "containerlaunched"
+  CONTAINEREXISTS         = "containerexists"
+  CONTAINERDELETE         = "containerdelete"
+  CONTAINERSTARTING       = "containerstarting"
+  CONTAINERSTARTED        = "containerstarted"
+  CONTAINERSTOPPING       = "containerstopping"
+  CONTAINERSTOPPED        = "containerstopped"
+  CONTAINERRESTARTING     = "containerrestarting"
+  CONTAINERRESTARTED      = "containerrestarted"
+  CONTAINERUPGRADED       = "containerupgraded"
+	CONTAINERRUNNING        = "containerrunning"
+	CONTAINERERROR 					= "containererror"
+
 	ERROR            = "error"
 	NETWORK_ERROR    = "netwroking_error"
 	VMLAUNCH_ERROR   = "launching_error"
@@ -141,6 +160,10 @@ const (
 	PREDEPLOY_ERROR  = "perdeploy_error"
 	MANAGEMENT_ERROR = "management_error"
 
+	StateContainerInitializing = State(CONTAINERINITIALIZING)
+	StateContainerInitialized  = State(CONTAINERINITIALIZED)
+	StateContainerBootstrapped = State(CONTAINERBOOTSTRAPPED)
+	StateContainerRunning      = State(CONTAINERRUNNING)
 	// StateLaunched is the milestone state for box after launched in cloud.
 	StateInitializing = State(INITIALIZING)
 
@@ -213,8 +236,8 @@ const (
 	StatusIpsFailure          = Status(INSTANCEIPSFAILURE)
 	StatusChefConfigSetupping = Status(CHEFCONFIGSETUPSTARTING)
 	StatusChefConfigSetupped  = Status(CHEFCONFIGSETUPSTARTED)
-	StatusChefsoloStarting    = Status(CHEFSOLOSTARTING)
-	StatusChefsoloFinished    = Status(CHEFSOLOFINISHED)
+	StatusAppDeploying        = Status(APPDEPLOYING)
+	StatusAppDeployed         = Status(APPDEPLOYED)
 
 	StatusNetworkCreating = Status(DNSNETWORKCREATING)
 	StatusNetworkCreated  = Status(DNSNETWORKCREATED)
@@ -226,8 +249,23 @@ const (
 	StatusServiceStarting = Status(SERVICESTARTING)
 	StatusServiceStopped  = Status(SERVICESTOPPED)
 
+	StatusContainerLaunching     = Status(CONTAINERLAUNCHING)
+	StatusContainerBootstrapping = Status(CONTAINERBOOTSTRAPPING)
+  StatusContainerBootstrapped  = Status(CONTAINERBOOTSTRAPPED)
+  StatusContainerLaunched      = Status(CONTAINERLAUNCHED)
+  StatusContainerExists        = Status(CONTAINEREXISTS)
+	StatusContainerDelete        = Status(CONTAINERDELETE)
+	StatusContainerStarting      = Status(CONTAINERSTARTING)
+	StatusContainerStarted       = Status(CONTAINERSTARTED)
+	StatusContainerStopping      = Status(CONTAINERSTOPPING)
+	StatusContainerStopped       = Status(CONTAINERSTOPPED)
+	StatusContainerRestarting    = Status(CONTAINERRESTARTING)
+	StatusContainerRestarted     = Status(CONTAINERRESTARTED)
+	StatusContainerUpgraded      = Status(CONTAINERUPGRADED)
+	StatusContainerRunning       = Status(CONTAINERRUNNING)
 	StatusContainerNetworkSuccess = Status(CONTAINERNETWORKSUCCESS)
 	StatusContainerNetworkFailure = Status(CONTAINERNETWORKFAILURE)
+	StatusContainerError          = Status(CONTAINERERROR)
 
 	// StatusError is the status for units that failed to start, because of
 	// a box error.
@@ -248,8 +286,8 @@ const (
 	ONEINSTANCECHEFCONFIGSETUPSTARTED  = "compute.instance.chefconfigsetupstarted"
 	ONEINSTANCEGITCLONING              = "compute.instance.gitcloning"
 	ONEINSTANCEGITCLONED               = "compute.instance.gitcloned"
-	ONEINSTANCECHEFSOLOSTARTING        = "compute.instance.chefsolostarting"
-	ONEINSTANCECHEFSOLOFINISHED        = "compute.instance.chefsolofinished"
+	ONEINSTANCEAPPDEPLOYING            = "compute.instance.appdeploying"
+	ONEINSTANCEAPPDEPLOYED             = "compute.instance.appdeployed"
 	ONEINSTANCEBUILDSTARTING           = "compute.instance.buildstarting"
 	ONEINSTANCEBUILDSTOPPED            = "compute.instance.buildstopped"
 	ONEINSTANCESERVICESTARTING         = "compute.instance.servicestarting"
@@ -289,6 +327,21 @@ const (
 	INSTANCEIPSUPDATEDTYPE  = "compute.instance.ip_updated"
 	INSTANCEIPSFAILURETYPE  = "compute.instance.ip_updatefailure"
 
-	CONTAINERNETWORKSUCCESSTYPE = "net.container.ip_allocate_success"
-	CONTAINERNETWORKFAILURETYPE = "net.container.ip_allocate_failure"
+	CONTAINERINSTANCELAUNCHINGTYPE = "compute.container.launching"
+	CONTAINERINSTANCEBOOTSTRAPPING = "compute.container.bootstrapping"
+	CONTAINERINSTANCEBOOTSTRAPPED  = "compute.container.bootstrapped"
+	CONTAINERINSTANCELAUNCHEDTYPE  = "compute.container.launched"
+	CONTAINERINSTANCEEXISTS        = "compute.container.exists"
+	CONTAINERINSTANCEDELETE        = "compute.container.delete"
+	CONTAINERINSTANCESTARTING      = "compute.container.starting"
+	CONTAINERINSTANCESTARTED       = "compute.container.started"
+	CONTAINERINSTANCESTOPPING      = "compute.container.stopping"
+	CONTAINERINSTANCESTOPPED       = "compute.container.stopped"
+	CONTAINERINSTANCERESTARTING    = "compute.container.restarting"
+	CONTAINERINSTANCERESTARTED     = "compute.container.restarted"
+	CONTAINERINSTANCEUPGRADED      = "compute.container.upgraded"
+	CONTAINERINSTANCERUNNING       = "compute.container.running"
+	CONTAINERNETWORKSUCCESSTYPE    = "compute.container.ip_allocate_success"
+	CONTAINERNETWORKFAILURETYPE    = "compute.container.ip_allocate_failure"
+	CONTAINERINSTANCEERROR         = "compute.container.error"
 )
