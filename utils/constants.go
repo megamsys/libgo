@@ -36,8 +36,17 @@ const (
 	EVENT_TYPE    = "event_type"
 	ACCOUNT_ID    = "account_id"
 	ASSEMBLY_ID   = "assembly_id"
+	ASSEMBLY_NAME = "assembly_name"
 	DATA          = "data"
 	CREATED_AT    = "created_at"
+
+
+	ACCOUNTID    = "AccountId"
+	ASSEMBLYID   = "AssemblyId"
+	ASSEMBLYNAME = "AssemblyName"
+	CONSUMED     = "Consumed"
+	START_TIME    = "StartTime"
+	END_TIME      = "EndTime"
 
 	//args for notification
 	NILAVU    = "nilavu"
