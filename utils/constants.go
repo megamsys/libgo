@@ -32,11 +32,21 @@ const (
 	SCYLLAHOST     = "scylla_host"
 	SCYLLAKEYSPACE = "scylla_keyspace"
 
-	EVENT_TYPE  = "event_type"
-	ACCOUNT_ID  = "account_id"
-	ASSEMBLY_ID = "assembly_id"
-	DATA        = "data"
-	CREATED_AT  = "created_at"
+	ASSEMBLIES_ID = "assemblies_id"
+	EVENT_TYPE    = "event_type"
+	ACCOUNT_ID    = "account_id"
+	ASSEMBLY_ID   = "assembly_id"
+	ASSEMBLY_NAME = "assembly_name"
+	DATA          = "data"
+	CREATED_AT    = "created_at"
+
+
+	ACCOUNTID    = "AccountId"
+	ASSEMBLYID   = "AssemblyId"
+	ASSEMBLYNAME = "AssemblyName"
+	CONSUMED     = "Consumed"
+	START_TIME    = "StartTime"
+	END_TIME      = "EndTime"
 
 	//args for notification
 	NILAVU    = "nilavu"
@@ -101,7 +111,6 @@ const (
 	DISKATTACHED  = "disk_attached"
 	DISKDETACHING = "disk_detaching"
 	DISKDETACHED  = "disk_detached"
-
 
 	VNCHOSTUPDATING    = "vnchostupdating"
 	VNCHOSTUPDATED     = "vnchostupdated"
@@ -219,8 +228,8 @@ const (
 	StatusSnapDeleting = Status(SNAPDESTORYING)
 	StatusSnapDeleted  = Status(SNAPDESTORYED)
 
-	StatusDiskAttaching  = Status(DISKATTACHING)
-	StatusDiskAttached   = Status(DISKATTACHED)
+	StatusDiskAttaching = Status(DISKATTACHING)
+	StatusDiskAttached  = Status(DISKATTACHED)
 	StatusDiskDetaching = Status(DISKDETACHING)
 	StatusDiskDetached  = Status(DISKDETACHED)
 
