@@ -69,10 +69,10 @@ func (s Status) Event_type() string {
 		return COOKBOOKDOWNLOADEDTYPE
 	case COOKBOOKFAILURE:
 		return COOKBOOKFAILURETYPE
-	case CHEFSOLOSTARTING:
-		return ONEINSTANCECHEFSOLOSTARTING
-	case CHEFSOLOFINISHED:
-		return ONEINSTANCECHEFSOLOFINISHED
+	case APPDEPLOYING:
+		return ONEINSTANCEAPPDEPLOYING
+	case APPDEPLOYED:
+		return ONEINSTANCEAPPDEPLOYED
 	case VNCHOSTUPDATING:
 		return ONEINSTANCEVNCHOSTUPDATING
 	case VNCHOSTUPDATED:
@@ -131,6 +131,37 @@ func (s Status) Event_type() string {
 		return ONEINSTANCEGITCLONING
 	case CLONED:
 		return ONEINSTANCEGITCLONED
+	case CONTAINERLAUNCHING:
+		return CONTAINERINSTANCELAUNCHINGTYPE
+	case CONTAINERBOOTSTRAPPING:
+		return CONTAINERINSTANCEBOOTSTRAPPING
+	case CONTAINERBOOTSTRAPPED:
+		return CONTAINERINSTANCEBOOTSTRAPPED
+	case CONTAINERLAUNCHED:
+			return CONTAINERINSTANCELAUNCHEDTYPE
+	case CONTAINEREXISTS:
+		return CONTAINERINSTANCEEXISTS
+	case CONTAINERDELETE:
+		return CONTAINERINSTANCEDELETE
+	case CONTAINERSTARTING:
+		return CONTAINERINSTANCESTARTING
+	case CONTAINERSTARTED:
+		return CONTAINERINSTANCESTARTED
+	case CONTAINERSTOPPING:
+		return CONTAINERINSTANCESTOPPING
+	case CONTAINERSTOPPED:
+		return CONTAINERINSTANCESTOPPED
+	case CONTAINERRESTARTING:
+		return CONTAINERINSTANCERESTARTING
+	case CONTAINERRESTARTED:
+		return CONTAINERINSTANCERESTARTED
+	case CONTAINERUPGRADED:
+		return CONTAINERINSTANCEUPGRADED
+  case CONTAINERRUNNING:
+		return CONTAINERINSTANCERUNNING
+	case CONTAINERERROR:
+		return CONTAINERINSTANCEERROR
+
 	case ERROR:
 		return ONEINSTANCEERRORTYPE
 	default:
@@ -159,10 +190,10 @@ func (s Status) Description(name string) string {
 		return name + " is stateupped.."
 	case RUNNING:
 		return name + " is running.."
-	case CHEFSOLOSTARTING:
-		return "Chefsolo starting .."
-	case CHEFSOLOFINISHED:
-		return "Chefsolo finished .."
+	case APPDEPLOYING:
+		return "Your App " + name + " is deploying.."
+	case APPDEPLOYED:
+		return "Your App " + name + " is deployed.."
 	case STARTING:
 		return "Starting process initializing on " + name + ".."
 	case STARTED:
@@ -241,6 +272,36 @@ func (s Status) Description(name string) string {
 		return "Parsing host(" + name + ") hostname .."
 	case FETCHEDHOSTNAME:
 		return "Parsed host(" + name + ") hostname successfully .."
+	case CONTAINERLAUNCHING:
+		return "Your " + name + " container is initializing.."
+	case CONTAINERBOOTSTRAPPING:
+		return name + " was bootstrapping.."
+	case CONTAINERBOOTSTRAPPED:
+		return name + " was bootstrapped.."
+	case CONTAINERLAUNCHED:
+		return "Container " + name + " was initialized on cloud.."
+	case CONTAINEREXISTS:
+		return name + "was exists.."
+	case CONTAINERDELETE:
+		return name + "was deleted.."
+	case CONTAINERSTARTING:
+		return "Starting process initializing on " + name + ".."
+	case CONTAINERSTARTED:
+		return name + " was started.."
+	case CONTAINERSTOPPING:
+		return "Stopping process initializing on " + name + ".."
+	case CONTAINERSTOPPED:
+		return name + " was stopped.."
+	case CONTAINERRESTARTING:
+		return "Restarting process initializing on " + name + ".."
+	case CONTAINERRESTARTED:
+		return name + " was restarted.."
+	case CONTAINERUPGRADED:
+		return name + " was upgraded.."
+	case CONTAINERRUNNING:
+		return name + "was running.."
+	case CONTAINERERROR:
+		return "Oops something went wrong on " + name + ".."
 	case ERROR:
 		return "Oops something went wrong on " + name + ".."
 	default:
