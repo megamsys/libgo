@@ -40,13 +40,12 @@ const (
 	DATA          = "data"
 	CREATED_AT    = "created_at"
 
-
 	ACCOUNTID    = "AccountId"
 	ASSEMBLYID   = "AssemblyId"
 	ASSEMBLYNAME = "AssemblyName"
 	CONSUMED     = "Consumed"
-	START_TIME    = "StartTime"
-	END_TIME      = "EndTime"
+	START_TIME   = "StartTime"
+	END_TIME     = "EndTime"
 
 	//args for notification
 	NILAVU    = "nilavu"
@@ -140,21 +139,21 @@ const (
 	CONTAINERNETWORKSUCCESS = "container_network_success"
 	CONTAINERNETWORKFAILURE = "container_network_failure"
 
-	CONTAINERLAUNCHING      = "containerlaunching"
-  CONTAINERBOOTSTRAPPING  = "containerbootstrapping"
-  CONTAINERBOOTSTRAPPED   = "containerbootstrapped"
-  CONTAINERLAUNCHED       = "containerlaunched"
-  CONTAINEREXISTS         = "containerexists"
-  CONTAINERDELETE         = "containerdelete"
-  CONTAINERSTARTING       = "containerstarting"
-  CONTAINERSTARTED        = "containerstarted"
-  CONTAINERSTOPPING       = "containerstopping"
-  CONTAINERSTOPPED        = "containerstopped"
-  CONTAINERRESTARTING     = "containerrestarting"
-  CONTAINERRESTARTED      = "containerrestarted"
-  CONTAINERUPGRADED       = "containerupgraded"
-	CONTAINERRUNNING        = "containerrunning"
-	CONTAINERERROR 					= "containererror"
+	CONTAINERLAUNCHING     = "containerlaunching"
+	CONTAINERBOOTSTRAPPING = "containerbootstrapping"
+	CONTAINERBOOTSTRAPPED  = "containerbootstrapped"
+	CONTAINERLAUNCHED      = "containerlaunched"
+	CONTAINEREXISTS        = "containerexists"
+	CONTAINERDELETE        = "containerdelete"
+	CONTAINERSTARTING      = "containerstarting"
+	CONTAINERSTARTED       = "containerstarted"
+	CONTAINERSTOPPING      = "containerstopping"
+	CONTAINERSTOPPED       = "containerstopped"
+	CONTAINERRESTARTING    = "containerrestarting"
+	CONTAINERRESTARTED     = "containerrestarted"
+	CONTAINERUPGRADED      = "containerupgraded"
+	CONTAINERRUNNING       = "containerrunning"
+	CONTAINERERROR         = "containererror"
 
 	ERROR            = "error"
 	NETWORK_ERROR    = "netwroking_error"
@@ -166,8 +165,8 @@ const (
 	VMRESUME_ERROR   = "vmresume_error"
 	VMPOWEROFF_ERROR = "vmshutdown_error"
 
-	PREDEPLOY_ERROR  = "perdeploy_error"
-	MANAGEMENT_ERROR = "management_error"
+	PREDEPLOY_ERROR = "preerror"
+	POST_ERROR      = "posterror"
 
 	StateContainerInitializing = State(CONTAINERINITIALIZING)
 	StateContainerInitialized  = State(CONTAINERINITIALIZED)
@@ -186,7 +185,7 @@ const (
 	StateStopped = State(STOPPED)
 
 	StatePreError  = State(PREDEPLOY_ERROR)
-	StatePostError = State(MANAGEMENT_ERROR)
+	StatePostError = State(POST_ERROR)
 
 	// StatusLaunching is the initial status of a box
 	// it should transition shortly to a more specific status
@@ -258,20 +257,20 @@ const (
 	StatusServiceStarting = Status(SERVICESTARTING)
 	StatusServiceStopped  = Status(SERVICESTOPPED)
 
-	StatusContainerLaunching     = Status(CONTAINERLAUNCHING)
-	StatusContainerBootstrapping = Status(CONTAINERBOOTSTRAPPING)
-  StatusContainerBootstrapped  = Status(CONTAINERBOOTSTRAPPED)
-  StatusContainerLaunched      = Status(CONTAINERLAUNCHED)
-  StatusContainerExists        = Status(CONTAINEREXISTS)
-	StatusContainerDelete        = Status(CONTAINERDELETE)
-	StatusContainerStarting      = Status(CONTAINERSTARTING)
-	StatusContainerStarted       = Status(CONTAINERSTARTED)
-	StatusContainerStopping      = Status(CONTAINERSTOPPING)
-	StatusContainerStopped       = Status(CONTAINERSTOPPED)
-	StatusContainerRestarting    = Status(CONTAINERRESTARTING)
-	StatusContainerRestarted     = Status(CONTAINERRESTARTED)
-	StatusContainerUpgraded      = Status(CONTAINERUPGRADED)
-	StatusContainerRunning       = Status(CONTAINERRUNNING)
+	StatusContainerLaunching      = Status(CONTAINERLAUNCHING)
+	StatusContainerBootstrapping  = Status(CONTAINERBOOTSTRAPPING)
+	StatusContainerBootstrapped   = Status(CONTAINERBOOTSTRAPPED)
+	StatusContainerLaunched       = Status(CONTAINERLAUNCHED)
+	StatusContainerExists         = Status(CONTAINEREXISTS)
+	StatusContainerDelete         = Status(CONTAINERDELETE)
+	StatusContainerStarting       = Status(CONTAINERSTARTING)
+	StatusContainerStarted        = Status(CONTAINERSTARTED)
+	StatusContainerStopping       = Status(CONTAINERSTOPPING)
+	StatusContainerStopped        = Status(CONTAINERSTOPPED)
+	StatusContainerRestarting     = Status(CONTAINERRESTARTING)
+	StatusContainerRestarted      = Status(CONTAINERRESTARTED)
+	StatusContainerUpgraded       = Status(CONTAINERUPGRADED)
+	StatusContainerRunning        = Status(CONTAINERRUNNING)
 	StatusContainerNetworkSuccess = Status(CONTAINERNETWORKSUCCESS)
 	StatusContainerNetworkFailure = Status(CONTAINERNETWORKFAILURE)
 	StatusContainerError          = Status(CONTAINERERROR)
