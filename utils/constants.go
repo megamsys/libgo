@@ -84,6 +84,7 @@ const (
 	INITIALIZING  = "initializing"
 	INITIALIZED   = "initialized"
 	LAUNCHED      = "launched"
+	VMBOOTING     = "vm_booting"
 	BOOTSTRAPPED  = "bootstrapped"
 	BOOTSTRAPPING = "bootstrapping"
 
@@ -195,6 +196,8 @@ const (
 	// StatusLaunched is the status for box after launched in cloud.
 	StatusLaunched = Status(LAUNCHED)
 
+	StatusVMBooting = Status(VMBOOTING)
+
 	// StatusBootstrapped is the status for box after being booted by the agent in cloud
 	StatusBootstrapped  = Status(BOOTSTRAPPED)
 	StatusBootstrapping = Status(BOOTSTRAPPING)
@@ -289,6 +292,7 @@ const (
 	StatusVmStopError    = Status(VMPOWEROFF_ERROR)
 
 	ONEINSTANCELAUNCHINGTYPE           = "compute.instance.launching"
+  ONEINSTANCEBOOTINGTYPE           = "compute.instance.booting"
 	ONEINSTANCEVNCHOSTUPDATING         = "compute.instance.vnchostupdating"
 	ONEINSTANCEVNCHOSTUPDATED          = "compute.instance.vnchostupdated"
 	ONEINSTANCECHEFCONFIGSETUPSTARTING = "compute.instance.chefconfigsetupstarting"
@@ -322,7 +326,7 @@ const (
 	ONEINSTANCEUPGRADEDTYPE            = "compute.instance.upgraded"
 	ONEINSTANCERESIZINGTYPE            = "compute.instance.resizing"
 	ONEINSTANCERESIZEDTYPE             = "compute.instance.resized"
-	ONEINSTANCEERRORTYPE               = "compute.instance.error"
+	ONEINSTANCEERRORTYPE               = "compute.instance.posterror"
 	ONEINSTANCESNAPSHOTTINGTYPE        = "compute.instance.snapshotting"
 	ONEINSTANCESNAPSHOTTEDTYPE         = "compute.instance.snapshotted"
 
@@ -352,5 +356,5 @@ const (
 	CONTAINERINSTANCERUNNING       = "compute.container.running"
 	CONTAINERNETWORKSUCCESSTYPE    = "compute.container.ip_allocate_success"
 	CONTAINERNETWORKFAILURETYPE    = "compute.container.ip_allocate_failure"
-	CONTAINERINSTANCEERROR         = "compute.container.error"
+	CONTAINERINSTANCEERROR         = "compute.container.posterror"
 )

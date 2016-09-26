@@ -33,6 +33,8 @@ func (s Status) Event_type() string {
 	switch s.String() {
 	case LAUNCHING:
 		return ONEINSTANCELAUNCHINGTYPE
+	case VMBOOTING:
+		return ONEINSTANCEBOOTINGTYPE
 	case LAUNCHED:
 		return ONEINSTANCELAUNCHEDTYPE
 	case BOOTSTRAPPING:
@@ -174,6 +176,8 @@ func (s Status) Description(name string) string {
 	switch s.String() {
 	case LAUNCHING:
 		return "Your " + name + " machine is initializing.."
+	case VMBOOTING:
+		return "Virtual machine " + name + " is booting.."
 	case LAUNCHED:
 		return "Machine " + name + " was initialized on cloud.."
 	case VNCHOSTUPDATING:
