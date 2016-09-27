@@ -83,6 +83,7 @@ const (
 	INITIALIZING  = "initializing"
 	INITIALIZED   = "initialized"
 	LAUNCHED      = "launched"
+	VMBOOTING     = "vm_booting"
 	BOOTSTRAPPED  = "bootstrapped"
 	BOOTSTRAPPING = "bootstrapping"
 
@@ -177,6 +178,7 @@ const (
 
 	StateInitialized = State(INITIALIZED)
 
+
 	// StateBootstrapped is the milestone state for box after being booted by the agent in cloud
 	StateBootstrapped = State(BOOTSTRAPPED)
 	//StateRunning is the milestone for fully up instance
@@ -193,6 +195,8 @@ const (
 
 	// StatusLaunched is the status for box after launched in cloud.
 	StatusLaunched = Status(LAUNCHED)
+
+  StatusVMBooting = Status(VMBOOTING)
 
 	// StatusBootstrapped is the status for box after being booted by the agent in cloud
 	StatusBootstrapped  = Status(BOOTSTRAPPED)
@@ -288,6 +292,7 @@ const (
 	StatusVmStopError    = Status(VMPOWEROFF_ERROR)
 
 	ONEINSTANCELAUNCHINGTYPE           = "compute.instance.launching"
+	ONEINSTANCEBOOTINGTYPE             = "compute.instance.booting"
 	ONEINSTANCEVNCHOSTUPDATING         = "compute.instance.vnchostupdating"
 	ONEINSTANCEVNCHOSTUPDATED          = "compute.instance.vnchostupdated"
 	ONEINSTANCECHEFCONFIGSETUPSTARTING = "compute.instance.chefconfigsetupstarting"
