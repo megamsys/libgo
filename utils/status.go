@@ -177,7 +177,7 @@ func (s Status) Description(name string) string {
 	case LAUNCHING:
 		return "Your " + name + " machine is initializing.."
 	case VMBOOTING:
-		return "Virtual machine " + name + " is booting...."
+		return "Virtual machine " + name + " is booting ..."
 	case LAUNCHED:
 		return "Machine " + name + " was initialized on cloud.."
 	case VNCHOSTUPDATING:

@@ -326,7 +326,7 @@ const (
 	ONEINSTANCEUPGRADEDTYPE            = "compute.instance.upgraded"
 	ONEINSTANCERESIZINGTYPE            = "compute.instance.resizing"
 	ONEINSTANCERESIZEDTYPE             = "compute.instance.resized"
-	ONEINSTANCEERRORTYPE               = "compute.instance.error"
+	ONEINSTANCEERRORTYPE               = "compute.instance.posterror"
 	ONEINSTANCESNAPSHOTTINGTYPE        = "compute.instance.snapshotting"
 	ONEINSTANCESNAPSHOTTEDTYPE         = "compute.instance.snapshotted"
 
@@ -356,5 +356,5 @@ const (
 	CONTAINERINSTANCERUNNING       = "compute.container.running"
 	CONTAINERNETWORKSUCCESSTYPE    = "compute.container.ip_allocate_success"
 	CONTAINERNETWORKFAILURETYPE    = "compute.container.ip_allocate_failure"
-	CONTAINERINSTANCEERROR         = "compute.container.error"
+	CONTAINERINSTANCEERROR         = "compute.container.posterror"
 )
