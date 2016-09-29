@@ -21,6 +21,8 @@ const (
 	DESCRIPTION
 	SNAPSHOTTING
 	SNAPSHOTTED
+	RUNNING
+	FAILURE
 )
 
 type Notifier interface {
@@ -60,6 +62,10 @@ func (v *EventAction) String() string {
 		return "snapshotting"
 	case SNAPSHOTTED:
 		return "snapshotted"
+	case RUNNING:
+		return "running"
+	case FAILURE:
+		return "failure"
 	default:
 		return "arrgh"
 	}
@@ -104,6 +110,7 @@ func (m *mailgunner) satisfied(eva EventAction) bool {
 		"days":      "20",
 		"cost":      "$12",
 }*/
+
 func (m *mailgunner) Notify(eva EventAction, edata EventData) error {
 	if !m.satisfied(eva) {
 		return nil
@@ -120,6 +127,7 @@ func (m *mailgunner) Notify(eva EventAction, edata EventData) error {
 }
 
 func (m *mailgunner) Send(msg string, sender string, subject string, to string) error {
+
 	if len(strings.TrimSpace(sender)) <= 0 {
 		sender = m.sender
 	}
@@ -155,12 +163,16 @@ func subject(eva EventAction) string {
 		sub = "Piggy bank!"
 	case LAUNCHED:
 		sub = "Up!"
+	case RUNNING:
+		sub = "Ahoy! Your application is running "
 	case DESTROYED:
 		sub = "Nuked"
 	case SNAPSHOTTING:
-		sub = "Disk saving!"
+		sub = "Snapshot creating!"
 	case SNAPSHOTTED:
-		sub = "Ahoy. VM saved"
+		sub = "Ahoy! Snapshot created"
+	case FAILURE:
+		sub = "Your application failure"
 	default:
 		break
 	}

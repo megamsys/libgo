@@ -62,20 +62,6 @@ func (self *Bill) skip(k string) bool {
 }
 
 func (self *Bill) OnboardFunc(evt *Event) error {
-	log.Infof("Event:BILL:onboard")
-
-	result := &bills.BillOpts{
-		AccountId: evt.EventData.M[constants.EMAIL],
-	}
-
-	for k, bp := range bills.BillProviders {
-		if !self.skip(k) {
-			err := bp.Onboard(result, self.M)
-			if err != nil {
-				return err
-			}
-		}
-	}
 	return nil
 }
 
