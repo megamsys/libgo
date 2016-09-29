@@ -7,6 +7,7 @@ import (
 
 type Machine struct {
 	stop chan struct{}
+	fns  AfterFuncsMap
 }
 
 // Watches for new vms, or vms destroyed.
@@ -19,6 +20,11 @@ func (self *Machine) Watch(eventsChannel *EventChannel) error {
 				switch {
 				case event.EventAction == alerts.LAUNCHED:
 					err := self.create(event)
+					if err != nil {
+						log.Warningf("Failed to process watch event: %v", err)
+					}
+				case event.EventAction == alerts.RUNNING:
+					err := self.alert(event)
 					if err != nil {
 						log.Warningf("Failed to process watch event: %v", err)
 					}
@@ -37,7 +43,12 @@ func (self *Machine) Watch(eventsChannel *EventChannel) error {
 						if err != nil {
 							log.Warningf("Failed to process watch event: %v", err)
 						}
-				 }
+			 case event.EventAction == alerts.FAILURE:
+						err := self.alert(event)
+						if err != nil {
+							log.Warningf("Failed to process watch event: %v", err)
+						}
+					}
 			case <-self.stop:
 				log.Info("machine watcher exiting")
 				return
@@ -67,4 +78,25 @@ func (self *Machine) snapcreate(evt *Event) error {
 
 func (self *Machine) snapdone(evt *Event) error {
 	return nil
+}
+
+
+func (self *Machine) alert(evt *Event) error {
+	var err error
+	for _, a := range notifiers {
+		err = a.Notify(evt.EventAction, evt.EventData)
+	}
+	if err != nil {
+		return err
+	}
+	return self.after(evt)
+}
+
+func (self *Machine) after(evt *Event) error {
+	var err error
+	perActionfns := self.fns[evt.EventAction]
+	for _, fn := range perActionfns {
+		err = fn(evt)
+	}
+	return err
 }
