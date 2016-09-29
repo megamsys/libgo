@@ -1,7 +1,6 @@
 package alerts
 
 import (
-	"fmt"
 	log "github.com/Sirupsen/logrus"
 	mailgun "github.com/mailgun/mailgun-go"
 	constants "github.com/megamsys/libgo/utils"
@@ -113,7 +112,6 @@ func (m *mailgunner) satisfied(eva EventAction) bool {
 }*/
 
 func (m *mailgunner) Notify(eva EventAction, edata EventData) error {
-	fmt.Println("********************",edata)
 	if !m.satisfied(eva) {
 		return nil
 	}
@@ -140,14 +138,12 @@ func (m *mailgunner) Send(msg string, sender string, subject string, to string) 
 		"You are in !",
 		to,
 	)
-			fmt.Println("***********msg*********",sender,subject,to)
 	g.SetHtml(msg)
 	g.SetTracking(false)
 	//g.SetTrackingClicks(false)
 	//g.SetTrackingOpens(false)
 	_, id, err := mg.Send(g)
 	if err != nil {
-		fmt.Println("***********msg*********",err)
 		return err
 	}
 	log.Infof("Mailgun sent %s", id)
