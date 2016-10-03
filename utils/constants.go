@@ -31,6 +31,8 @@ const (
 	DIR            = "dir"
 	SCYLLAHOST     = "scylla_host"
 	SCYLLAKEYSPACE = "scylla_keyspace"
+	SCYLLAUSERNAME = "scylla_username"
+	SCYLLAPASSWORD = "scylla_password"
 
 	ASSEMBLIES_ID = "assemblies_id"
 	EVENT_TYPE    = "event_type"

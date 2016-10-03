@@ -34,6 +34,8 @@ func (s *Scylla) NotifyContainer(eva EventAction, edata EventData) error {
 		Ccms:        []string{constants.ASSEMBLY_ID, constants.ACCOUNT_ID},
 		Hosts:       s.scylla_host,
 		Keyspace:    s.scylla_keyspace,
+		Username:		 s.scylla_username,
+		Password:    s.scylla_password,
 		PksClauses:  map[string]interface{}{constants.EVENT_TYPE: edata.M[constants.EVENT_TYPE], constants.CREATED_AT: s_data.CreatedAt},
 		CcmsClauses: map[string]interface{}{constants.ASSEMBLY_ID: edata.M[constants.ASSEMBLY_ID], constants.ACCOUNT_ID: edata.M[constants.ACCOUNT_ID]},
 	}
