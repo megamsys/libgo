@@ -8,12 +8,16 @@ import (
 type Scylla struct {
 	scylla_host     []string
 	scylla_keyspace string
+	scylla_username string
+	scylla_password string
 }
 
 func NewScylla(m map[string]string) Notifier {
 	return &Scylla{
 		scylla_host:  strings.Split(m[constants.SCYLLAHOST], ","),
 		scylla_keyspace: m[constants.SCYLLAKEYSPACE],
+		scylla_username: m[constants.SCYLLAUSERNAME],
+		scylla_password: m[constants.SCYLLAPASSWORD],
 	}
 }
 

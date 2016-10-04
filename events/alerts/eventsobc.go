@@ -28,6 +28,8 @@ func (s *Scylla) NotifyOBC(eva EventAction, edata EventData) error {
 		Ccms:        []string{constants.HOST_IP, constants.ACCOUNT_ID},
 		Hosts:       s.scylla_host,
 		Keyspace:    s.scylla_keyspace,
+		Username:    s.scylla_username,
+		Password:    s.scylla_password,
 		PksClauses:  map[string]interface{}{constants.EVENT_TYPE: edata.M[constants.EVENT_TYPE], constants.CREATED_AT: s_data.CreatedAt},
 		CcmsClauses: map[string]interface{}{constants.HOST_IP: edata.M[constants.HOST_IP], constants.ACCOUNT_ID: edata.M[constants.ACCOUNT_ID]},
 	}
