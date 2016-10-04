@@ -62,6 +62,8 @@ func NewBalances(id string, m map[string]string) (*Balances, error) {
 		Ccms:        []string{"account_id"},
 		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
 		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		Username:    m[constants.SCYLLAUSERNAME],
+		Password:    m[constants.SCYLLAPASSWORD],
 		PksClauses:  make(map[string]interface{}),
 		CcmsClauses: map[string]interface{}{"account_id": id},
 	}
@@ -92,6 +94,8 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 		Ccms:        []string{"account_id"},
 		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
 		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		Username:    m[constants.SCYLLAUSERNAME],
+		Password:    m[constants.SCYLLAPASSWORD],
 		PksClauses:  make(map[string]interface{}),
 		CcmsClauses: map[string]interface{}{"account_id": b.AccountId},
 	}

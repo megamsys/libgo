@@ -74,6 +74,8 @@ func (bt *BillTransaction) Transact(m map[string]string) error {
 		Ccms:        []string{"account_id", "assembly_id"},
 		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
 		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		Username:    m[constants.SCYLLAUSERNAME],
+		Password:    m[constants.SCYLLAPASSWORD],
 		PksClauses:  map[string]interface{}{"bill_type": bt.BillType, "created_at": bt.CreatedAt},
 		CcmsClauses: map[string]interface{}{"account_id": bt.AccountId, "assembly_id": bt.AssemblyId},
 	}

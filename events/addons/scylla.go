@@ -42,6 +42,8 @@ func (s *Addons) Onboard(m map[string]string) error {
 		Ccms:        []string{constants.ACCOUNT_ID},
 		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
 		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		Username:    m[constants.SCYLLAUSERNAME],
+		Password:    m[constants.SCYLLAPASSWORD],
 		PksClauses:  map[string]interface{}{PROVIDER_NAME: s.ProviderName},
 		CcmsClauses: map[string]interface{}{constants.ACCOUNT_ID: s.AccountId},
 	}
@@ -60,6 +62,8 @@ func (s *Addons) Get(m map[string]string) error {
 		Ccms:        []string{constants.ACCOUNT_ID},
 		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
 		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		Username:    m[constants.SCYLLAUSERNAME],
+		Password:    m[constants.SCYLLAPASSWORD],
 		PksClauses:  map[string]interface{}{PROVIDER_NAME: s.ProviderName},
 		CcmsClauses: map[string]interface{}{constants.ACCOUNT_ID: s.AccountId},
 	}
