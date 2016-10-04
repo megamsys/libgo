@@ -116,6 +116,8 @@ func NewAccounts(email string, m map[string]string) (*Accounts, error) {
 		Ccms:        []string{"email"},
 		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
 		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		Username:    m[constants.SCYLLAUSERNAME],
+		Password:    m[constants.SCYLLAPASSWORD],
 		PksClauses:  make(map[string]interface{}),
 		CcmsClauses: map[string]interface{}{"email": email},
 	}
@@ -133,6 +135,8 @@ func AccountsOrg(email string, m map[string]string) (*Organization, error) {
 		Ccms:        []string{"accounts_id"},
 		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
 		Keyspace:    m[constants.SCYLLAKEYSPACE],
+		Username:    m[constants.SCYLLAUSERNAME],
+		Password:    m[constants.SCYLLAPASSWORD],
 		PksClauses:  make(map[string]interface{}),
 		CcmsClauses: map[string]interface{}{"accounts_id": email},
 	}
