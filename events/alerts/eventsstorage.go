@@ -37,7 +37,6 @@ func (s *Scylla) NotifyStorage(eva EventAction, edata EventData) error {
 		log.Debugf(err.Error())
 		return err
 	}
-
 	return nil
 }
 
