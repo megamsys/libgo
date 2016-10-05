@@ -7,7 +7,6 @@ import (
 	"github.com/megamsys/libgo/events/alerts"
 	"strings"
 	"time"
-	"fmt"
 )
 
 const (
@@ -52,9 +51,6 @@ func (s *Addons) Onboard(m map[string]string) error {
 		log.Debugf(err.Error())
 		return err
 	}
-	fmt.Println("****scylla******")
-	fmt.Println(s)
-	fmt.Println("****************")
 	return nil
 }
 
