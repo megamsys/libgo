@@ -6,6 +6,7 @@ import (
 	constants "github.com/megamsys/libgo/utils"
 	"github.com/pborman/uuid"
 	"time"
+	"fmt"
 )
 
 const (
@@ -43,7 +44,9 @@ func (s *Scylla) NotifyVm(eva EventAction, edata EventData) error {
 		log.Debugf(err.Error())
 		return err
 	}
-
+	fmt.Println("--------events vm----------")
+	fmt.Println(s_data)
+	fmt.Println("------------------")
 	return nil
 }
 

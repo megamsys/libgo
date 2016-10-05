@@ -5,6 +5,7 @@ import (
 	ldb "github.com/megamsys/libgo/db"
 	constants "github.com/megamsys/libgo/utils"
 	"time"
+	"fmt"
 )
 
 const EVENTBILL = "events_for_billings"
@@ -37,7 +38,9 @@ func (s *Scylla) NotifyBill(eva EventAction, edata EventData) error {
 		log.Debugf(err.Error())
 		return err
 	}
-
+	fmt.Println("--------events billing----------")
+	fmt.Println(s_data)
+	fmt.Println("------------------")
 	return nil
 }
 

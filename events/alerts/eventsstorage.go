@@ -5,6 +5,7 @@ import (
 	ldb "github.com/megamsys/libgo/db"
 	constants "github.com/megamsys/libgo/utils"
 	"time"
+	"fmt"
 )
 
 const EVENTSTORAGE = "events_for_storages"
@@ -37,7 +38,9 @@ func (s *Scylla) NotifyStorage(eva EventAction, edata EventData) error {
 		log.Debugf(err.Error())
 		return err
 	}
-
+	fmt.Println("--------events storage----------")
+	fmt.Println(s_data)
+	fmt.Println("------------------")
 	return nil
 }
 

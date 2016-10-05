@@ -5,6 +5,7 @@ import (
 	ldb "github.com/megamsys/libgo/db"
 	constants "github.com/megamsys/libgo/utils"
 	"time"
+	"fmt"
 )
 
 const EVENTSOBCBUCKET = "events_for_obc"
@@ -37,7 +38,9 @@ func (s *Scylla) NotifyOBC(eva EventAction, edata EventData) error {
 		log.Debugf(err.Error())
 		return err
 	}
-
+	fmt.Println("--------events obc----------")
+	fmt.Println(s_data)
+	fmt.Println("------------------")
 	return nil
 }
 
