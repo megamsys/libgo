@@ -159,6 +159,7 @@ const (
 	CONTAINERERROR         = "containererror"
 
 	ERROR            = "error"
+	PREERROR         = "preerror"
 	NETWORK_ERROR    = "netwroking_error"
 	VMLAUNCH_ERROR   = "launching_error"
 	VMBOOT_ERROR     = "vmboot_error"
@@ -188,7 +189,7 @@ const (
 
 	StateStopped = State(STOPPED)
 
-	StatePreError  = State(PREDEPLOY_ERROR)
+	Error  = State(PREDEPLOY_ERROR)
 	StatePostError = State(POST_ERROR)
 
 	// StatusLaunching is the initial status of a box
@@ -284,6 +285,7 @@ const (
 	// StatusError is the status for units that failed to start, because of
 	// a box error.
 	StatusError          = Status(ERROR)
+	StatusPreError       = Status(PREERROR)
 	StatusNetworkError   = Status(NETWORK_ERROR)
 	StatusVmLaunchError  = Status(VMLAUNCH_ERROR)
 	StatusVmBootError    = Status(VMBOOT_ERROR)
@@ -329,6 +331,7 @@ const (
 	ONEINSTANCERESIZINGTYPE            = "compute.instance.resizing"
 	ONEINSTANCERESIZEDTYPE             = "compute.instance.resized"
 	ONEINSTANCEERRORTYPE               = "compute.instance.posterror"
+	ONEINSTANCEPREERRORTYPE            = "compute.instance.preerror"
 	ONEINSTANCESNAPSHOTTINGTYPE        = "compute.instance.snapshotting"
 	ONEINSTANCESNAPSHOTTEDTYPE         = "compute.instance.snapshotted"
 

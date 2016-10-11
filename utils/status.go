@@ -163,7 +163,8 @@ func (s Status) Event_type() string {
 		return CONTAINERINSTANCERUNNING
 	case CONTAINERERROR:
 		return CONTAINERINSTANCEERROR
-
+	case PREERROR:
+		return ONEINSTANCEPREERRORTYPE
 	case ERROR:
 		return ONEINSTANCEERRORTYPE
 	default:
@@ -307,6 +308,8 @@ func (s Status) Description(name string) string {
 	case CONTAINERERROR:
 		return "Oops something went wrong on " + name + ".."
 	case ERROR:
+		return "Oops something went wrong on " + name + ".."
+	case PREERROR:
 		return "Oops something went wrong on " + name + ".."
 	default:
 		return "arrgh"
