@@ -189,7 +189,7 @@ const (
 
 	StateStopped = State(STOPPED)
 
-	Error  = State(PREDEPLOY_ERROR)
+	StatePreError  = State(PREDEPLOY_ERROR)
 	StatePostError = State(POST_ERROR)
 
 	// StatusLaunching is the initial status of a box
