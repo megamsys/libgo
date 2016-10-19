@@ -26,10 +26,10 @@ func (s *Scylla) NotifyOBC(eva EventAction, edata EventData) error {
 		TableName:   EVENTSOBCBUCKET,
 		Pks:         []string{constants.EVENT_TYPE, constants.CREATED_AT},
 		Ccms:        []string{constants.HOST_IP, constants.ACCOUNT_ID},
-		Hosts:       s.scylla_host,
-		Keyspace:    s.scylla_keyspace,
-		Username:    s.scylla_username,
-		Password:    s.scylla_password,
+		Hosts:       s.Scylla_host,
+		Keyspace:    s.Scylla_keyspace,
+		Username:    s.Scylla_username,
+		Password:    s.Scylla_password,
 		PksClauses:  map[string]interface{}{constants.EVENT_TYPE: edata.M[constants.EVENT_TYPE], constants.CREATED_AT: s_data.CreatedAt},
 		CcmsClauses: map[string]interface{}{constants.HOST_IP: edata.M[constants.HOST_IP], constants.ACCOUNT_ID: edata.M[constants.ACCOUNT_ID]},
 	}
@@ -38,6 +38,28 @@ func (s *Scylla) NotifyOBC(eva EventAction, edata EventData) error {
 		return err
 	}
 	return nil
+}
+
+func (s *Scylla) GetEventsByEmail(email string,limit int) (*[]EventsObc,error) {
+	events := &[]EventsObc{}
+	e := EventsObc{}
+
+	ops := ldb.Options{
+		TableName:   EVENTSOBCBUCKET,
+		Pks:         []string{constants.ACCOUNT_ID},
+		Ccms:        []string{},
+		Hosts:       s.Scylla_host,
+		Keyspace:    s.Scylla_keyspace,
+		Username:    s.Scylla_username,
+		Password:    s.Scylla_password,
+		PksClauses:  map[string]interface{}{constants.ACCOUNT_ID: email},
+		CcmsClauses: map[string]interface{}{},
+	}
+	if err := ldb.FetchListdb(ops,limit,e,events); err != nil {
+		log.Debugf(err.Error())
+		return nil,err
+	}
+	return events,nil
 }
 
 func parseMapToOutputObc(edata EventData) EventsObc {
