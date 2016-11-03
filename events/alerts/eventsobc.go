@@ -62,6 +62,28 @@ func (s *Scylla) GetEventsByEmail(email string,limit int) (*[]EventsObc,error) {
 	return events,nil
 }
 
+func (s *Scylla) GetEventsByNodeIp(email,ip string,limit int) (*[]EventsObc,error) {
+	events := &[]EventsObc{}
+	e := EventsObc{}
+
+	ops := ldb.Options{
+		TableName:   EVENTSOBCBUCKET,
+		Pks:         []string{constants.HOST_IP},
+		Ccms:        []string{constants.ACCOUNT_ID},
+		Hosts:       s.Scylla_host,
+		Keyspace:    s.Scylla_keyspace,
+		Username:    s.Scylla_username,
+		Password:    s.Scylla_password,
+		PksClauses:  map[string]interface{}{constants.HOST_IP: ip},
+		CcmsClauses: map[string]interface{}{constants.ACCOUNT_ID: email},
+	}
+	if err := ldb.FetchListdb(ops,limit,e,events); err != nil {
+		log.Debugf(err.Error())
+		return nil,err
+	}
+	return events,nil
+}
+
 func parseMapToOutputObc(edata EventData) EventsObc {
 	return EventsObc{
 		EventType:  edata.M[constants.EVENT_TYPE],
