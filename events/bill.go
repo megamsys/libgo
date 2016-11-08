@@ -8,6 +8,7 @@ import (
 	constants "github.com/megamsys/libgo/utils"
 	"reflect"
 	"strings"
+	"fmt"
 )
 
 type Bill struct {
@@ -69,7 +70,6 @@ func (self *Bill) deduct(evt *Event) error {
 	log.Infof("Event:BILL:deduct")
 	result := &bills.BillOpts{}
 	_ = result.FillStruct(evt.EventData.M) //we will manage error later
-
 	for k, bp := range bills.BillProviders {
 		if !self.skip(k) {
 			err := bp.Deduct(result, self.M)

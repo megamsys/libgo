@@ -8,7 +8,7 @@ const (
 	INFOBIP = "infobip"
 	SCYLLA  = "scylla"
 	META    = "meta"
-	WHMCS   = "whmcs"
+	WHMCS   = "WHMCS"
 	SENDER  = "sender"
 
 	//config keys by watchers

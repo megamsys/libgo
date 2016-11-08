@@ -22,6 +22,7 @@ import (
 	"github.com/megamsys/libgo/db"
 	constants "github.com/megamsys/libgo/utils"
 	"gopkg.in/yaml.v2"
+	"fmt"
 )
 
 const (
@@ -56,6 +57,9 @@ func (b *Balances) String() string {
 //We need add a Notifier interface duck typed by Box and Carton ?
 func NewBalances(id string, m map[string]string) (*Balances, error) {
 	b := &Balances{}
+	if id == "" {
+	 return nil,fmt.Errorf("account_id should not be empty")
+	}
 	ops := db.Options{
 		TableName:   BALANCESBUCKET,
 		Pks:         []string{},
@@ -70,7 +74,6 @@ func NewBalances(id string, m map[string]string) (*Balances, error) {
 	if err := db.Fetchdb(ops, b); err != nil {
 		return nil, err
 	}
-
 	return b, nil
 }
 
