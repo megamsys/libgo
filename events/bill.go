@@ -8,7 +8,6 @@ import (
 	constants "github.com/megamsys/libgo/utils"
 	"reflect"
 	"strings"
-	"fmt"
 )
 
 type Bill struct {
