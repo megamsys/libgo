@@ -74,6 +74,7 @@ const (
 	EventUser      = "user"
 	EventStatus    = "status"
 
+
 	BILLMGR = "bill"
 	ADDONS  = "addons"
 
@@ -83,6 +84,7 @@ const (
 
 	LAUNCHING     = "launching"
 	INITIALIZING  = "initializing"
+	BALANCECHECK  = "balance_check"
 	INITIALIZED   = "initialized"
 	LAUNCHED      = "launched"
 	VMBOOTING     = "vm_booting"
@@ -181,7 +183,6 @@ const (
 
 	StateInitialized = State(INITIALIZED)
 
-
 	// StateBootstrapped is the milestone state for box after being booted by the agent in cloud
 	StateBootstrapped = State(BOOTSTRAPPED)
 	//StateRunning is the milestone for fully up instance
@@ -195,6 +196,8 @@ const (
 	// StatusLaunching is the initial status of a box
 	// it should transition shortly to a more specific status
 	StatusLaunching = Status(LAUNCHING)
+
+	StatusBalanceVerified = Status(BALANCECHECK)
 
 	// StatusLaunched is the status for box after launched in cloud.
 	StatusLaunched = Status(LAUNCHED)
@@ -334,6 +337,7 @@ const (
 	ONEINSTANCEPREERRORTYPE            = "compute.instance.preerror"
 	ONEINSTANCESNAPSHOTTINGTYPE        = "compute.instance.snapshotting"
 	ONEINSTANCESNAPSHOTTEDTYPE         = "compute.instance.snapshotted"
+	ONEINSTANCESBALANCEVERIFYTYPE      = "compute.instance.balance_check"
 
 	COOKBOOKDOWNLOADINGTYPE = "compute.instance.cookbook_downloading"
 	COOKBOOKDOWNLOADEDTYPE  = "compute.instance.cookbook_downloaded"

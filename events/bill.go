@@ -37,6 +37,11 @@ func (self *Bill) Watch(eventsChannel *EventChannel) error {
 					if err != nil {
 						log.Warningf("Failed to process watch event: %v", err)
 					}
+				case event.EventAction == alerts.LOWFUND:
+					err := self.alertMail(event)
+					if err != nil {
+						log.Warningf("Failed to process watch event: %v", err)
+					}
 				case event.EventAction == alerts.DEDUCT:
 					err := self.deduct(event)
 					if err != nil {
@@ -59,6 +64,16 @@ func (self *Bill) Watch(eventsChannel *EventChannel) error {
 
 func (self *Bill) skip(k string) bool {
 	return !strings.Contains(self.piggyBanks, k)
+}
+
+func (self *Bill) alertMail(evt *Event) error {
+	var err error
+ 	  a :=  notifiers[constants.MAILGUN]
+ 		err = a.Notify(evt.EventAction, evt.EventData)
+ 	 	if err != nil {
+ 		return err
+ 	  }
+	return nil
 }
 
 func (self *Bill) OnboardFunc(evt *Event) error {
