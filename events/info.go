@@ -129,3 +129,10 @@ func (me *MultiEvent) Write() error {
 	}
 	return err
 }
+
+func (me *MultiEvent) IsEnabled() bool {
+	if W != nil {
+	 return true
+	}
+  return false
+}
