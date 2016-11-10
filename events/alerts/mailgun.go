@@ -164,7 +164,7 @@ func subject(eva EventAction) string {
 	case BALANCE:
 		sub = "Piggy bank!"
 	case INSUFFICIENT_FUND:
-		sub = "Piggy bank!"
+		sub = "Insufficient funds!"
 	case LAUNCHED:
 		sub = "Up!"
 	case RUNNING:
