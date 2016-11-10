@@ -40,7 +40,7 @@ func (self *Machine) Watch(eventsChannel *EventChannel) error {
 						log.Warningf("Failed to process watch event: %v", err)
 					}
 				case event.EventAction == alerts.INSUFFICIENT_FUND:
-					err := self.alertMail(event)
+					err := self.insufficientFund(event)
 					if err != nil {
 						log.Warningf("Failed to process watch event: %v", err)
 					}
@@ -86,7 +86,7 @@ func (self *Machine) snapdone(evt *Event) error {
 	return nil
 }
 
-func (self *Machine) alertMail(evt *Event) error {
+func (self *Machine) insufficientFund(evt *Event) error {
 	var err error
 	a := notifiers[constants.MAILGUN]
 	err = a.Notify(evt.EventAction, evt.EventData)
