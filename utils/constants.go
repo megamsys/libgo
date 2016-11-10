@@ -85,6 +85,7 @@ const (
 	LAUNCHING     = "launching"
 	INITIALIZING  = "initializing"
 	BALANCECHECK  = "balance_check"
+	INSUFFICIENT_FUND = "insufficient_fund"
 	INITIALIZED   = "initialized"
 	LAUNCHED      = "launched"
 	VMBOOTING     = "vm_booting"
@@ -173,11 +174,13 @@ const (
 
 	PREDEPLOY_ERROR = "preerror"
 	POST_ERROR      = "posterror"
+	PARKED          = "parked"
 
 	StateContainerInitializing = State(CONTAINERINITIALIZING)
 	StateContainerInitialized  = State(CONTAINERINITIALIZED)
 	StateContainerBootstrapped = State(CONTAINERBOOTSTRAPPED)
 	StateContainerRunning      = State(CONTAINERRUNNING)
+	StateMachineParked  = State(PARKED)
 	// StateLaunched is the milestone state for box after launched in cloud.
 	StateInitializing = State(INITIALIZING)
 
@@ -201,6 +204,8 @@ const (
 
 	// StatusLaunched is the status for box after launched in cloud.
 	StatusLaunched = Status(LAUNCHED)
+
+  StatusInsufficientFund = Status(INSUFFICIENT_FUND)
 
   StatusVMBooting = Status(VMBOOTING)
 
@@ -338,6 +343,7 @@ const (
 	ONEINSTANCESNAPSHOTTINGTYPE        = "compute.instance.snapshotting"
 	ONEINSTANCESNAPSHOTTEDTYPE         = "compute.instance.snapshotted"
 	ONEINSTANCESBALANCEVERIFYTYPE      = "compute.instance.balance_check"
+	ONEINSTANCESINSUFFIENTFUNDTYPE      = "compute.instance.insufficient_fund"
 
 	COOKBOOKDOWNLOADINGTYPE = "compute.instance.cookbook_downloading"
 	COOKBOOKDOWNLOADEDTYPE  = "compute.instance.cookbook_downloaded"

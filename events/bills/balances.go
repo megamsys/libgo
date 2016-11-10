@@ -57,6 +57,8 @@ func (b *Balances) String() string {
 //We need add a Notifier interface duck typed by Box and Carton ?
 func NewBalances(id string, m map[string]string) (*Balances, error) {
 	b := &Balances{}
+	// Here skips balances fetching for the VMs which is launched on opennebula,
+	// that does not have records on vertice database
 	if id == "" {
 	 return nil,fmt.Errorf("account_id should not be empty")
 	}

@@ -23,7 +23,7 @@ const (
 	SNAPSHOTTED
 	RUNNING
 	FAILURE
-	LOWFUND
+	INSUFFICIENT_FUND
 )
 
 type Notifier interface {
@@ -57,8 +57,8 @@ func (v *EventAction) String() string {
 		return "invite"
 	case BALANCE:
 		return "balance"
-	case LOWFUND:
-		return "lowfund"
+	case INSUFFICIENT_FUND:
+		return "insufficientfunds"
 	case DESCRIPTION:
 		return "description"
 	case SNAPSHOTTING:
@@ -163,7 +163,7 @@ func subject(eva EventAction) string {
 		sub = "Lets party!"
 	case BALANCE:
 		sub = "Piggy bank!"
-	case LOWFUND:
+	case INSUFFICIENT_FUND:
 		sub = "Piggy bank!"
 	case LAUNCHED:
 		sub = "Up!"
