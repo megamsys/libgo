@@ -7,6 +7,7 @@ import (
 	"github.com/megamsys/libgo/events/alerts"
 	"strings"
 	"time"
+	"fmt"
 )
 
 const (
@@ -55,6 +56,11 @@ func (s *Addons) Onboard(m map[string]string) error {
 }
 
 func (s *Addons) Get(m map[string]string) error {
+	// Here skips balances fetching for the VMs which is launched on opennebula,
+	// that does not have records on vertice database
+	if s.AccountId == "" {
+	 return fmt.Errorf("account_id should not be empty")
+	}
 	ops := ldb.Options{
 		TableName:   ADDONSBUCKET,
 		Pks:         []string{PROVIDER_NAME},
@@ -69,5 +75,6 @@ func (s *Addons) Get(m map[string]string) error {
 	if err := ldb.Fetchdb(ops, s); err != nil {
 		return err
 	}
+
 	return nil
 }

@@ -3,6 +3,7 @@ package events
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/events/alerts"
+	constants "github.com/megamsys/libgo/utils"
 )
 
 type Machine struct {
@@ -34,21 +35,26 @@ func (self *Machine) Watch(eventsChannel *EventChannel) error {
 						log.Warningf("Failed to process watch event: %v", err)
 					}
 				case event.EventAction == alerts.SNAPSHOTTING:
-						err := self.snapcreate(event)
-						if err != nil {
-							log.Warningf("Failed to process watch event: %v", err)
-						}
-				case event.EventAction == alerts.SNAPSHOTTED:
-						err := self.snapdone(event)
-						if err != nil {
-							log.Warningf("Failed to process watch event: %v", err)
-						}
-			 case event.EventAction == alerts.FAILURE:
-						err := self.alert(event)
-						if err != nil {
-							log.Warningf("Failed to process watch event: %v", err)
-						}
+					err := self.snapcreate(event)
+					if err != nil {
+						log.Warningf("Failed to process watch event: %v", err)
 					}
+				case event.EventAction == alerts.INSUFFICIENT_FUND:
+					err := self.insufficientFund(event)
+					if err != nil {
+						log.Warningf("Failed to process watch event: %v", err)
+					}
+				case event.EventAction == alerts.SNAPSHOTTED:
+					err := self.snapdone(event)
+					if err != nil {
+						log.Warningf("Failed to process watch event: %v", err)
+					}
+				case event.EventAction == alerts.FAILURE:
+					err := self.alert(event)
+					if err != nil {
+						log.Warningf("Failed to process watch event: %v", err)
+					}
+				}
 			case <-self.stop:
 				log.Info("machine watcher exiting")
 				return
@@ -80,6 +86,15 @@ func (self *Machine) snapdone(evt *Event) error {
 	return nil
 }
 
+func (self *Machine) insufficientFund(evt *Event) error {
+	var err error
+	a := notifiers[constants.MAILGUN]
+	err = a.Notify(evt.EventAction, evt.EventData)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func (self *Machine) alert(evt *Event) error {
 	var err error

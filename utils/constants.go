@@ -8,7 +8,7 @@ const (
 	INFOBIP = "infobip"
 	SCYLLA  = "scylla"
 	META    = "meta"
-	WHMCS   = "whmcs"
+	WHMCS   = "WHMCS"
 	SENDER  = "sender"
 
 	//config keys by watchers
@@ -74,6 +74,7 @@ const (
 	EventUser      = "user"
 	EventStatus    = "status"
 
+
 	BILLMGR = "bill"
 	ADDONS  = "addons"
 
@@ -83,6 +84,8 @@ const (
 
 	LAUNCHING     = "launching"
 	INITIALIZING  = "initializing"
+	BALANCECHECK  = "balance_check"
+	INSUFFICIENT_FUND = "insufficient_fund"
 	INITIALIZED   = "initialized"
 	LAUNCHED      = "launched"
 	VMBOOTING     = "vm_booting"
@@ -171,16 +174,17 @@ const (
 
 	PREDEPLOY_ERROR = "preerror"
 	POST_ERROR      = "posterror"
+	PARKED          = "parked"
 
 	StateContainerInitializing = State(CONTAINERINITIALIZING)
 	StateContainerInitialized  = State(CONTAINERINITIALIZED)
 	StateContainerBootstrapped = State(CONTAINERBOOTSTRAPPED)
 	StateContainerRunning      = State(CONTAINERRUNNING)
+	StateMachineParked  = State(PARKED)
 	// StateLaunched is the milestone state for box after launched in cloud.
 	StateInitializing = State(INITIALIZING)
 
 	StateInitialized = State(INITIALIZED)
-
 
 	// StateBootstrapped is the milestone state for box after being booted by the agent in cloud
 	StateBootstrapped = State(BOOTSTRAPPED)
@@ -196,8 +200,12 @@ const (
 	// it should transition shortly to a more specific status
 	StatusLaunching = Status(LAUNCHING)
 
+	StatusBalanceVerified = Status(BALANCECHECK)
+
 	// StatusLaunched is the status for box after launched in cloud.
 	StatusLaunched = Status(LAUNCHED)
+
+  StatusInsufficientFund = Status(INSUFFICIENT_FUND)
 
   StatusVMBooting = Status(VMBOOTING)
 
@@ -334,6 +342,8 @@ const (
 	ONEINSTANCEPREERRORTYPE            = "compute.instance.preerror"
 	ONEINSTANCESNAPSHOTTINGTYPE        = "compute.instance.snapshotting"
 	ONEINSTANCESNAPSHOTTEDTYPE         = "compute.instance.snapshotted"
+	ONEINSTANCESBALANCEVERIFYTYPE      = "compute.instance.balance_check"
+	ONEINSTANCESINSUFFIENTFUNDTYPE      = "compute.instance.insufficient_fund"
 
 	COOKBOOKDOWNLOADINGTYPE = "compute.instance.cookbook_downloading"
 	COOKBOOKDOWNLOADEDTYPE  = "compute.instance.cookbook_downloaded"

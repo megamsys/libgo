@@ -23,6 +23,7 @@ const (
 	SNAPSHOTTED
 	RUNNING
 	FAILURE
+	INSUFFICIENT_FUND
 )
 
 type Notifier interface {
@@ -56,6 +57,8 @@ func (v *EventAction) String() string {
 		return "invite"
 	case BALANCE:
 		return "balance"
+	case INSUFFICIENT_FUND:
+		return "insufficientfunds"
 	case DESCRIPTION:
 		return "description"
 	case SNAPSHOTTING:
@@ -127,7 +130,6 @@ func (m *mailgunner) Notify(eva EventAction, edata EventData) error {
 }
 
 func (m *mailgunner) Send(msg string, sender string, subject string, to string) error {
-
 	if len(strings.TrimSpace(sender)) <= 0 {
 		sender = m.sender
 	}
@@ -161,6 +163,8 @@ func subject(eva EventAction) string {
 		sub = "Lets party!"
 	case BALANCE:
 		sub = "Piggy bank!"
+	case INSUFFICIENT_FUND:
+		sub = "Insufficient funds!"
 	case LAUNCHED:
 		sub = "Up!"
 	case RUNNING:

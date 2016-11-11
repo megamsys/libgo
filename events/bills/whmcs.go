@@ -16,6 +16,7 @@ import (
 	"encoding/base64"
 	"os"
 	"io"
+	"fmt"
 )
 
 const (
@@ -99,10 +100,13 @@ func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) error {
 		ProviderName: constants.WHMCS,
 		AccountId:    o.AccountId,
 	}
-
-	err := add.Get(m)
-	if err != nil {
-		return err
+  if add.AccountId != "" {
+		err := add.Get(m)
+		if err != nil {
+			return err
+		}
+	} else {
+		return fmt.Errorf("account_id should not empty")
 	}
 
 	client := whmcs.NewClient(nil, m[constants.DOMAIN])
@@ -115,8 +119,8 @@ func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) error {
 		"amount":        o.Consumed,
 		"invoiceaction": "nextcron",
 	}
+	_, _, err := client.Billables.Create(a)
 
-	_, _, err = client.Billables.Create(a)
 	return err
 }
 

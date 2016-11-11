@@ -37,6 +37,11 @@ func (self *Bill) Watch(eventsChannel *EventChannel) error {
 					if err != nil {
 						log.Warningf("Failed to process watch event: %v", err)
 					}
+				case event.EventAction == alerts.INSUFFICIENT_FUND:
+					err := self.insufficientFund(event)
+					if err != nil {
+						log.Warningf("Failed to process watch event: %v", err)
+					}
 				case event.EventAction == alerts.DEDUCT:
 					err := self.deduct(event)
 					if err != nil {
@@ -61,6 +66,16 @@ func (self *Bill) skip(k string) bool {
 	return !strings.Contains(self.piggyBanks, k)
 }
 
+func (self *Bill) insufficientFund(evt *Event) error {
+	var err error
+ 	  a :=  notifiers[constants.MAILGUN]
+ 		err = a.Notify(evt.EventAction, evt.EventData)
+ 	 	if err != nil {
+ 		return err
+ 	  }
+	return nil
+}
+
 func (self *Bill) OnboardFunc(evt *Event) error {
 	return nil
 }
@@ -69,7 +84,6 @@ func (self *Bill) deduct(evt *Event) error {
 	log.Infof("Event:BILL:deduct")
 	result := &bills.BillOpts{}
 	_ = result.FillStruct(evt.EventData.M) //we will manage error later
-
 	for k, bp := range bills.BillProviders {
 		if !self.skip(k) {
 			err := bp.Deduct(result, self.M)

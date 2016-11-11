@@ -33,6 +33,10 @@ func (s Status) Event_type() string {
 	switch s.String() {
 	case LAUNCHING:
 		return ONEINSTANCELAUNCHINGTYPE
+	case BALANCECHECK:
+		return ONEINSTANCESBALANCEVERIFYTYPE
+	case INSUFFICIENT_FUND:
+		return ONEINSTANCESINSUFFIENTFUNDTYPE
 	case VMBOOTING:
 		return ONEINSTANCEBOOTINGTYPE
 	case LAUNCHED:
@@ -177,6 +181,10 @@ func (s Status) Description(name string) string {
 	switch s.String() {
 	case LAUNCHING:
 		return "Your " + name + " machine is initializing.."
+	case BALANCECHECK:
+		return "Verifying credit balance.."
+	case INSUFFICIENT_FUND:
+		return "Insuffient funds on you wallet to launch " + name +" machine .."
 	case VMBOOTING:
 		return "Virtual machine " + name + " is booting ..."
 	case LAUNCHED:
