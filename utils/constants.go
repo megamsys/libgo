@@ -69,6 +69,7 @@ const (
 	IPV6PUB = "ipv6public"
 	STORAGE_TYPE = "storage_hddtype"
 
+	TRUE    = "true"
 	ENABLED = "enabled"
 	EventMachine   = "machine"
 	EventContainer = "container"
