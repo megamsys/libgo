@@ -67,7 +67,9 @@ const (
 	IPV4PRI = "ipv4private"
 	IPV6PRI = "ipv6private"
 	IPV6PUB = "ipv6public"
+	STORAGE_TYPE = "storage_hddtype"
 
+	ENABLED = "enabled"
 	EventMachine   = "machine"
 	EventContainer = "container"
 	EventBill      = "bill"
