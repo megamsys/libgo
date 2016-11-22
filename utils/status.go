@@ -103,30 +103,6 @@ func (s Status) Event_type() string {
 		return CONTAINERNETWORKSUCCESSTYPE
 	case CONTAINERNETWORKFAILURE:
 		return CONTAINERNETWORKFAILURETYPE
-	case FETCHINGHOSTINFOS:
-		return OBCHOSTINFOSFETCHING
-	case FETCHEDHOSTINFOS:
-		return OBCHOSTINFOSSUCCESS
-	case FETCHINGHOSTCPU:
-		return OBCHOSTINFOSCPUPARSING
-	case FETCHEDHOSTCPU:
-		return OBCHOSTINFOSCPUPARSED
-	case FETCHINGHOSTRAM:
-		return OBCHOSTINFOSRAMPARSING
-	case FETCHEDHOSTRAM:
-		return OBCHOSTINFOSRAMPARSED
-	case FETCHINGHOSTOS:
-		return OBCHOSTINFOSOSPARSING
-	case FETCHEDHOSTOS:
-		return OBCHOSTINFOSOSPARSED
-	case FETCHINGHOSTDISK:
-		return OBCHOSTINFOSDISKPARSING
-	case FETCHEDHOSTDISK:
-		return OBCHOSTINFOSDISKPARSED
-	case FETCHINGHOSTNAME:
-		return OBCHOSTINFOSHOSTNAMEPARSING
-	case FETCHEDHOSTNAME:
-		return OBCHOSTINFOSHOSTNAMEPARSED
 	case DNSNETWORKCREATING:
 		return ONEINSTANCEDNSCNAMING
 	case DNSNETWORKCREATED:
@@ -261,30 +237,6 @@ func (s Status) Description(name string) string {
 		return "Private and public ips are updated on your " + name
 	case CONTAINERNETWORKFAILURE:
 		return error_common + "Updating private and public ips on " + name + ".."
-	case FETCHINGHOSTINFOS:
-		return "Fetching informations about the host(" + name + ") .."
-	case FETCHEDHOSTINFOS:
-		return "Fetched informations about host(" + name + ") successfully .."
-	case FETCHINGHOSTCPU:
-		return "Parsing host(" + name + ") CPU .."
-	case FETCHEDHOSTCPU:
-		return "Parsed host(" + name + ") CPU successfully .."
-	case FETCHINGHOSTRAM:
-		return "Parsing host(" + name + ") RAM .."
-	case FETCHEDHOSTRAM:
-		return "Parsed host(" + name + ") RAM successfully .."
-	case FETCHINGHOSTOS:
-		return "Parsing host(" + name + ") operatins system .."
-	case FETCHEDHOSTOS:
-		return "Parsed host(" + name + ") operatins system successfully .."
-	case FETCHINGHOSTDISK:
-		return "Parsing host(" + name + ") disk storage .."
-	case FETCHEDHOSTDISK:
-		return "Parsed host(" + name + ") disk storage successfully .."
-	case FETCHINGHOSTNAME:
-		return "Parsing host(" + name + ") hostname .."
-	case FETCHEDHOSTNAME:
-		return "Parsed host(" + name + ") hostname successfully .."
 	case CONTAINERLAUNCHING:
 		return "Your " + name + " container is initializing.."
 	case CONTAINERBOOTSTRAPPING:
@@ -314,11 +266,18 @@ func (s Status) Description(name string) string {
 	case CONTAINERRUNNING:
 		return name + "was running.."
 	case CONTAINERERROR:
-		return "Oops something went wrong on " + name + ".."
+		return error_common + name + ".."
 	case ERROR:
-		return "Oops something went wrong on " + name + ".."
+		return error_common + name + ".."
+	default:
+		return "arrgh"
+	}
+}
+
+func (s Status) DescriptionError(name,msg string) string {
+	switch s.String() {
 	case PREERROR:
-		return "Oops something went wrong on " + name + ".."
+		return msg + " on deploy machine " +name
 	default:
 		return "arrgh"
 	}
