@@ -14,7 +14,7 @@
 ** limitations under the License.
  */
 
-package megdc
+package obc
 
 import (
 	"strings"
@@ -32,6 +32,10 @@ type State string
 func (s State) String() string {
 	return string(s)
 }
+
+// **************************************
+//find some generic way to get a string instead of switch case
+//*************************************
 
 func (s Status) Event_type() string {
 	switch s.String() {
@@ -97,10 +101,10 @@ func (s Status) Event_type() string {
 		return OBCONEHOSTTPLFINISHEDTYPE
 	case TPL_CEPHCLUSTER_RUN:
 		return OBCCEPHCLUSTERTPLRUN
-	case CEPHCLUSTER_DEPENDS_BEGIN:
-		return OBCCEPHCLUSTERDEPENDSINSTALLINGTYPE
-	case CEPHCLUSTER_DEPENDS_END:
-		return OBCCEPHCLUSTERDEPENDSINSTALLEDTYPE
+	case CEPHCLUSTER_PREPARE_BEGIN:
+		return OBCCEPHCLUSTERPREPAREINSTALLINGTYPE
+	case CEPHCLUSTER_PREPARE_END:
+		return OBCCEPHCLUSTERPREPAREINSTALLEDTYPE
 	case CEPHCLUSTER_INSTALL_BEIGIN:
 		return OBCCEPHCLUSTERINSTALLINGTYPE
 	case CEPHCLUSTER_INSTALL_END:
@@ -203,8 +207,14 @@ func (s Status) Event_type() string {
 		return OBCGETNETWORKINFOSGATHEREDTYPE
 	case TPL_NETWORKINFO_FINISHED:
 		return OBCNETWORKINFOTPLFINISHED
+	case HOSTRUNNING:
+		return OBCHOSTINSTALLRUNNINGTYPE
+	case MASTERRUNNING:
+		return OBCHOSTINSTALLRUNNINGTYPE
 	case PREERROR:
 		return OBCTEMPLATEPREERRORTYPE
+	case POSTERROR:
+		return OBCTEMPLATEPOSTERRORTYPE
 	case ERROR:
 		return OBCTEPMLATEERRORTYPE
 	default:
@@ -279,9 +289,9 @@ func (s Status) Description(host string) string {
 		return TPL_FINISHED
 	case TPL_CEPHCLUSTER_RUN:
 		return TPL_RUN
-	case CEPHCLUSTER_DEPENDS_BEGIN:
+	case CEPHCLUSTER_PREPARE_BEGIN:
 		return "Host " + host + " ceph cluster dependancy packages installing"
-	case CEPHCLUSTER_DEPENDS_END:
+	case CEPHCLUSTER_PREPARE_END:
 		return "Host " + host + " ceph cluster dependancy packages installed"
 	case CEPHCLUSTER_INSTALL_BEIGIN:
 		return "Host " + host + " ceph-deploy packages installing"
@@ -385,6 +395,10 @@ func (s Status) Description(host string) string {
 		return "Host " + host + " network informations collected"
 	case TPL_NETWORKINFO_FINISHED:
 		return TPL_FINISHED
+	case HOSTRUNNING:
+		return "Host " + host + " installed successfully"
+	case MASTERRUNNING:
+		return "Master " + host + " installed successfully"
 	default:
 		return "arrgh"
 	}
