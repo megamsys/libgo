@@ -26,6 +26,7 @@ const (
 	VERTICE_ORGID  = "vertice_orgid"
 	USERMAIL       = "email"
 	STATUS         = "status"
+	HOST_IP        = "host_ip"
 
 	HOME           = "home"
 	DIR            = "dir"
@@ -50,33 +51,30 @@ const (
 	END_TIME     = "EndTime"
 
 	//args for notification
-	NILAVU    = "nilavu"
-	LOGO      = "logo"
-	NAME      = "name"
-	VERTNAME  = "appname"
-	TEAM      = "team"
-	VERTTYPE  = "type"
-	EMAIL     = "email"
-	DAYS      = "days"
-	COST      = "cost"
-	STARTTIME = "starttime"
-	ENDTIME   = "endtime"
-	//STATUS    = "status"
-	//DESCRIPTION = "description"
-	IPV4PUB = "ipv4public"
-	IPV4PRI = "ipv4private"
-	IPV6PRI = "ipv6private"
-	IPV6PUB = "ipv6public"
+	NILAVU       = "nilavu"
+	LOGO         = "logo"
+	NAME         = "name"
+	VERTNAME     = "appname"
+	TEAM         = "team"
+	VERTTYPE     = "type"
+	EMAIL        = "email"
+	DAYS         = "days"
+	COST         = "cost"
+	STARTTIME    = "starttime"
+	ENDTIME      = "endtime"
+	IPV4PUB      = "ipv4public"
+	IPV4PRI      = "ipv4private"
+	IPV6PRI      = "ipv6private"
+	IPV6PUB      = "ipv6public"
 	STORAGE_TYPE = "storage_hddtype"
 
-	TRUE    = "true"
-	ENABLED = "enabled"
+	TRUE           = "true"
+	ENABLED        = "enabled"
 	EventMachine   = "machine"
 	EventContainer = "container"
 	EventBill      = "bill"
 	EventUser      = "user"
 	EventStatus    = "status"
-
 
 	BILLMGR = "bill"
 	ADDONS  = "addons"
@@ -85,15 +83,15 @@ const (
 	PROVIDER_ONE    = "one"
 	PROVIDER_DOCKER = "docker"
 
-	LAUNCHING     = "launching"
-	INITIALIZING  = "initializing"
-	BALANCECHECK  = "balance_check"
+	LAUNCHING         = "launching"
+	INITIALIZING      = "initializing"
+	BALANCECHECK      = "balance_check"
 	INSUFFICIENT_FUND = "insufficient_fund"
-	INITIALIZED   = "initialized"
-	LAUNCHED      = "launched"
-	VMBOOTING     = "vm_booting"
-	BOOTSTRAPPED  = "bootstrapped"
-	BOOTSTRAPPING = "bootstrapping"
+	INITIALIZED       = "initialized"
+	LAUNCHED          = "launched"
+	VMBOOTING         = "vm_booting"
+	BOOTSTRAPPED      = "bootstrapped"
+	BOOTSTRAPPING     = "bootstrapping"
 
 	CONTAINERINITIALIZING = "containerinitializing"
 	CONTAINERINITIALIZED  = "containerinitialized"
@@ -183,7 +181,7 @@ const (
 	StateContainerInitialized  = State(CONTAINERINITIALIZED)
 	StateContainerBootstrapped = State(CONTAINERBOOTSTRAPPED)
 	StateContainerRunning      = State(CONTAINERRUNNING)
-	StateMachineParked  = State(PARKED)
+	StateMachineParked         = State(PARKED)
 	// StateLaunched is the milestone state for box after launched in cloud.
 	StateInitializing = State(INITIALIZING)
 
@@ -208,9 +206,9 @@ const (
 	// StatusLaunched is the status for box after launched in cloud.
 	StatusLaunched = Status(LAUNCHED)
 
-  StatusInsufficientFund = Status(INSUFFICIENT_FUND)
+	StatusInsufficientFund = Status(INSUFFICIENT_FUND)
 
-  StatusVMBooting = Status(VMBOOTING)
+	StatusVMBooting = Status(VMBOOTING)
 
 	// StatusBootstrapped is the status for box after being booted by the agent in cloud
 	StatusBootstrapped  = Status(BOOTSTRAPPED)
@@ -346,7 +344,7 @@ const (
 	ONEINSTANCESNAPSHOTTINGTYPE        = "compute.instance.snapshotting"
 	ONEINSTANCESNAPSHOTTEDTYPE         = "compute.instance.snapshotted"
 	ONEINSTANCESBALANCEVERIFYTYPE      = "compute.instance.balance_check"
-	ONEINSTANCESINSUFFIENTFUNDTYPE      = "compute.instance.insufficient_fund"
+	ONEINSTANCESINSUFFIENTFUNDTYPE     = "compute.instance.insufficient_fund"
 
 	COOKBOOKDOWNLOADINGTYPE = "compute.instance.cookbook_downloading"
 	COOKBOOKDOWNLOADEDTYPE  = "compute.instance.cookbook_downloaded"
