@@ -1,7 +1,6 @@
 package pairs
 
 import (
-	"fmt"
 	"encoding/json"
 	"strings"
 )
@@ -87,8 +86,7 @@ func ArrayToJsonPairs(m []string) (*JsonPairs) {
 	pairs := make(JsonPairs, 0)
 	for _, k := range m {
 	pair := &JsonPair{}
-	err := json.Unmarshal([]byte(k), pair)
-	fmt.Println(err)
+	_ = json.Unmarshal([]byte(k), pair)
 	pairs = append(pairs, pair)
 	}
 	return &pairs

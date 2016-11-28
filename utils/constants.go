@@ -107,6 +107,7 @@ const (
 	RESTARTED      = "restarted"
 	UPGRADED       = "upgraded"
 	DESTROYING     = "destroying"
+	DESTROYED      = "destroyed"
 	NUKED          = "nuked"
 	SNAPSHOTTING   = "snapshotting"
 	SNAPSHOTTED    = "snapshotted"
@@ -181,6 +182,8 @@ const (
 	StateContainerInitialized  = State(CONTAINERINITIALIZED)
 	StateContainerBootstrapped = State(CONTAINERBOOTSTRAPPED)
 	StateContainerRunning      = State(CONTAINERRUNNING)
+	StateDestroying  = State(DESTROYING)
+	StateDestroyed = State(DESTROYED)
 	StateMachineParked         = State(PARKED)
 	// StateLaunched is the milestone state for box after launched in cloud.
 	StateInitializing = State(INITIALIZING)
@@ -236,6 +239,8 @@ const (
 	StatusUpgraded = Status(UPGRADED)
 
 	StatusDestroying = Status(DESTROYING)
+	StatusDestroyed = Status(DESTROYED)
+
 	StatusNuked      = Status(NUKED)
 
 	StatusSnapCreating = Status(SNAPSHOTTING)

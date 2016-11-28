@@ -269,15 +269,8 @@ func (s Status) Description(name string) string {
 		return error_common + name + ".."
 	case ERROR:
 		return error_common + name + ".."
-	default:
-		return "arrgh"
-	}
-}
-
-func (s Status) DescriptionError(name,msg string) string {
-	switch s.String() {
 	case PREERROR:
-		return msg + " on deploy machine " +name
+		return error_common + name + ".."
 	default:
 		return "arrgh"
 	}
