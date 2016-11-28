@@ -7,6 +7,7 @@ const (
 	EVENT_TYPE = "event_type"
 	ACCOUNT_ID = "account_id"
 	USERMAIL   = "email"
+	CREATED_AT = "created_at"
 
 	TPL_HOSTINFOS_RUN      = "hostinfos.starting"
 	CMD_GETCONFIG_BEGIN    = "hostinfos.get_config.starting"
@@ -243,4 +244,9 @@ const (
 	OBCNETWORKINFOTPLFINISHED       = "obc.network.infos.finished"
 	OBCHOSTINSTALLRUNNINGTYPE       = "obc.host.setup.running"
 	OBCMASTERINSTALLRUNNINGTYPE     = "obc.master.setup.running"
+
+  OBCNETWORKERRORTYPE = "obc.host.setup.network_error"
+  OBCCOMPUTEERRORTYPE = "obc.host.setup.compute_error"
+	OBCSTORAGEERRORTYPE = "obc.host.setup.storage_error"
+
 )
