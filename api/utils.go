@@ -7,15 +7,17 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
-	"regexp"
 	"strings"
 )
 
 const (
+	HOST = "url"
+	PATH = "path"
 	EMAIL = "email"
 	PASSWORD = "password"
 	MASTER_KEY = "master_key"
 	API_KEY    = "api_key"
+	ORG_ID = "org_id"
 	X_Megam_EMAIL              = "X-Megam-EMAIL"
 	X_Megam_MASTERKEY          = "X-Megam-MASTERKEY"
 	X_Megam_PUTTUSAVI          = "X-Megam-PUTTUSAVI"
@@ -63,42 +65,3 @@ func CalcBase64(data string) string {
 	encoder.Close()
 	return buf.String()
 }
-
-func GetURL(path string) (string, error) {
-	var prefix string
-	//	target, err := config.GetString("api:server")
-	//	if err != nil {
-	//		return "", err
-	//	}
-	target :=  "localhost"  //config.GetString("api:host")
-	//API_GATEWAY_VERSION, _ := config.GetString("api:version")
-	if m, _ := regexp.MatchString("^https?://", target); !m {
-		prefix = "http://"
-	}
-	return prefix + strings.TrimRight(target, "/") + strings.TrimRight("v2", "/") + path, nil
-}
-
-/*
-type ServiceModel struct {
-	Service   string
-	Instances []string
-}
-
-func ShowServicesInstancesList(b []byte) ([]byte, error) {
-	var services []ServiceModel
-	err := json.Unmarshal(b, &services)
-	if err != nil {
-		return []byte{}, err
-	}
-	if len(services) == 0 {
-		return []byte{}, nil
-	}
-	table := NewTable()
-	table.Headers = Row([]string{"Services", "Instances"})
-	for _, s := range services {
-		insts := strings.Join(s.Instances, ", ")
-		r := Row([]string{s.Service, insts})
-		table.AddRow(r)
-	}
-	return table.Bytes(), nil
-}*/

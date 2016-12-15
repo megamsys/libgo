@@ -10,10 +10,7 @@ import (
 )
 
 type Context struct {
-	username   string
-	api_key    string
-	master_key string
-	password   string
+
 }
 
 type Client struct {
@@ -25,26 +22,22 @@ type Client struct {
 	versionHeader  string
 }
 
-func NewClient(client *http.Client, data map[string]string) *Client {
-	//
-	ctx := context(map[string]string{"email": "info@megam.io", "api_key": "fakeapikey"}) // context(data.GetKeys())
-	return &Client{
-		HTTPClient:     client,
-		context:        ctx,
-		Authly:         NewAuthly(),
-		progname:       "sample",
+
+func NewClient(c VerticeApi) *Client {
+	return  &Client{
+		HTTPClient:     &http.Client{},
+		context:        &Context{},
+		Authly:         NewAuthly(c),
+		progname:       "Vertice-Go-api",
 		currentVersion: "2",
 		versionHeader:  "Supported-Gulp",
 	}
 }
 
-func context(m map[string]string) *Context {
-	return &Context{
-		username:   m["email"],
-		api_key:    m["api_key"],
-		password:   m["password"],
-		master_key: m["master_key"],
-	}
+func (c *Client) GetURL() string {
+	target := c.Authly.Keys[HOST]
+	path := c.Authly.UrlSuffix
+	return strings.TrimRight(target, "/") + strings.TrimRight(path, "/")
 }
 
 func (c *Client) detectClientError(err error) error {

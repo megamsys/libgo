@@ -1,55 +1,32 @@
 package api
 
 import (
-	// "encoding/json"
-	// "fmt"
-	// "io"
-	// "os"
 	"testing"
 	"gopkg.in/check.v1"
 )
 
 func Test(t *testing.T) { check.TestingT(t) }
 
-type Api interface {
-	GetKeys() map[string]string
+type Assembly struct {
+	AccountId string `json:"accounts_id"  cql:"accounts_id"`
+	OrgId   string `json:"org_id" cql:"org_id"`
+	Id      string `json:"id"  cql:"id"`
 }
 
 type S struct {
   Email string  `json:"email"`
-	Api_key string `json:"api_key"`
-	States  States `json:"states"`
+	Api_Key string `json:"api_key"`
+	Master_Key string `json:"master_key"`
+	Assembly Assembly
 }
 
-type States struct {
-	Authority string  `json:"authority"`
-}
-
-func (s *S) Set(email, key string) {
-	s.Email = email
-	s.Api_key = key
-	s.States = States{Authority: "user"}
-}
-
-func (s *S) Get() Api {
-	return s
-}
-
-func (s *S) GetKeys() map[string]string {
-  m := make(map[string]string)
-	m["email"] = s.Email
-	m["api_key"] = s.Api_key
-	return m
-}
 var _ = check.Suite(&S{})
 
 //we need make sure the stub deploy methods are supported.
 func (s *S) SetUpSuite(c *check.C) {
-  //server, err := testing.NewServer("127.0.0.1:5555")
-	s.Set("info@megam.io","fakeapikey")
-	// s.Email = "info@megam.io"
-	// s.Api_key = "fakeapikey"
-  //c.Assert(err, check.IsNil)
+	s.Email = "info@megam.io"
+	s.Api_Key = "fakeapikey"
+	s.Assembly = Assembly{AccountId: email, OrgId: "ORG123", Id: "asdf"}
 }
 
 
