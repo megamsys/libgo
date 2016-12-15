@@ -39,8 +39,8 @@ type Balances struct {
 	Id        string `json:"id" cql:"id"`
 	AccountId string `json:"account_id" cql:"account_id"`
 	Credit    string `json:"credit" cql:"credit"`
-	CreatedAt string `json:"created_at" cql:"created_at"`
-	UpdatedAt string `json:"updated_at" cql:"updated_at"`
+	CreatedAt time.Time `json:"created_at" cql:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" cql:"updated_at"`
 	JsonClaz  string `json:"json_claz" cql:"json_claz"`
 }
 

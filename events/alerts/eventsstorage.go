@@ -13,7 +13,7 @@ type EventsStorage struct {
 	EventType string   `json:"event_type" cql:"event_type"`
 	AccountId string   `json:"account_id" cql:"account_id"`
 	Data      []string `json:"data" cql:"data"`
-	CreatedAt string   `json:"created_at" cql:"created_at"`
+	CreatedAt time.Time   `json:"created_at" cql:"created_at"`
 }
 
 func (s *Scylla) NotifyStorage(eva EventAction, edata EventData) error {
@@ -45,6 +45,6 @@ func parseMapToOutputStorage(edata EventData) EventsStorage {
 		EventType: edata.M[constants.EVENT_TYPE],
 		AccountId: edata.M[constants.ACCOUNT_ID],
 		Data:      edata.D,
-		CreatedAt: time.Now().String(),
+		CreatedAt: time.Now(),
 	}
 }
