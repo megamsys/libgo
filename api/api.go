@@ -13,7 +13,7 @@ type VerticeApi interface {
 	ToMap() map[string]string
 }
 
-type ApiOrgs struct {
+type ApiArgs struct {
 	Email      string
 	Api_Key    string
 	Master_Key string
@@ -23,7 +23,7 @@ type ApiOrgs struct {
 	Path       string
 }
 
-func (c ApiOrgs) ToMap() map[string]string {
+func (c ApiArgs) ToMap() map[string]string {
 	keys := make(map[string]string)
 	s := reflect.ValueOf(&c).Elem()
 	typ := s.Type()
@@ -42,20 +42,9 @@ func (c ApiOrgs) ToMap() map[string]string {
 	return keys
 }
 
-func (client *Client) Get() (*http.Response, error) {
-	url := client.GetURL()
-	fmt.Println("==> " + url)
-	err := client.Authly.AuthHeader()
-	if err != nil {
-		return nil, err
-	}
-
-	request, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return client.Do(request)
+func (c *Client) Get() (*http.Response, error) {
+		fmt.Println("Request [URL] ==> " + c.Url)
+	return c.run("GET")
 }
 
 func (c *Client) Post(data interface{}) (*http.Response, error) {
@@ -64,18 +53,24 @@ func (c *Client) Post(data interface{}) (*http.Response, error) {
 		return nil, err
 	}
 	c.Authly.JSONBody = jsonbody
-	url := c.GetURL()
-	fmt.Println("==> " + url)
+	fmt.Println("Request [URL] ==> " + c.Url)
+ return c.run("POST")
+}
 
-	err = c.Authly.AuthHeader()
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) Delete() (*http.Response, error) {
+	fmt.Println("Request [URL] ==> " + c.Url)
+ return c.run("DELETE")
+}
 
-	request, err := http.NewRequest("POST", url, bytes.NewReader(c.Authly.JSONBody))
-	if err != nil {
-		return nil, err
-	}
+func (c *Client) run(method string) (*http.Response, error) {
+		err := c.Authly.AuthHeader()
+		if err != nil {
+			return nil, err
+		}
+		request, err := http.NewRequest(method, c.Url, bytes.NewReader(c.Authly.JSONBody))
+		if err != nil {
+			return nil, err
+		}
 
-	return c.Do(request)
+		return c.Do(request)
 }

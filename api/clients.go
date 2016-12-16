@@ -17,6 +17,7 @@ type Client struct {
 	HTTPClient     *http.Client
 	context        *Context
 	Authly         *Authly
+	Url            string
 	progname       string
 	currentVersion string
 	versionHeader  string
@@ -24,20 +25,16 @@ type Client struct {
 
 
 func NewClient(c VerticeApi) *Client {
+	auth := NewAuthly(c)
 	return  &Client{
 		HTTPClient:     &http.Client{},
 		context:        &Context{},
-		Authly:         NewAuthly(c),
+		Authly:         auth,
+		Url:            auth.GetURL(),
 		progname:       "Vertice-Go-api",
 		currentVersion: "2",
 		versionHeader:  "Supported-Gulp",
 	}
-}
-
-func (c *Client) GetURL() string {
-	target := c.Authly.Keys[HOST]
-	path := c.Authly.UrlSuffix
-	return strings.TrimRight(target, "/") + strings.TrimRight(path, "/")
 }
 
 func (c *Client) detectClientError(err error) error {

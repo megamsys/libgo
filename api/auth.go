@@ -3,6 +3,7 @@ package api
 import (
 	"time"
   "net/url"
+	"strings"
 )
 
 type Authly struct {
@@ -27,6 +28,10 @@ func NewAuthly(c VerticeApi) *Authly {
 func GetPort() string {
 	//port, _ := config.GetString("beego:http_port")
 	return "port"
+}
+
+func (auth *Authly) GetURL() string {
+	return strings.TrimRight(auth.Keys[HOST], "/") + strings.TrimRight(auth.UrlSuffix, "/")
 }
 
 func (authly *Authly) AuthHeader() error {

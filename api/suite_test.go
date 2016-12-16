@@ -26,7 +26,7 @@ var _ = check.Suite(&S{})
 func (s *S) SetUpSuite(c *check.C) {
 	s.Email = "info@megam.io"
 	s.Api_Key = "fakeapikey"
-	s.Assembly = Assembly{AccountId: email, OrgId: "ORG123", Id: "asdf"}
+	s.Assembly = Assembly{AccountId: 	s.Email, OrgId: "ORG123", Id: "asdf"}
 }
 
 
