@@ -6,51 +6,71 @@ import (
   	"gopkg.in/check.v1"
 )
 
-// func (s *S) TestGetUser(c *check.C) {
-//   a := ApiArgs{
-//     Email: s.Email,
-//     Url: "http://192.168.10.109:9000/v2",
-//     Path: "/accounts/"+s.Email,
-//     Api_Key: s.Api_Key,
-//     Master_Key: "",
-//     Password: "",
-//     Org_Id: "",
-//   }
-//   cl := NewClient(a)
-//   // _, _ = cl.Post(s.Assembly)
-//   response, err := cl.Get()
-//   c.Assert(err, check.IsNil)
-//   fmt.Println("************************")
-//   fmt.Printf("%#v",response.Body)
-//   htmlData, err := ioutil.ReadAll(response.Body) //<--- here!
-//  	if err != nil {
-//  		fmt.Println("******Error",err)
-//  	}
-//  	fmt.Println("Success  :",string(htmlData)) //<-- here !
-//   fmt.Println(err)
-//   c.Assert(cl, check.NotNil)
-//   c.Assert(err, check.IsNil)
-// }
-
-func (s *S) TestGetAssembly(c *check.C) {
-  a := ApiArgs{
-    Email: s.Email,
-    Url: "http://apidb.megam.io:9000/v2",
-    Path: "/assembly/ASM5285833184590940525",
-  //  Api_Key: s.Api_Key,
-    Master_Key: "3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994ee3f",
-    Password: "",
-    Org_Id: "",
-  }
-  cl := NewClient(a)
-  response, err := cl.Get()
+func (s *S) TestGetUser(c *check.C) {
+  response, err := s.testGet("/accounts/" + s.ApiArgs.Email)
   c.Assert(err, check.IsNil)
   htmlData, err := ioutil.ReadAll(response.Body) //<--- here!
- 	if err != nil {
- 		fmt.Println("******Error",err)
- 	}
+  c.Assert(err, check.IsNil)
+  fmt.Println("Success  :",string(htmlData)) //<-- here !
+  fmt.Println(err)
+  c.Assert(err, check.IsNil)
+}
+
+type Assembly struct {
+	AccountId string `json:"accounts_id"  cql:"accounts_id"`
+	OrgId   string `json:"org_id" cql:"org_id"`
+	Id      string `json:"id"  cql:"id"`
+  Status  string `json:"status" cql:"status"`
+}
+
+type Components struct {
+	Id      string `json:"id"  cql:"id"`
+  Status  string `json:"status" cql:"status"`
+}
+
+func (s *S) TestGetAssembly(c *check.C) {
+  response, err := s.testGet("/assembly/ASM5285833184590940525")
+  c.Assert(err, check.IsNil)
+  htmlData, err := ioutil.ReadAll(response.Body) //<--- here!
+  c.Assert(err, check.IsNil)
  	fmt.Println("Success  :",string(htmlData)) //<-- here !
   fmt.Println(err)
-  c.Assert(cl, check.NotNil)
   c.Assert(err, check.IsNil)
+}
+
+func (s *S) TestAssemblyPost(c *check.C) {
+  response, err := s.testGet("/assembly/ASM5285833184590940525")
+  c.Assert(err, check.IsNil)
+  response, err := s.testPost("/assembly/update", Assembly{AccountId: 	s.ApiArgs.Email, OrgId: s.ApiArgs.Org_Id , Id: "ASM5285833184590940525",Status:"testing"})
+  htmlData, err := ioutil.ReadAll(response.Body) //<--- here!
+  c.Assert(err, check.IsNil)
+ 	fmt.Println("Success  :",string(htmlData)) //<-- here !
+  fmt.Println(err)
+  c.Assert(err, check.IsNil)
+}
+
+func (s *S) TestComponentPost(c *check.C) {
+  response, err := s.testGet("/components/CMP5285833184590940525")
+  c.Assert(err, check.IsNil)
+  response, err := s.testPost("/components/update", Components{Id: "CMP5285833184590940525",Status:"testing"})
+  c.Assert(err, check.IsNil)
+  htmlData, err := ioutil.ReadAll(response.Body) //<--- here!
+  c.Assert(err, check.IsNil)
+  fmt.Println("Success  :",string(htmlData)) //<-- here !
+  fmt.Println(err)
+//  c.Assert(nil, check.NotNil)
+}
+
+func (s *S) testGet(path string) (*http.Response, error) {
+  s.ApiArgs.Path = path
+  cl := NewClient(s.ApiArgs)
+  c.Assert(cl, check.NotNil)
+  return cl.Get()
+}
+
+func (s *S) testPost(path string, item interface{})  {
+  s.ApiArgs.Path = path
+  cl := NewClient(s.ApiArgs)
+  c.Assert(cl, check.NotNil)
+  return cl.Post(item)
 }

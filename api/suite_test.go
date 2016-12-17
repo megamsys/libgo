@@ -7,26 +7,22 @@ import (
 
 func Test(t *testing.T) { check.TestingT(t) }
 
-type Assembly struct {
-	AccountId string `json:"accounts_id"  cql:"accounts_id"`
-	OrgId   string `json:"org_id" cql:"org_id"`
-	Id      string `json:"id"  cql:"id"`
-}
-
 type S struct {
-  Email string  `json:"email"`
-	Api_Key string `json:"api_key"`
-	Master_Key string `json:"master_key"`
-	Assembly Assembly
+  ApiArgs ApiArgs
 }
 
 var _ = check.Suite(&S{})
 
 //we need make sure the stub deploy methods are supported.
 func (s *S) SetUpSuite(c *check.C) {
-	s.Email = "info@megam.io"
-	s.Api_Key = "fakeapikey"
-	s.Assembly = Assembly{AccountId: 	s.Email, OrgId: "ORG123", Id: "asdf"}
+	s.ApiArgs = ApiArgs{
+    Email: "info@megam.io",
+    Url: "http://apidb.megam.io:9000/v2",
+    Api_Key: "",
+    Master_Key: "3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994ee3f",
+    Password: "",
+    Org_Id: "",
+  }
 }
 
 
