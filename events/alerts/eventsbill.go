@@ -3,8 +3,8 @@ package alerts
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/api"
+	"github.com/megamsys/libgo/pairs"
 	constants "github.com/megamsys/libgo/utils"
-	"time"
 )
 
 const EVENTBILL_NEW = "/eventsbilling/content"
@@ -13,8 +13,7 @@ type EventsBill struct {
 	EventType  string   `json:"event_type" cql:"event_type"`
 	AccountId  string   `json:"account_id" cql:"account_id"`
 	AssemblyId string   `json:"assembly_id" cql:"assembly_id"`
-	Data       []string `json:"data" cql:"data"`
-	CreatedAt  time.Time   `json:"created_at" cql:"created_at"`
+	Data       pairs.JsonPairs `json:"data" cql:"data"`
 }
 
 func (v *VerticeApi) NotifyBill(eva EventAction, edata EventData) error {
@@ -23,6 +22,7 @@ func (v *VerticeApi) NotifyBill(eva EventAction, edata EventData) error {
 	}
 	sdata := parseMapToOutputFormat(edata)
 	v.Args.Path = EVENTBILL_NEW
+	v.Args.Email = edata.M[constants.ACCOUNT_ID]
 	cl := api.NewClient(v.Args)
 	_, err := cl.Post(sdata)
 	if err != nil {
@@ -37,7 +37,6 @@ func parseMapToOutputBill(edata EventData) EventsBill {
 		EventType:  edata.M[constants.EVENT_TYPE],
 		AccountId:  edata.M[constants.ACCOUNT_ID],
 		AssemblyId: edata.M[constants.ASSEMBLY_ID],
-		Data:       edata.D,
-		CreatedAt:  time.Now(),
+		Data:       *pairs.ArrayToJsonPairs(edata.D),
 	}
 }

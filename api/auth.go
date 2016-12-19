@@ -48,10 +48,10 @@ func (authly *Authly) AuthHeader() error {
 		key = authly.Keys[API_KEY]
 	case (authly.Keys[PASSWORD] != ""):
 		key = authly.Keys[EMAIL]
-		headMap[X_Megam_PUTTUSAVI] = key
+		headMap[X_Megam_PUTTUSAVI] = "true"
 	case (authly.Keys[MASTER_KEY] != ""):
 		key = authly.Keys[MASTER_KEY]
-		headMap[X_Megam_MASTERKEY] = key
+		headMap[X_Megam_MASTERKEY] = "true"
 	}
 
 	headMap[X_Megam_ORG] = authly.Keys[ORG_ID]

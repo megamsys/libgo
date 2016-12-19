@@ -42,13 +42,9 @@ func (c *Client) detectClientError(err error) error {
 }
 
 func (c *Client) Do(request *http.Request) (*http.Response, error) {
-	fmt.Println("Header :")
 	for headerKey, headerVal := range c.Authly.AuthMap {
-		fmt.Println("Key :", headerKey, "  Value :", headerVal)
-		request.Header.Add(headerKey, headerVal)
-		//request.Header[headerKey] = []string{headerVal}
-	}
-
+	  request.Header.Add(headerKey, headerVal)
+  }
 	request.Close = true
 	response, err := c.HTTPClient.Do(request)
 

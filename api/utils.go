@@ -49,7 +49,7 @@ func CalcHMAC(secret string, message string) string {
 func GetMD5Hash(text []byte) string {
 	hasher := md5.New()
 	hasher.Write(text)
-	return base64.StdEncoding.EncodeToString(hasher.Sum(nil))
+	return base64.URLEncoding.EncodeToString(hasher.Sum(nil))
 }
 
 // func GetMD5Hash(text []byte) string {
