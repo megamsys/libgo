@@ -5,7 +5,6 @@ import (
   "github.com/megamsys/libgo/api"
 	"github.com/megamsys/libgo/pairs"
 	constants "github.com/megamsys/libgo/utils"
-	"fmt"
 )
 
 const (
