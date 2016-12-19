@@ -55,7 +55,7 @@ func (w whmcsBiller) IsEnabled() bool {
 func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 	log.Debugf("User Onboarding...")
 
-	acc, err := NewAccounts(o.AccountId, m)
+	bacc, err := NewAccounts(m)
 	if err != nil {
 		return err
 	}
@@ -64,8 +64,6 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 	if err != nil {
 		return err
 	}
-
-	bacc, err := acc.convertBillAccount()
 
 	sDec, _ := b64.StdEncoding.DecodeString(bacc.Password.Password)
 
@@ -91,7 +89,7 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 		return err
 	}
 
-	err = onboardNotify(acc.Email, res.Body, m)
+	err = onboardNotify(bacc.Email, res.Body, m)
 	return err
 }
 

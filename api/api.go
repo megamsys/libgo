@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
+	"github.com/megamsys/libgo/utils"
 )
 
 type VerticeApi interface {
@@ -21,6 +22,17 @@ type ApiArgs struct {
 	Org_Id     string
 	Url        string
 	Path       string
+}
+
+func NewArgs(args map[string]string) ApiArgs {
+	return ApiArgs{
+		Email:      args[utils.USERMAIL],
+		Api_Key:    args[utils.API_KEY],
+		Master_Key: args[utils.MASTER_KEY],
+		Password:   args[utils.PASSWORD],
+		Org_Id:     args[utils.ORG_ID],
+		Url:        args[utils.API_URL],
+	}
 }
 
 func (c ApiArgs) ToMap() map[string]string {

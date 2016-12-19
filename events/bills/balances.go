@@ -18,15 +18,16 @@ package bills
 import (
 	"strconv"
 	"time"
-  "strings"
-	"github.com/megamsys/libgo/db"
-	constants "github.com/megamsys/libgo/utils"
+	"github.com/megamsys/libgo/api"
+	"io/ioutil"
+	"encoding/json"
 	"gopkg.in/yaml.v2"
 	"fmt"
 )
 
 const (
-	BALANCESBUCKET = "balances"
+	UPDATEBALANCES = "/balances/update"
+	GETBALANCE =  "/balances/"
 	EVENTBALANCEJSON = "Megam::Balances"
 )
 
@@ -35,6 +36,11 @@ type BalanceOpts struct {
 	Consumed  string
 }
 
+type ApiBalances struct {
+	JsonClaz  string `json:"json_claz" cql:"json_claz"`
+	Results   []Balances `json:"results" json:"results"`
+
+}
 type Balances struct {
 	Id        string `json:"id" cql:"id"`
 	AccountId string `json:"account_id" cql:"account_id"`
@@ -56,26 +62,29 @@ func (b *Balances) String() string {
 //This is used by SetStatus.
 //We need add a Notifier interface duck typed by Box and Carton ?
 func NewBalances(id string, m map[string]string) (*Balances, error) {
-	b := &Balances{}
 	// Here skips balances fetching for the VMs which is launched on opennebula,
 	// that does not have records on vertice database
 	if id == "" {
 	 return nil,fmt.Errorf("account_id should not be empty")
 	}
-	ops := db.Options{
-		TableName:   BALANCESBUCKET,
-		Pks:         []string{},
-		Ccms:        []string{"account_id"},
-		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
-		Keyspace:    m[constants.SCYLLAKEYSPACE],
-		Username:    m[constants.SCYLLAUSERNAME],
-		Password:    m[constants.SCYLLAPASSWORD],
-		PksClauses:  make(map[string]interface{}),
-		CcmsClauses: map[string]interface{}{"account_id": id},
-	}
-	if err := db.Fetchdb(ops, b); err != nil {
+	args := api.NewArgs(m)
+	args.Path = GETBALANCE + id
+	cl := api.NewClient(args)
+	response, err := cl.Get()
+	if err != nil {
 		return nil, err
 	}
+	htmlData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	ac := &ApiBalances{}
+	err = json.Unmarshal(htmlData, ac)
+	if err != nil {
+		return nil, err
+	}
+	b := &ac.Results[0]
 	return b, nil
 }
 
@@ -90,21 +99,14 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 		return cerr
 	}
 
-  update_fields := make(map[string]interface{})
-	update_fields["updated_at"] = time.Now().Local().Format(time.RFC822)
-	update_fields["credit"] = strconv.FormatFloat(avail - consume, 'f', 2, 64)
-	ops := db.Options{
-		TableName:   BALANCESBUCKET,
-		Pks:         []string{},
-		Ccms:        []string{"account_id"},
-		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
-		Keyspace:    m[constants.SCYLLAKEYSPACE],
-		Username:    m[constants.SCYLLAUSERNAME],
-		Password:    m[constants.SCYLLAPASSWORD],
-		PksClauses:  make(map[string]interface{}),
-		CcmsClauses: map[string]interface{}{"account_id": b.AccountId},
-	}
-	if err := db.Updatedb(ops, update_fields); err != nil {
+	b.UpdatedAt = time.Now()
+	b.Credit = strconv.FormatFloat(avail - consume, 'f', 2, 64)
+
+	args := api.NewArgs(m)
+	args.Path = UPDATEBALANCES
+	cl := api.NewClient(args)
+	_, err = cl.Post(b)
+	if err != nil {
 		return err
 	}
 

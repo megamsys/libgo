@@ -33,6 +33,7 @@ func register(e EventsConfigMap) {
 	notifiers[constants.INFOBIP] = newInfobip(e.Get(constants.INFOBIP))
 	notifiers[constants.SLACK] = newSlack(e.Get(constants.SLACK))
 	notifiers[constants.SCYLLA] = newScylla(e.Get(constants.META))
+	notifiers[constants.VERTICEAPI] = newVertApi(e.Get(constants.META))
 	enabler(e)
 }
 
@@ -69,6 +70,10 @@ func newSlack(m map[string]string) alerts.Notifier {
 
 func newScylla(m map[string]string) alerts.Notifier {
 	return alerts.NewScylla(m)
+}
+
+func newVertApi(m map[string]string) alerts.Notifier {
+	return alerts.NewApiArgs(m)
 }
 
 // Watches for new vms, or vms destroyed.

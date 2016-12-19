@@ -28,8 +28,13 @@ const (
 	STATUS         = "status"
 	HOST_IP        = "host_ip"
 
+	VERTICEAPI     = "verticegateway"
+	
 	HOME           = "home"
 	DIR            = "dir"
+	ORG_ID         = "org_id"
+	MASTER_KEY     = "master_key"
+	API_URL        = "url"
 	SCYLLAHOST     = "scylla_host"
 	SCYLLAKEYSPACE = "scylla_keyspace"
 	SCYLLAUSERNAME = "scylla_username"

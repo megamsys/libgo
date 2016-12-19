@@ -2,12 +2,12 @@ package alerts
 
 import (
 	log "github.com/Sirupsen/logrus"
-	ldb "github.com/megamsys/libgo/db"
+	"github.com/megamsys/libgo/api"
 	constants "github.com/megamsys/libgo/utils"
 	"time"
 )
 
-const EVENTSTORAGE = "events_for_storages"
+const EVENTSTORAGE_NEW = "/eventsstorage/content"
 
 type EventsStorage struct {
 	EventType string   `json:"event_type" cql:"event_type"`
@@ -16,24 +16,16 @@ type EventsStorage struct {
 	CreatedAt time.Time   `json:"created_at" cql:"created_at"`
 }
 
-func (s *Scylla) NotifyStorage(eva EventAction, edata EventData) error {
+func (v *VerticeApi) NotifyStorage(eva EventAction, edata EventData) error {
 
-	if !s.satisfied(eva) {
+	if !v.satisfied(eva) {
 		return nil
 	}
-	s_data := parseMapToOutputStorage(edata)
-	ops := ldb.Options{
-		TableName:   EVENTSTORAGE,
-		Pks:         []string{constants.EVENT_TYPE, constants.CREATED_AT},
-		Ccms:        []string{constants.ACCOUNT_ID},
-		Hosts:       s.Scylla_host,
-		Keyspace:    s.Scylla_keyspace,
-		Username:    s.Scylla_username,
-		Password:    s.Scylla_password,
-		PksClauses:  map[string]interface{}{constants.EVENT_TYPE: edata.M[constants.EVENT_TYPE], constants.CREATED_AT: s_data.CreatedAt},
-		CcmsClauses: map[string]interface{}{constants.ACCOUNT_ID: edata.M[constants.ACCOUNT_ID]},
-	}
-	if err := ldb.Storedb(ops, s_data); err != nil {
+	sdata := parseMapToOutputFormat(edata)
+	v.Args.Path = EVENTSTORAGE_NEW
+	cl := api.NewClient(v.Args)
+	_, err := cl.Post(sdata)
+	if err != nil {
 		log.Debugf(err.Error())
 		return err
 	}
