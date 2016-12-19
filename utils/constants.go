@@ -16,6 +16,8 @@ const (
 	CHANNEL        = "channel"
 	USERNAME       = "username"
 	PASSWORD       = "password"
+	WHMCS_PASSWORD = "whmcs_password"
+	WHMCS_APIKEY   = "whmcs_apikey"
 	APPLICATION_ID = "application_id"
 	MESSAGE_ID     = "message_id"
 	API_KEY        = "api_key"
@@ -29,7 +31,7 @@ const (
 	HOST_IP        = "host_ip"
 
 	VERTICEAPI     = "verticegateway"
-	
+
 	HOME           = "home"
 	DIR            = "dir"
 	ORG_ID         = "org_id"

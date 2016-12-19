@@ -3,8 +3,8 @@ package alerts
 import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/api"
+	"github.com/megamsys/libgo/pairs"
 	constants "github.com/megamsys/libgo/utils"
-	"time"
 )
 
 const EVENTSTORAGE_NEW = "/eventsstorage/content"
@@ -12,8 +12,7 @@ const EVENTSTORAGE_NEW = "/eventsstorage/content"
 type EventsStorage struct {
 	EventType string   `json:"event_type" cql:"event_type"`
 	AccountId string   `json:"account_id" cql:"account_id"`
-	Data      []string `json:"data" cql:"data"`
-	CreatedAt time.Time   `json:"created_at" cql:"created_at"`
+	Data      pairs.JsonPairs `json:"data" cql:"data"`
 }
 
 func (v *VerticeApi) NotifyStorage(eva EventAction, edata EventData) error {
@@ -36,7 +35,6 @@ func parseMapToOutputStorage(edata EventData) EventsStorage {
 	return EventsStorage{
 		EventType: edata.M[constants.EVENT_TYPE],
 		AccountId: edata.M[constants.ACCOUNT_ID],
-		Data:      edata.D,
-		CreatedAt: time.Now(),
+		Data:      *pairs.ArrayToJsonPairs(edata.D),
 	}
 }
