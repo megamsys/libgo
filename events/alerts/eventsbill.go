@@ -2,38 +2,30 @@ package alerts
 
 import (
 	log "github.com/Sirupsen/logrus"
-	ldb "github.com/megamsys/libgo/db"
+	"github.com/megamsys/libgo/api"
 	constants "github.com/megamsys/libgo/utils"
 	"time"
 )
 
-const EVENTBILL = "events_for_billings"
+const EVENTBILL_NEW = "/eventsbilling/content"
 
 type EventsBill struct {
 	EventType  string   `json:"event_type" cql:"event_type"`
 	AccountId  string   `json:"account_id" cql:"account_id"`
 	AssemblyId string   `json:"assembly_id" cql:"assembly_id"`
 	Data       []string `json:"data" cql:"data"`
-	CreatedAt  string   `json:"created_at" cql:"created_at"`
+	CreatedAt  time.Time   `json:"created_at" cql:"created_at"`
 }
 
-func (s *Scylla) NotifyBill(eva EventAction, edata EventData) error {
-	if !s.satisfied(eva) {
+func (v *VerticeApi) NotifyBill(eva EventAction, edata EventData) error {
+	if !v.satisfied(eva) {
 		return nil
 	}
-	s_data := parseMapToOutputBill(edata)
-	ops := ldb.Options{
-		TableName:   EVENTBILL,
-		Pks:         []string{constants.EVENT_TYPE, constants.CREATED_AT},
-		Ccms:        []string{constants.ASSEMBLY_ID, constants.ACCOUNT_ID},
-		Hosts:       s.Scylla_host,
-		Keyspace:    s.Scylla_keyspace,
-		Username:    s.Scylla_username,
-		Password:    s.Scylla_password,
-		PksClauses:  map[string]interface{}{constants.EVENT_TYPE: edata.M[constants.EVENT_TYPE], constants.CREATED_AT: s_data.CreatedAt},
-		CcmsClauses: map[string]interface{}{constants.ASSEMBLY_ID: edata.M[constants.ASSEMBLY_ID], constants.ACCOUNT_ID: edata.M[constants.ACCOUNT_ID]},
-	}
-	if err := ldb.Storedb(ops, s_data); err != nil {
+	sdata := parseMapToOutputFormat(edata)
+	v.Args.Path = EVENTBILL_NEW
+	cl := api.NewClient(v.Args)
+	_, err := cl.Post(sdata)
+	if err != nil {
 		log.Debugf(err.Error())
 		return err
 	}
@@ -46,6 +38,6 @@ func parseMapToOutputBill(edata EventData) EventsBill {
 		AccountId:  edata.M[constants.ACCOUNT_ID],
 		AssemblyId: edata.M[constants.ASSEMBLY_ID],
 		Data:       edata.D,
-		CreatedAt:  time.Now().String(),
+		CreatedAt:  time.Now(),
 	}
 }

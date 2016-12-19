@@ -74,17 +74,6 @@ func (st *ScyllaTable) readMulti(fields map[string]interface{},limit int,out int
 	return st.T.List(fields, nil, limit,out).WithOptions(op).Run()
 }
 
-/*func (st *ScyllaTable) read(fn RelationsFunc, out interface{}) error {
-	log.Debugf(cmd.Colorfy("  > [scylla] read", "blue", "", "bold"))
-	return st.T.Where(fn()).ReadOne(out).Run()
-}
-
-func (st *ScyllaTable) readWhere(where ScyllaWhere, out interface{}) error {
-	log.Debugf(cmd.Colorfy("  > [scylla] readwhere", "blue", "", "bold"))
-	op := gocassa.Options{AllowFiltering: true}
-	return st.T.Where(where.toEqs()...).ReadOne(out).WithOptions(op).Run()
-}*/
-
 func (st *ScyllaTable) insert(data interface{}) error {
 	log.Debugf(cmd.Colorfy("  > [scylla] insert", "blue", "", "bold"))
 	return st.T.Set(data).Run()
@@ -98,12 +87,4 @@ func (st *ScyllaTable) update(tinfo Options, data map[string]interface{}) error 
 func (st *ScyllaTable) deleterow(tinfo Options) error {
 	log.Debugf(cmd.Colorfy("  > [scylla] delete", "blue", "", "bold"))
 	return st.T.Delete(tinfo.PksClauses, tinfo.CcmsClauses).Run()
-}
-
-func (wh ScyllaWhere) toEqs() []gocassa.Relation {
-	r := make([]gocassa.Relation,0)
-	for k, v := range wh.Clauses {
-		r = append(r, gocassa.Eq(k, v))
-	}
-	return r
 }

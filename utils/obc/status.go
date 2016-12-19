@@ -207,6 +207,8 @@ func (s Status) Event_type() string {
 		return OBCGETNETWORKINFOSGATHEREDTYPE
 	case TPL_NETWORKINFO_FINISHED:
 		return OBCNETWORKINFOTPLFINISHED
+	case RUNNING:
+		return OBCHOSTINSTALLRUNNINGTYPE
 	case HOSTRUNNING:
 		return OBCHOSTINSTALLRUNNINGTYPE
 	case MASTERRUNNING:
@@ -401,6 +403,8 @@ func (s Status) Description(host string) string {
 		return "Host " + host + " network informations collected"
 	case TPL_NETWORKINFO_FINISHED:
 		return TPL_FINISHED
+	case RUNNING:
+		return "Server " + host + " installed successfully"
 	case HOSTRUNNING:
 		return "Host " + host + " installed successfully"
 	case MASTERRUNNING:

@@ -2,16 +2,18 @@ package addons
 
 import (
 	log "github.com/Sirupsen/logrus"
-	ldb "github.com/megamsys/libgo/db"
+	"github.com/megamsys/libgo/api"
 	constants "github.com/megamsys/libgo/utils"
+	"encoding/json"
+	"io/ioutil"
 	"github.com/megamsys/libgo/events/alerts"
-	"strings"
 	"time"
 	"fmt"
 )
 
 const (
-	ADDONSBUCKET = "addons"
+	ADDONS_NEW = "/addons/content"
+	GETADDONS = "/addons/"
 	PROVIDER_NAME = "provider_name"
 	PROVIDER_ID = "provider_id"
 	)
@@ -23,6 +25,11 @@ type Addons struct {
 	AccountId    string   `json:"account_id" cql:"account_id"`
 	Options      []string `json:"options" cql:"options"`
 	CreatedAt    string   `json:"created_at" cql:"created_at"`
+}
+
+type ApiAddons struct {
+	JsonClaz  string `json:"json_claz"`
+	Results  []Addons `json:"results"`
 }
 
 func NewAddons(edata alerts.EventData) *Addons {
@@ -37,18 +44,11 @@ func NewAddons(edata alerts.EventData) *Addons {
 }
 
 func (s *Addons) Onboard(m map[string]string) error {
-	ops := ldb.Options{
-		TableName:   ADDONSBUCKET,
-		Pks:         []string{PROVIDER_NAME},
-		Ccms:        []string{constants.ACCOUNT_ID},
-		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
-		Keyspace:    m[constants.SCYLLAKEYSPACE],
-		Username:    m[constants.SCYLLAUSERNAME],
-		Password:    m[constants.SCYLLAPASSWORD],
-		PksClauses:  map[string]interface{}{PROVIDER_NAME: s.ProviderName},
-		CcmsClauses: map[string]interface{}{constants.ACCOUNT_ID: s.AccountId},
-	}
-	if err := ldb.Storedb(ops, s); err != nil {
+	args := api.NewArgs(m)
+	args.Path = ADDONS_NEW
+	cl := api.NewClient(args)
+	_, err := cl.Post(s)
+	if err != nil {
 		log.Debugf(err.Error())
 		return err
 	}
@@ -61,20 +61,23 @@ func (s *Addons) Get(m map[string]string) error {
 	if s.AccountId == "" {
 	 return fmt.Errorf("account_id should not be empty")
 	}
-	ops := ldb.Options{
-		TableName:   ADDONSBUCKET,
-		Pks:         []string{PROVIDER_NAME},
-		Ccms:        []string{constants.ACCOUNT_ID},
-		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
-		Keyspace:    m[constants.SCYLLAKEYSPACE],
-		Username:    m[constants.SCYLLAUSERNAME],
-		Password:    m[constants.SCYLLAPASSWORD],
-		PksClauses:  map[string]interface{}{PROVIDER_NAME: s.ProviderName},
-		CcmsClauses: map[string]interface{}{constants.ACCOUNT_ID: s.AccountId},
+	args := api.NewArgs(m)
+	args.Path = GETADDONS + s.Id
+	cl := api.NewClient(args)
+	response, err := cl.Get()
+	if err != nil {
+		return err
 	}
-	if err := ldb.Fetchdb(ops, s); err != nil {
+	htmlData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
 		return err
 	}
 
+	o := &ApiAddons{}
+	err = json.Unmarshal(htmlData, o)
+	if err != nil {
+		return err
+	}
+	s = &o.Results[0]
 	return nil
 }

@@ -17,15 +17,13 @@ package bills
 
 import (
 	"time"
-    "strings"
-	"github.com/megamsys/libgo/db"
-	constants "github.com/megamsys/libgo/utils"
+	"github.com/megamsys/libgo/api"
 	"gopkg.in/yaml.v2"
 	log "github.com/Sirupsen/logrus"
 )
 
 const (
-	TRANSACTIONBUCKET = "billedhistories"
+	NEWTRANSACTION = "/billedhistories/content"
 	BILLJSONCLAZ      = "Megam::Billedhistories"
 )
 
@@ -44,7 +42,7 @@ type BillTransaction struct {
 	BillingAmount string `json:"billing_amount" cql:"billing_amount"`
 	CurrencyType  string `json:"currency_type" cql:"currency_type"`
 	JsonClaz      string `json:"json_claz" cql:"json_claz"`
-	CreatedAt     string `json:"created_at" cql:"created_at"`
+	CreatedAt     time.Time `json:"created_at" cql:"created_at"`
 }
 
 func (bt *BillTransactionOpts) String() string {
@@ -63,23 +61,16 @@ func NewBillTransaction(topts *BillOpts) (*BillTransaction, error) {
 		BillingAmount: topts.Consumed,
 		JsonClaz: BILLJSONCLAZ,
 		CurrencyType:  "",
-		CreatedAt:     time.Now().Local().Format(time.RFC822),
+		CreatedAt:     time.Now(),
 	}, nil
 }
 
 func (bt *BillTransaction) Transact(m map[string]string) error {
-	ops := db.Options{
-		TableName:   TRANSACTIONBUCKET,
-		Pks:         []string{"bill_type", "created_at"},
-		Ccms:        []string{"account_id", "assembly_id"},
-		Hosts:       strings.Split(m[constants.SCYLLAHOST], ","),
-		Keyspace:    m[constants.SCYLLAKEYSPACE],
-		Username:    m[constants.SCYLLAUSERNAME],
-		Password:    m[constants.SCYLLAPASSWORD],
-		PksClauses:  map[string]interface{}{"bill_type": bt.BillType, "created_at": bt.CreatedAt},
-		CcmsClauses: map[string]interface{}{"account_id": bt.AccountId, "assembly_id": bt.AssemblyId},
-	}
-	if err := db.Storedb(ops, bt); err != nil {
+	args := api.NewArgs(m)
+	args.Path = NEWTRANSACTION
+	cl := api.NewClient(args)
+	_, err := cl.Post(bt)
+	if err != nil {
 		log.Debugf(err.Error())
 		return err
 	}

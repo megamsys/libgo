@@ -111,6 +111,7 @@ const (
 	HOSTRUNNING    = "host.running"
 	MASTERRUNNING  = "master.running"
 	NETWORKRUNNING = "network.running"
+	RUNNING        = "running"
 
 	NETWORKERROR = "network_error"
 	STORAGEERROR = "storage_error"
@@ -118,7 +119,8 @@ const (
 
 	StatusHostRunning   = Status(HOSTRUNNING)
 	StatusMasterRunning = Status(MASTERRUNNING)
-	StatusRunning       = Status(NETWORKRUNNING)
+	StatusNetowrkRunning       = Status(NETWORKRUNNING)
+	StatusRunning = Status(RUNNING)
 
 	StatusComputeError = Status(COMPUTEERROR)
 	StatusNetworkError = Status(NETWORKERROR)
