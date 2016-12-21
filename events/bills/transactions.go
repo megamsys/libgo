@@ -67,8 +67,7 @@ func NewBillTransaction(topts *BillOpts) (*BillTransaction, error) {
 
 func (bt *BillTransaction) Transact(m map[string]string) error {
 	args := api.NewArgs(m)
-	args.Path = NEWTRANSACTION
-	cl := api.NewClient(args)
+	cl := api.NewClient(args, NEWTRANSACTION)
 	_, err := cl.Post(bt)
 	if err != nil {
 		log.Debugf(err.Error())

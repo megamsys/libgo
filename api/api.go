@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"strings"
 	"github.com/megamsys/libgo/utils"
+	log "github.com/Sirupsen/logrus"
 )
 
 type VerticeApi interface {
@@ -55,7 +56,7 @@ func (c ApiArgs) ToMap() map[string]string {
 }
 
 func (c *Client) Get() (*http.Response, error) {
-		fmt.Println("Request [URL] ==> " + c.Url)
+		fmt.Println("Request [GET] ==> " + c.Url)
 	return c.run("GET")
 }
 
@@ -65,12 +66,13 @@ func (c *Client) Post(data interface{}) (*http.Response, error) {
 		return nil, err
 	}
 	c.Authly.JSONBody = jsonbody
-	fmt.Println("Request [URL] ==> " + c.Url)
+	fmt.Println("Request [POST] ==> " + c.Url)
+	log.Debugf("[Body]  (%s)",string(jsonbody))
  return c.run("POST")
 }
 
 func (c *Client) Delete() (*http.Response, error) {
-	fmt.Println("Request [URL] ==> " + c.Url)
+	fmt.Println("Request [DELETE] ==> " + c.Url)
  return c.run("DELETE")
 }
 
@@ -84,5 +86,11 @@ func (c *Client) run(method string) (*http.Response, error) {
 			return nil, err
 		}
 
-		return c.Do(request)
+		res, err := c.Do(request)
+		if err != nil {
+			fmt.Println("  api error :",err)
+			return nil, err
+		}
+
+		return res, nil
 }

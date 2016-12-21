@@ -23,9 +23,8 @@ func (v *VerticeApi) NotifyVm(eva EventAction, edata EventData) error {
 		return nil
 	}
 	sdata := parseMapToOutputFormat(edata)
-	v.Args.Path = EVENTSVM_NEW
 	v.Args.Email = edata.M[constants.ACCOUNT_ID]
-	cl := api.NewClient(v.Args)
+	cl := api.NewClient(v.Args, EVENTSVM_NEW)
 	_, err := cl.Post(sdata)
 	if err != nil {
 		log.Debugf(err.Error())

@@ -22,7 +22,7 @@ import (
 )
 
 const(
-	ORGANIZATIONBUCKET ="organizations"
+	ORGANIZATIONGET ="/organizations"
 	ACCOUNTS_GET = "/accounts/"
 
 	)
@@ -104,8 +104,7 @@ type States struct {
 
 func NewAccounts(m map[string]string) (*Accounts, error) {
 	args := api.NewArgs(m)
-	args.Path = ACCOUNTS_GET + args.Email
-	cl := api.NewClient(args)
+	cl := api.NewClient(args, ACCOUNTS_GET + args.Email)
 	response, err := cl.Get()
 	if err != nil {
 		return nil, err
@@ -126,8 +125,7 @@ func NewAccounts(m map[string]string) (*Accounts, error) {
 
 func AccountsOrg(email string, m map[string]string) (*Organization, error) {
 	args := api.NewArgs(m)
-	args.Path = ACCOUNTS_GET + args.Email
-	cl := api.NewClient(args)
+	cl := api.NewClient(args, ORGANIZATIONGET)
 	response, err := cl.Get()
 	if err != nil {
 		return nil, err
