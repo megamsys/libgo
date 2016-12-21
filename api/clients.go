@@ -24,8 +24,9 @@ type Client struct {
 }
 
 
-func NewClient(c VerticeApi) *Client {
+func NewClient(c VerticeApi, path string) *Client {
 	auth := NewAuthly(c)
+	auth.UrlSuffix = path
 	return  &Client{
 		HTTPClient:     &http.Client{},
 		context:        &Context{},

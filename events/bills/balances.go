@@ -68,8 +68,7 @@ func NewBalances(id string, m map[string]string) (*Balances, error) {
 	 return nil,fmt.Errorf("account_id should not be empty")
 	}
 	args := api.NewArgs(m)
-	args.Path = GETBALANCE + id
-	cl := api.NewClient(args)
+	cl := api.NewClient(args, GETBALANCE + id)
 	response, err := cl.Get()
 	if err != nil {
 		return nil, err
@@ -103,8 +102,7 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 	b.Credit = strconv.FormatFloat(avail - consume, 'f', 2, 64)
 
 	args := api.NewArgs(m)
-	args.Path = UPDATEBALANCES
-	cl := api.NewClient(args)
+	cl := api.NewClient(args, UPDATEBALANCES)
 	_, err = cl.Post(b)
 	if err != nil {
 		return err

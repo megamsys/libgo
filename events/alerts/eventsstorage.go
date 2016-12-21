@@ -21,8 +21,8 @@ func (v *VerticeApi) NotifyStorage(eva EventAction, edata EventData) error {
 		return nil
 	}
 	sdata := parseMapToOutputFormat(edata)
-	v.Args.Path = EVENTSTORAGE_NEW
-	cl := api.NewClient(v.Args)
+	v.Args.Email = edata.M[constants.ACCOUNT_ID]
+	cl := api.NewClient(v.Args, EVENTSTORAGE_NEW)
 	_, err := cl.Post(sdata)
 	if err != nil {
 		log.Debugf(err.Error())

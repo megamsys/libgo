@@ -45,8 +45,7 @@ func NewAddons(edata alerts.EventData) *Addons {
 
 func (s *Addons) Onboard(m map[string]string) error {
 	args := api.NewArgs(m)
-	args.Path = ADDONS_NEW
-	cl := api.NewClient(args)
+	cl := api.NewClient(args, ADDONS_NEW)
 	_, err := cl.Post(s)
 	if err != nil {
 		log.Debugf(err.Error())
@@ -62,8 +61,7 @@ func (s *Addons) Get(m map[string]string) error {
 	 return fmt.Errorf("account_id should not be empty")
 	}
 	args := api.NewArgs(m)
-	args.Path = GETADDONS + s.Id
-	cl := api.NewClient(args)
+	cl := api.NewClient(args, GETADDONS + s.Id)
 	response, err := cl.Get()
 	if err != nil {
 		return err
