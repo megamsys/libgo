@@ -16,38 +16,37 @@
 package bills
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/megamsys/libgo/api"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"strconv"
 	"time"
-	"github.com/megamsys/libgo/api"
-	"io/ioutil"
-	"encoding/json"
-	"gopkg.in/yaml.v2"
-	"fmt"
 )
 
 const (
-	UPDATEBALANCES = "/balances/update"
-	GETBALANCE =  "/balances/"
+	UPDATEBALANCES   = "/balances/update"
+	GETBALANCE       = "/balances/"
 	EVENTBALANCEJSON = "Megam::Balances"
 )
 
 type BalanceOpts struct {
-	Id        string
-	Consumed  string
+	Id       string
+	Consumed string
 }
 
 type ApiBalances struct {
-	JsonClaz  string `json:"json_claz" cql:"json_claz"`
-	Results   []Balances `json:"results" json:"results"`
-
+	JsonClaz string     `json:"json_claz" cql:"json_claz"`
+	Results  []Balances `json:"results" json:"results"`
 }
 type Balances struct {
-	Id        string `json:"id" cql:"id"`
-	AccountId string `json:"account_id" cql:"account_id"`
-	Credit    string `json:"credit" cql:"credit"`
+	Id        string    `json:"id" cql:"id"`
+	AccountId string    `json:"account_id" cql:"account_id"`
+	Credit    string    `json:"credit" cql:"credit"`
 	CreatedAt time.Time `json:"created_at" cql:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" cql:"updated_at"`
-	JsonClaz  string `json:"json_claz" cql:"json_claz"`
+	JsonClaz  string    `json:"json_claz" cql:"json_claz"`
 }
 
 func (b *Balances) String() string {
@@ -65,10 +64,11 @@ func NewBalances(id string, m map[string]string) (*Balances, error) {
 	// Here skips balances fetching for the VMs which is launched on opennebula,
 	// that does not have records on vertice database
 	if id == "" {
-	 return nil,fmt.Errorf("account_id should not be empty")
+		return nil, fmt.Errorf("account_id should not be empty")
 	}
+
 	args := api.NewArgs(m)
-	cl := api.NewClient(args, GETBALANCE + id)
+	cl := api.NewClient(args, GETBALANCE+id)
 	response, err := cl.Get()
 	if err != nil {
 		return nil, err
@@ -99,7 +99,7 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 	}
 
 	b.UpdatedAt = time.Now()
-	b.Credit = strconv.FormatFloat(avail - consume, 'f', 2, 64)
+	b.Credit = strconv.FormatFloat(avail-consume, 'f', 2, 64)
 
 	args := api.NewArgs(m)
 	cl := api.NewClient(args, UPDATEBALANCES)
@@ -107,6 +107,5 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }

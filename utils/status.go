@@ -37,6 +37,10 @@ func (s Status) Event_type() string {
 		return ONEINSTANCESBALANCEVERIFYTYPE
 	case INSUFFICIENT_FUND:
 		return ONEINSTANCESINSUFFIENTFUNDTYPE
+	case QUOTAUPDATING:
+		return ONEINSTANCEUSERQUOTAUPDATING
+	case QUOTAUPDATED:
+		return ONEINSTANCEUSERQUOTAUPDATED
 	case VMBOOTING:
 		return ONEINSTANCEBOOTINGTYPE
 	case LAUNCHED:
@@ -69,6 +73,10 @@ func (s Status) Event_type() string {
 		return ONEINSTANCESNAPSHOTTINGTYPE
 	case SNAPSHOTTED:
 		return ONEINSTANCESNAPSHOTTEDTYPE
+	case LCMSTATECHECK:
+		return ONEINSTANCELCMSTATECHECKING
+	case VMSTATECHECK:
+		return ONEINSTANCEVMSTATECHECKING
 	case COOKBOOKDOWNLOADING:
 		return COOKBOOKDOWNLOADINGTYPE
 	case COOKBOOKDOWNLOADED:
@@ -165,6 +173,10 @@ func (s Status) Description(name string) string {
 		return "Virtual machine " + name + " is booting ..."
 	case LAUNCHED:
 		return "Machine " + name + " was initialized on cloud.."
+	case QUOTAUPDATING:
+		return "Machine " + name + " updating into quota.."
+	case QUOTAUPDATED:
+		return "Machine " + name + " updated into quota.."
 	case VNCHOSTUPDATING:
 		return name + " vnc_host is updating.."
 	case VNCHOSTUPDATED:

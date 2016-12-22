@@ -19,7 +19,6 @@ func (m scylladbManager) Onboard(o *BillOpts, mi map[string]string) error {
 }
 
 func (m scylladbManager) Deduct(o *BillOpts, mi map[string]string) error {
-	//b, err := carton.NewBalances(o.AccountsId)
 	b, err := NewBalances(o.AccountId, mi)
 	if err != nil {
 		return err

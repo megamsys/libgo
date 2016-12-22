@@ -126,6 +126,12 @@ const (
 	DISKDETACHING = "disk_detaching"
 	DISKDETACHED  = "disk_detached"
 
+	QUOTAUPDATING  = "quota_updating"
+	QUOTAUPDATED	 = "quota_updated"
+
+	LCMSTATECHECK  = "check_lcmstate"
+	VMSTATECHECK   = "check_vmstate"
+
 	VNCHOSTUPDATING    = "vnchostupdating"
 	VNCHOSTUPDATED     = "vnchostupdated"
 	DNSNETWORKCREATING = "dnscnamecreating"
@@ -216,6 +222,9 @@ const (
 	// StatusLaunched is the status for box after launched in cloud.
 	StatusLaunched = Status(LAUNCHED)
 
+	StatusQuotaUpdating = Status(QUOTAUPDATING)
+	StatusQuotaUpdated = Status(QUOTAUPDATED)
+
 	StatusInsufficientFund = Status(INSUFFICIENT_FUND)
 
 	StatusVMBooting = Status(VMBOOTING)
@@ -259,6 +268,8 @@ const (
 	StatusDiskAttached  = Status(DISKATTACHED)
 	StatusDiskDetaching = Status(DISKDETACHING)
 	StatusDiskDetached  = Status(DISKDETACHED)
+	StatusLcmStateChecking = Status(LCMSTATECHECK)
+	StatusVmStateChecking = Status(VMSTATECHECK)
 
 	StatusCookbookDownloading = Status(COOKBOOKDOWNLOADING)
 	StatusCookbookDownloaded  = Status(COOKBOOKDOWNLOADED)
@@ -357,6 +368,10 @@ const (
 	ONEINSTANCESNAPSHOTTEDTYPE         = "compute.instance.snapshotted"
 	ONEINSTANCESBALANCEVERIFYTYPE      = "compute.instance.balance_check"
 	ONEINSTANCESINSUFFIENTFUNDTYPE     = "compute.instance.insufficient_fund"
+	ONEINSTANCEUSERQUOTAUPDATING       = "compute.instance.quota_updating"
+	ONEINSTANCEUSERQUOTAUPDATED        = "compute.instance.quota_updated"
+	ONEINSTANCELCMSTATECHECKING	       = "compute.instance.lcmstate_checking"
+	ONEINSTANCEVMSTATECHECKING         = "compute.instance.vmstate_checking"
 
 	COOKBOOKDOWNLOADINGTYPE = "compute.instance.cookbook_downloading"
 	COOKBOOKDOWNLOADEDTYPE  = "compute.instance.cookbook_downloaded"

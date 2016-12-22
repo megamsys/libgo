@@ -16,15 +16,17 @@
 package bills
 
 import (
-	"time"
-	"github.com/megamsys/libgo/api"
-	"gopkg.in/yaml.v2"
 	log "github.com/Sirupsen/logrus"
+	"github.com/megamsys/libgo/api"
+	"github.com/megamsys/libgo/utils"
+	"gopkg.in/yaml.v2"
+	//"strconv"
+	"time"
 )
 
 const (
 	NEWTRANSACTION = "/billedhistories/content"
-	BILLJSONCLAZ      = "Megam::Billedhistories"
+	BILLJSONCLAZ   = "Megam::Billedhistories"
 )
 
 type BillTransactionOpts struct {
@@ -35,14 +37,13 @@ type BillTransactionOpts struct {
 }
 
 type BillTransaction struct {
-	Id            string `json:"id" cql:"id"`
-	AccountId     string `json:"account_id" cql:"account_id"`
-	AssemblyId    string `json:"assembly_id" cql:"assembly_id"`
-	BillType      string `json:"bill_type" cql:"bill_type"`
-	BillingAmount string `json:"billing_amount" cql:"billing_amount"`
-	CurrencyType  string `json:"currency_type" cql:"currency_type"`
-	JsonClaz      string `json:"json_claz" cql:"json_claz"`
-	CreatedAt     time.Time `json:"created_at" cql:"created_at"`
+	AccountId     string    `json:"-" cql:"account_id"`
+	AssemblyId    string    `json:"assembly_id" cql:"assembly_id"`
+	BillType      string    `json:"bill_type" cql:"bill_type"`
+	BillingAmount string    `json:"billing_amount" cql:"billing_amount"`
+	StateDate     time.Time `json:"start_date" cql:"start_date"`
+	EndDate       time.Time `json:"end_date" cql:"end_date"`
+	CurrencyType  string    `json:"currency_type" cql:"currency_type"`
 }
 
 func (bt *BillTransactionOpts) String() string {
@@ -54,18 +55,21 @@ func (bt *BillTransactionOpts) String() string {
 }
 
 func NewBillTransaction(topts *BillOpts) (*BillTransaction, error) {
+	//start, _ := strconv.ParseInt(topts.StartTime, 10, 64)
+	//end, _ := strconv.ParseInt(topts.EndTime, 10, 64)
 	return &BillTransaction{
 		AccountId:     topts.AccountId,
 		AssemblyId:    topts.AssemblyId,
 		BillType:      "VM",
 		BillingAmount: topts.Consumed,
-		JsonClaz: BILLJSONCLAZ,
+		StateDate:     time.Now(), //time.Unix(start, 0),
+		EndDate:       time.Now(), //time.Unix(end, 0),
 		CurrencyType:  "",
-		CreatedAt:     time.Now(),
 	}, nil
 }
 
 func (bt *BillTransaction) Transact(m map[string]string) error {
+	m[utils.USERMAIL] = bt.AccountId
 	args := api.NewArgs(m)
 	cl := api.NewClient(args, NEWTRANSACTION)
 	_, err := cl.Post(bt)
