@@ -1,12 +1,12 @@
 package api
-/*
+
 import (
   "io/ioutil"
    "fmt"
    "net/http"
   	"gopkg.in/check.v1"
 )
-
+/*
 func (s *S) TestGetUser(c *check.C) {
   response, err := s.testGet("/accounts/" + s.ApiArgs.Email)
   c.Assert(err, check.IsNil)
@@ -61,17 +61,53 @@ func (s *S) TestComponentPost(c *check.C) {
   fmt.Println(err)
 //  c.Assert(nil, check.NotNil)
 }
-
+// */
 func (s *S) testGet(path string) (*http.Response, error) {
-  s.ApiArgs.Path = path
-  cl := NewClient(s.ApiArgs)
+  cl := NewClient(s.ApiArgs, path)
   return cl.Get()
 }
 
 func (s *S) testPost(path string, item interface{}) (*http.Response, error) {
-  s.ApiArgs.Path = path
-  cl := NewClient(s.ApiArgs)
+  cl := NewClient(s.ApiArgs, path)
   return cl.Post(item)
 }
 
-// */
+// type Sensor struct {
+// 	Id                   string  `json:"id" cql:"id"`
+// 	AccountId            string  `json:"account_id" cql:"account_id"`
+// 	SensorType           string  `json:"sensor_type" cql:"sensor_type"`
+// 	AssemblyId           string  `json:"assembly_id" cql:"assembly_id"`
+// }
+//
+//
+// func (s *S) TestSensorPost(c *check.C) {
+//   response, err := s.testPost("/sensors/content", Sensor{Id: "SNS5285833184590940525",AccountId:"info@megam.io",SensorType: "VM",AssemblyId: "ASM000001" })
+//   c.Assert(err, check.IsNil)
+//   htmlData, err := ioutil.ReadAll(response.Body) //<--- here!
+//   c.Assert(err, check.IsNil)
+//   fmt.Println("Success  :",string(htmlData)) //<-- here !
+//   fmt.Println(err)
+//   c.Assert(nil, check.NotNil)
+// }
+
+// func (s *S) TestGetBalances(c *check.C) {
+//   s.ApiArgs.Email = "vijaykanthm28@gmail.com"
+//   response, err := s.testGet("/balances/vijaykanthm28@gmail.com")
+//   c.Assert(err, check.IsNil)
+//   htmlData, err := ioutil.ReadAll(response.Body) //<--- here!
+//   c.Assert(err, check.IsNil)
+//   fmt.Println("Success  :",string(htmlData)) //<-- here !
+//   fmt.Println(err)
+//   c.Assert(nil, check.NotNil)
+// }
+
+// func (s *S) TestGetAddons(c *check.C) {
+//   s.ApiArgs.Email = "vijaykanthm28@gmail.com"
+//   response, err := s.testGet("/addons/WHMCS")
+//   c.Assert(err, check.IsNil)
+//   htmlData, err := ioutil.ReadAll(response.Body) //<--- here!
+//   c.Assert(err, check.IsNil)
+//   fmt.Println("Success  :",string(htmlData)) //<-- here !
+//   fmt.Println(err)
+//   c.Assert(nil, check.NotNil)
+// }

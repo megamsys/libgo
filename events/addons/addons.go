@@ -61,7 +61,7 @@ func (s *Addons) Get(m map[string]string) error {
 	 return fmt.Errorf("account_id should not be empty")
 	}
 	args := api.NewArgs(m)
-	cl := api.NewClient(args, GETADDONS + s.Id)
+	cl := api.NewClient(args, GETADDONS + s.ProviderName)
 	response, err := cl.Get()
 	if err != nil {
 		return err
