@@ -1,11 +1,11 @@
 package bills
 
-//import (
-	//"github.com/megamsys/vertice/carton"
-//)
+import (
+	"github.com/megamsys/libgo/utils"
+)
 
 func init() {
-	Register("scylladb", scylladbManager{})
+	Register(utils.SCYLLAMGR, scylladbManager{})
 }
 
 type scylladbManager struct{}
@@ -35,12 +35,12 @@ func (m scylladbManager) Deduct(o *BillOpts, mi map[string]string) error {
 
 func (m scylladbManager) Transaction(o *BillOpts, mi map[string]string) error {
 	//bt, err := carton.NewBillTransaction(o.AccountsId)
-	bt, err := NewBillTransaction(o)
+	bt, err := NewBilledHistories(o)
 	if err != nil {
 		return err
 	}
 	//if err = bt.Transact(&carton.BillTransactionOpts{
-	if err = bt.Transact(mi); err != nil {
+	if err = bt.BilledHistories(mi); err != nil {
 		return err
 	}
 	return nil

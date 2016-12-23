@@ -44,10 +44,18 @@ type Balances struct {
 	Id        string    `json:"id" cql:"id"`
 	AccountId string    `json:"account_id" cql:"account_id"`
 	Credit    string    `json:"credit" cql:"credit"`
-	CreatedAt time.Time `json:"created_at" cql:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" cql:"updated_at"`
 	JsonClaz  string    `json:"json_claz" cql:"json_claz"`
 }
+
+type updateBalances struct {
+	Id        string    `json:"id" cql:"id"`
+	AccountId string    `json:"account_id" cql:"account_id"`
+	Credit    string    `json:"credit" cql:"credit"`
+	JsonClaz  string    `json:"json_claz" cql:"json_claz"`
+	CreatedAt time.Time `json:"created_at" cql:"created_at"`
+	UpdatedAt time.Time `json:"updated_at" cql:"updated_at"`
+}
+
 
 func (b *Balances) String() string {
 	if d, err := yaml.Marshal(b); err != nil {
@@ -84,10 +92,12 @@ func NewBalances(id string, m map[string]string) (*Balances, error) {
 		return nil, err
 	}
 	b := &ac.Results[0]
+
 	return b, nil
 }
 
 func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
+
 	avail, err := strconv.ParseFloat(b.Credit, 64)
 	if err != nil {
 		return err
@@ -98,14 +108,24 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 		return cerr
 	}
 
-	b.UpdatedAt = time.Now()
 	b.Credit = strconv.FormatFloat(avail-consume, 'f', 2, 64)
 
 	args := api.NewArgs(m)
 	cl := api.NewClient(args, UPDATEBALANCES)
-	_, err = cl.Post(b)
+	_, err = cl.Post(b.toUpdate())
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (b *Balances) toUpdate() *updateBalances {
+ return &updateBalances{
+	 Id:        b.Id,
+	 AccountId: b.AccountId,
+	 Credit:    b.Credit,
+	 JsonClaz:  b.JsonClaz,
+	 CreatedAt: time.Now(),
+	 UpdatedAt: time.Now(),
+ }
 }

@@ -25,18 +25,18 @@ import (
 )
 
 const (
-	NEWTRANSACTION = "/billedhistories/content"
+	NEWBILLEDHISTORY = "/billedhistories/content"
 	BILLJSONCLAZ   = "Megam::Billedhistories"
 )
 
-type BillTransactionOpts struct {
+type BilledHistoriesOpts struct {
 	AccountId    string
 	AssemblyId   string
 	AssemblyName string
 	Consumed     string
 }
 
-type BillTransaction struct {
+type BilledHistories struct {
 	AccountId     string    `json:"-" cql:"account_id"`
 	AssemblyId    string    `json:"assembly_id" cql:"assembly_id"`
 	BillType      string    `json:"bill_type" cql:"bill_type"`
@@ -46,7 +46,7 @@ type BillTransaction struct {
 	CurrencyType  string    `json:"currency_type" cql:"currency_type"`
 }
 
-func (bt *BillTransactionOpts) String() string {
+func (bt *BilledHistoriesOpts) String() string {
 	if d, err := yaml.Marshal(bt); err != nil {
 		return err.Error()
 	} else {
@@ -54,10 +54,10 @@ func (bt *BillTransactionOpts) String() string {
 	}
 }
 
-func NewBillTransaction(topts *BillOpts) (*BillTransaction, error) {
+func NewBilledHistories(topts *BillOpts) (*BilledHistories, error) {
 	//start, _ := strconv.ParseInt(topts.StartTime, 10, 64)
 	//end, _ := strconv.ParseInt(topts.EndTime, 10, 64)
-	return &BillTransaction{
+	return &BilledHistories{
 		AccountId:     topts.AccountId,
 		AssemblyId:    topts.AssemblyId,
 		BillType:      "VM",
@@ -68,10 +68,10 @@ func NewBillTransaction(topts *BillOpts) (*BillTransaction, error) {
 	}, nil
 }
 
-func (bt *BillTransaction) Transact(m map[string]string) error {
+func (bt *BilledHistories) BilledHistories(m map[string]string) error {
 	m[utils.USERMAIL] = bt.AccountId
 	args := api.NewArgs(m)
-	cl := api.NewClient(args, NEWTRANSACTION)
+	cl := api.NewClient(args, NEWBILLEDHISTORY)
 	_, err := cl.Post(bt)
 	if err != nil {
 		log.Debugf(err.Error())
