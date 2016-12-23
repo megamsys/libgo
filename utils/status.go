@@ -73,10 +73,6 @@ func (s Status) Event_type() string {
 		return ONEINSTANCESNAPSHOTTINGTYPE
 	case SNAPSHOTTED:
 		return ONEINSTANCESNAPSHOTTEDTYPE
-	case LCMSTATECHECK:
-		return ONEINSTANCELCMSTATECHECKING
-	case VMSTATECHECK:
-		return ONEINSTANCEVMSTATECHECKING
 	case COOKBOOKDOWNLOADING:
 		return COOKBOOKDOWNLOADINGTYPE
 	case COOKBOOKDOWNLOADED:
@@ -151,6 +147,23 @@ func (s Status) Event_type() string {
 		return CONTAINERINSTANCERUNNING
 	case CONTAINERERROR:
 		return CONTAINERINSTANCEERROR
+
+	case WAITUNTILL:
+		return ONEINSTANCEWAITING
+	case LCMSTATECHECK:
+		return ONEINSTANCELCMSTATECHECKING
+	case VMSTATECHECK:
+		return ONEINSTANCEVMSTATECHECKING
+	case PENDING + ".":
+		return ONEINSTANCEVMSTATEPENDING
+	case HOLD + ".":
+		return ONEINSTANCEVMSTATEHOLD
+	case ACTIVE + ".lcm_init":
+		return ONEINSTANCELCMSTATEINIT
+	case ACTIVE + ".boot":
+		return ONEINSTANCELCMSTATEBOOT
+	case ACTIVE + ".prolog":
+		return ONEINSTANCELCMMSTATEPROLOG
 	case PREERROR:
 		return ONEINSTANCEPREERRORTYPE
 	case ERROR:
@@ -277,6 +290,20 @@ func (s Status) Description(name string) string {
 		return name + " was upgraded.."
 	case CONTAINERRUNNING:
 		return name + "was running.."
+  case VMSTATECHECK:
+    return "Machine "+ name +" state checking"
+	case WAITUNTILL:
+	  return "waiting 20 seconds to machine " + name +"to deploy.."
+	case PENDING + ".":
+		return "Machine " + name + "is in state of pending"
+	case HOLD + ".":
+		return "Machine " + name + "is in state of hold"
+	case ACTIVE + ".lcm_init":
+		return "Machine " + name + " activation initiated.."
+	case ACTIVE + ".boot":
+		return "Machine " + name + " activation booting.."
+	case ACTIVE + ".prolog":
+		return "Machine " + name + "is in state of activation prologing"
 	case CONTAINERERROR:
 		return error_common + name + ".."
 	case ERROR:

@@ -11,6 +11,7 @@ const (
 	WHMCS   = "WHMCS"
 	SENDER  = "sender"
 
+  SCYLLAMGR = "scylladb"
 	//config keys by watchers
 	TOKEN          = "token"
 	CHANNEL        = "channel"
@@ -131,6 +132,7 @@ const (
 
 	LCMSTATECHECK  = "check_lcmstate"
 	VMSTATECHECK   = "check_vmstate"
+	WAITUNTILL 		 = "waituntill"
 
 	VNCHOSTUPDATING    = "vnchostupdating"
 	VNCHOSTUPDATED     = "vnchostupdated"
@@ -190,6 +192,13 @@ const (
 	PREDEPLOY_ERROR = "preerror"
 	POST_ERROR      = "posterror"
 	PARKED          = "parked"
+
+	ACTIVE = "active"
+	PENDING = "pending"
+	INIT = "init"
+	HOLD = "hold"
+	SUSPENDED = "suspended"
+
 
 	StateContainerInitializing = State(CONTAINERINITIALIZING)
 	StateContainerInitialized  = State(CONTAINERINITIALIZED)
@@ -269,6 +278,7 @@ const (
 	StatusDiskDetaching = Status(DISKDETACHING)
 	StatusDiskDetached  = Status(DISKDETACHED)
 	StatusLcmStateChecking = Status(LCMSTATECHECK)
+	StatusWaitUntill = Status(WAITUNTILL)
 	StatusVmStateChecking = Status(VMSTATECHECK)
 
 	StatusCookbookDownloading = Status(COOKBOOKDOWNLOADING)
@@ -372,6 +382,16 @@ const (
 	ONEINSTANCEUSERQUOTAUPDATED        = "compute.instance.quota_updated"
 	ONEINSTANCELCMSTATECHECKING	       = "compute.instance.lcmstate_checking"
 	ONEINSTANCEVMSTATECHECKING         = "compute.instance.vmstate_checking"
+
+  ONEINSTANCEWAITING 				= "compute.instance.waituntill"
+	ONEINSTANCEVMSTATEPENDING = "compute.instance.pending"
+	ONEINSTANCEVMSTATEPROLOG = "compute.instance.active"
+	ONEINSTANCEVMSTATEHOLD = "compute.instance.hold"
+
+  ONEINSTANCELCMMSTATEPROLOG = "compute.instance.active_prolog"
+	ONEINSTANCELCMSTATEBOOT	 = "compute.instance.active_boot"
+	ONEINSTANCELCMSTATERUNNING = "compute.instance.active_running"
+	ONEINSTANCELCMSTATEINIT = "compute.instance.active_lcm_init"
 
 	COOKBOOKDOWNLOADINGTYPE = "compute.instance.cookbook_downloading"
 	COOKBOOKDOWNLOADEDTYPE  = "compute.instance.cookbook_downloaded"

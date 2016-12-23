@@ -26,39 +26,44 @@ func NewBill(b map[string]string, m map[string]string) *Bill {
 
 // Watches for new vms, or vms destroyed.
 func (self *Bill) Watch(eventsChannel *EventChannel) error {
-	self.stop = make(chan struct{})
-	go func() {
-		for {
-			select {
-			case event := <-eventsChannel.channel:
-				switch {
-				case event.EventAction == alerts.ONBOARD:
-					err := self.OnboardFunc(event)
-					if err != nil {
-						log.Warningf("Failed to process watch event: %v", err)
+		self.stop = make(chan struct{})
+		go func() {
+			for {
+				select {
+				case event := <-eventsChannel.channel:
+					switch {
+					case event.EventAction == alerts.ONBOARD:
+						err := self.OnboardFunc(event)
+						if err != nil {
+							log.Warningf("Failed to process watch event: %v", err)
+						}
+					case event.EventAction == alerts.INSUFFICIENT_FUND:
+						err := self.insufficientFund(event)
+						if err != nil {
+							log.Warningf("Failed to process watch event: %v", err)
+						}
+					case event.EventAction == alerts.DEDUCT && self.M[constants.ENABLED] == constants.TRUE:
+						err := self.deduct(event)
+						if err != nil {
+							log.Warningf("Failed to process watch event: %v", err)
+						}
+					case event.EventAction == alerts.BILLEDHISTORY:
+						err := self.billedhistory(event)
+						if err != nil {
+							log.Warningf("Failed to process watch event: %v", err)
+						}
+					case event.EventAction == alerts.TRANSACTION:
+						err := self.transaction(event)
+						if err != nil {
+							log.Warningf("Failed to process watch event: %v", err)
+						}
 					}
-				case event.EventAction == alerts.INSUFFICIENT_FUND:
-					err := self.insufficientFund(event)
-					if err != nil {
-						log.Warningf("Failed to process watch event: %v", err)
-					}
-				case event.EventAction == alerts.DEDUCT:
-					err := self.deduct(event)
-					if err != nil {
-						log.Warningf("Failed to process watch event: %v", err)
-					}
-				case event.EventAction == alerts.TRANSACTION:
-					err := self.transaction(event)
-					if err != nil {
-						log.Warningf("Failed to process watch event: %v", err)
-					}
+				case <-self.stop:
+					log.Info("bill watcher exiting")
+					return
 				}
-			case <-self.stop:
-				log.Info("bill watcher exiting")
-				return
 			}
-		}
-	}()
+		}()
 	return nil
 }
 
@@ -95,11 +100,25 @@ func (self *Bill) deduct(evt *Event) error {
 	return nil
 }
 
+func (self *Bill) billedhistory(evt *Event) error {
+	log.Infof("Event:BILL:transaction")
+	result := &bills.BillOpts{}
+	_ = result.FillStruct(evt.EventData.M) //we will manage error later
+		if !self.skip(constants.SCYLLAMGR) {
+			err := bills.BillProviders[constants.SCYLLAMGR].Transaction(result, self.M)
+			if err != nil {
+				return err
+			}
+	  }
+	return nil
+}
+
+
+//transaction for all managers like whmcs and scylla
 func (self *Bill) transaction(evt *Event) error {
 	log.Infof("Event:BILL:transaction")
 	result := &bills.BillOpts{}
 	_ = result.FillStruct(evt.EventData.M) //we will manage error later
-
 	for k, bp := range bills.BillProviders {
 		if !self.skip(k) {
 			err := bp.Transaction(result, self.M)

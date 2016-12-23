@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	b64 "encoding/base64"
 	"encoding/hex"
+	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/events/addons"
 	"github.com/megamsys/libgo/pairs"
@@ -16,7 +17,6 @@ import (
 	"encoding/base64"
 	"os"
 	"io"
-	"fmt"
 )
 
 const (
@@ -93,31 +93,33 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 	return err
 }
 
-func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) error {
-	add := &addons.Addons{
-		ProviderName: constants.WHMCS,
-		AccountId:    o.AccountId,
-	}
-  if add.AccountId != "" {
-		err := add.Get(m)
-		if err != nil {
-			return err
+func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) (err error) {
+	if w.IsEnabled() {
+		add := &addons.Addons{
+			ProviderName: constants.WHMCS,
+			AccountId:    o.AccountId,
 		}
-	} else {
-		return fmt.Errorf("account_id should not empty")
-	}
+	  if add.AccountId != "" {
+			err = add.Get(m)
+			if err != nil {
+				return err
+			}
+		} else {
+			return fmt.Errorf("account_id should not empty")
+		}
 
-	client := whmcs.NewClient(nil, m[constants.DOMAIN])
-	a := map[string]string{
-		"username":      m[constants.USERNAME],
-		"password":      GetMD5Hash(m[constants.PASSWORD]),
-		"clientid":      add.ProviderId,
-		"description":   o.AssemblyName,
-		"hours":         "1",
-		"amount":        o.Consumed,
-		"invoiceaction": "nextcron",
+		client := whmcs.NewClient(nil, m[constants.DOMAIN])
+		a := map[string]string{
+			"username":      m[constants.USERNAME],
+			"password":      GetMD5Hash(m[constants.PASSWORD]),
+			"clientid":      add.ProviderId,
+			"description":   o.AssemblyName,
+			"hours":         "1",
+			"amount":        o.Consumed,
+			"invoiceaction": "nextcron",
+		}
+		_, _, err = client.Billables.Create(a)
 	}
-	_, _, err := client.Billables.Create(a)
 
 	return err
 }
