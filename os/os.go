@@ -12,6 +12,7 @@ const (
 	CentOS
 	Debian
 	Arch
+	FreeBSD
 )
 
 func (t OSType) String() string {
@@ -28,6 +29,8 @@ func (t OSType) String() string {
 		return "Debian"
 	case Arch:
 		return "Arch"
+	case FreeBSD:
+		return "FreeBSD"
 	}
 	return "Unknown"
 }

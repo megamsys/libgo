@@ -22,6 +22,8 @@ func (s *osSuite) TestHostOS(c *gc.C) {
 		if os != Ubuntu && os != CentOS && os != Arch && os != Debian{
 			c.Fatalf("unknown linux version: %v", os)
 		}
+	case "freebsd":
+		c.Assert(os, gc.Equals, FreeBSD)
 	default:
 		c.Fatalf("unsupported operating system: %v", runtime.GOOS)
 	}
