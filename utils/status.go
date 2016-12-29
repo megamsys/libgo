@@ -293,7 +293,7 @@ func (s Status) Description(name string) string {
   case VMSTATECHECK:
     return "Machine "+ name +" state checking"
 	case WAITUNTILL:
-	  return "waiting 20 seconds to machine " + name +"to deploy.."
+	  return "Waiting 20 seconds for machine " + name +"to deploy.."
 	case PENDING + ".":
 		return "Machine " + name + "is in state of pending"
 	case HOLD + ".":
