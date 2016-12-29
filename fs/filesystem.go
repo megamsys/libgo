@@ -22,7 +22,6 @@ type File interface {
 	Stat() (os.FileInfo, error)
 	WriteString(s string) (ret int, err error)
 	Truncate(size int64) error
-	Close()
 }
 
 // Fs is the filesystem interface.
@@ -103,8 +102,4 @@ func (OsFs) Rename(oldname, newname string) error {
 
 func (OsFs) Stat(name string) (os.FileInfo, error) {
 	return os.Stat(name)
-}
-
-func (OsFs) Close() {
-	
 }

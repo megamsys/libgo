@@ -6,8 +6,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/megamsys/libgo/fs"
-	"github.com/megamsys/libgo/fs/fstest"
+	// "github.com/megamsys/libgo/fs"
+	// "github.com/megamsys/libgo/fs/fstest"
 	"gopkg.in/check.v1"
 	"launchpad.net/gnuflag"
 )

@@ -1,10 +1,10 @@
 package api
 
 import (
-  "io/ioutil"
-   "fmt"
    "net/http"
-  	"gopkg.in/check.v1"
+  //  "io/ioutil"
+  //   "fmt"
+  // 	"gopkg.in/check.v1"
 )
 /*
 func (s *S) TestGetUser(c *check.C) {
