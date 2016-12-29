@@ -108,7 +108,7 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 		return cerr
 	}
 
-	b.Credit = strconv.FormatFloat(avail-consume, 'f', 4, 64)
+	b.Credit = strconv.FormatFloat(avail-consume, 'f', 6, 64)
 
 	args := api.NewArgs(m)
 	cl := api.NewClient(args, UPDATEBALANCES)
