@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
+	"io/ioutil"
 	"github.com/megamsys/libgo/utils"
 	log "github.com/Sirupsen/logrus"
 )
@@ -60,12 +61,12 @@ func (c ApiArgs) ToMap() map[string]string {
 	return keys
 }
 
-func (c *Client) Get() (*http.Response, error) {
+func (c *Client) Get() ([]byte, error) {
 		fmt.Println("Request [GET] ==> " + c.Url)
 	return c.run(GET)
 }
 
-func (c *Client) Post(data interface{}) (*http.Response, error) {
+func (c *Client) Post(data interface{}) ([]byte, error) {
 	jsonbody, err := json.Marshal(data)
 	if err != nil {
 		return nil, err
@@ -76,12 +77,12 @@ func (c *Client) Post(data interface{}) (*http.Response, error) {
  return c.run(POST)
 }
 
-func (c *Client) Delete() (*http.Response, error) {
+func (c *Client) Delete() ([]byte, error) {
 	fmt.Println("Request [DELETE] ==> " + c.Url)
  return c.run(DELETE)
 }
 
-func (c *Client) run(method string) (*http.Response, error) {
+func (c *Client) run(method string) ([]byte, error) {
 		err := c.Authly.AuthHeader()
 		if err != nil {
 			return nil, err
@@ -90,6 +91,15 @@ func (c *Client) run(method string) (*http.Response, error) {
 		if err != nil {
 			return nil, err
 		}
+		response, err := c.Do(request)
+		if err != nil {
+			return nil, err
+		}
 
-		return c.Do(request)
+		jsonData, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			return nil, err
+		}
+		defer response.Body.Close()
+		return jsonData, nil
 }

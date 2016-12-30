@@ -5,7 +5,6 @@ import (
 	"github.com/megamsys/libgo/api"
 	constants "github.com/megamsys/libgo/utils"
 	"encoding/json"
-	"io/ioutil"
 	"github.com/megamsys/libgo/events/alerts"
 	"time"
 	"fmt"
@@ -66,13 +65,9 @@ func (s *Addons) Get(m map[string]string) error {
 	if err != nil {
 		return err
 	}
-	htmlData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return err
-	}
 
 	o := &ApiAddons{}
-	err = json.Unmarshal(htmlData, o)
+	err = json.Unmarshal(response, o)
 	if err != nil {
 		return err
 	}

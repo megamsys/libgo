@@ -17,7 +17,6 @@ package bills
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"github.com/megamsys/libgo/api"
 )
 
@@ -109,13 +108,9 @@ func NewAccounts(m map[string]string) (*Accounts, error) {
 	if err != nil {
 		return nil, err
 	}
-	htmlData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return nil, err
-	}
 
 	ac := &ApiAccounts{}
-	err = json.Unmarshal(htmlData, ac)
+	err = json.Unmarshal(response, ac)
 	if err != nil {
 		return nil, err
 	}
@@ -130,13 +125,9 @@ func AccountsOrg(email string, m map[string]string) (*Organization, error) {
 	if err != nil {
 		return nil, err
 	}
-	htmlData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return nil, err
-	}
 
 	o := &ApiOrganizations{}
-	err = json.Unmarshal(htmlData, o)
+	err = json.Unmarshal(response, o)
 	if err != nil {
 		return nil, err
 	}

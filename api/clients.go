@@ -68,11 +68,11 @@ version is %s.
 		fmt.Println(supported)
 	}
 	if response.StatusCode > 399 {
+		defer response.Body.Close()
 		result, _ := ioutil.ReadAll(response.Body)
 		return response, errors.New(string(result))
 	}
-	defer response.Body.Close()
-	
+  //defer response.Body.Close()
 	return response, nil
 
 }
