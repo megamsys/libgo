@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io"
 	"os"
-	
-	"github.com/megamsys/libgo/fs"
-	"github.com/megamsys/libgo/fs/fstest"
+
+	// "github.com/megamsys/libgo/fs"
+	// "github.com/megamsys/libgo/fs/fstest"
 	"gopkg.in/check.v1"
 	"launchpad.net/gnuflag"
 )
@@ -599,12 +599,12 @@ func (s *S) TestInvalidCommandFuzzyMatch04(c *check.C) {
 	c.Assert(manager.e.(*recordingExiter).value(), check.Equals, 1)
 }
 */
-func (s *S) TestFileSystem(c *check.C) {
-	fsystem = &fstest.RecordingFs{}
-	c.Assert(filesystem(), check.DeepEquals, fsystem)
-	fsystem = nil
-	c.Assert(filesystem(), check.DeepEquals, fs.OsFs{})
-}
+// func (s *S) TestFileSystem(c *check.C) {
+// 	fsystem = &fstest.RecordingFs{}
+// 	c.Assert(filesystem(), check.DeepEquals, fsystem)
+// 	fsystem = nil
+// 	c.Assert(filesystem(), check.DeepEquals, fs.OsFs{})
+// }
 
 type recordingExiter int
 

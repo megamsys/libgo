@@ -9,7 +9,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/megamsys/libgo/fs"
 	"github.com/sajari/fuzzy"
 	"launchpad.net/gnuflag"
 )
@@ -424,11 +423,11 @@ func ExtractProgramName(path string) string {
 	return parts[len(parts)-1]
 }
 
-var fsystem fs.Fs
-
-func filesystem() fs.Fs {
-	if fsystem == nil {
-		fsystem = fs.OsFs{}
-	}
-	return fsystem
-}
+// var fsystem fs.Fs
+//
+// func filesystem() fs.Fs {
+// 	if fsystem == nil {
+// 		fsystem = fs.OsFs{}
+// 	}
+// 	return fsystem
+// }
