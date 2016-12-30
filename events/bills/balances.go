@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"github.com/megamsys/libgo/api"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
 	"strconv"
 	"time"
 )
@@ -81,13 +80,9 @@ func NewBalances(id string, m map[string]string) (*Balances, error) {
 	if err != nil {
 		return nil, err
 	}
-	htmlData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return nil, err
-	}
 
 	ac := &ApiBalances{}
-	err = json.Unmarshal(htmlData, ac)
+	err = json.Unmarshal(response, ac)
 	if err != nil {
 		return nil, err
 	}

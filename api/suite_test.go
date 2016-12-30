@@ -17,7 +17,7 @@ var _ = check.Suite(&S{})
 func (s *S) SetUpSuite(c *check.C) {
 	s.ApiArgs = ApiArgs{
     Email: "info@megam.io",
-    Url: "http://192.168.0.115:9000/v2",
+    Url: "http://192.168.0.1:9000/v2",
     Api_Key: "",
     Master_Key: "3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994ee3f",
     Password: "",
