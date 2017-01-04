@@ -94,12 +94,12 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 }
 
 func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) (err error) {
-	if w.IsEnabled() {
+
 		add := &addons.Addons{
 			ProviderName: constants.WHMCS,
 			AccountId:    o.AccountId,
 		}
-	  if add.AccountId != "" {
+		if add.AccountId != "" {
 			err = add.Get(m)
 			if err != nil {
 				return err
@@ -107,7 +107,7 @@ func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) (err error) {
 		} else {
 			return fmt.Errorf("account_id should not empty")
 		}
-
+		log.Debugf("Request WHMCS [POST] ==> " + m[constants.DOMAIN])
 		client := whmcs.NewClient(nil, m[constants.DOMAIN])
 		a := map[string]string{
 			"username":      m[constants.USERNAME],
@@ -119,7 +119,6 @@ func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) (err error) {
 			"invoiceaction": "nextcron",
 		}
 		_, _, err = client.Billables.Create(a)
-	}
 
 	return err
 }

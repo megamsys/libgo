@@ -3,7 +3,6 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"reflect"
 	"strings"
@@ -62,7 +61,7 @@ func (c ApiArgs) ToMap() map[string]string {
 }
 
 func (c *Client) Get() ([]byte, error) {
-		fmt.Println("Request [GET] ==> " + c.Url)
+		log.Debugf("Request [GET] ==> " + c.Url)
 	return c.run(GET)
 }
 
@@ -72,13 +71,13 @@ func (c *Client) Post(data interface{}) ([]byte, error) {
 		return nil, err
 	}
 	c.Authly.JSONBody = jsonbody
-	fmt.Println("Request [POST] ==> " + c.Url)
+	log.Debugf("Request [POST] ==> " + c.Url)
 	log.Debugf("[Body]  (%s)",string(jsonbody))
  return c.run(POST)
 }
 
 func (c *Client) Delete() ([]byte, error) {
-	fmt.Println("Request [DELETE] ==> " + c.Url)
+	log.Debugf("Request [DELETE] ==> " + c.Url)
  return c.run(DELETE)
 }
 

@@ -25,8 +25,8 @@ import (
 )
 
 const (
-	UPDATEBALANCES   = "/balances/update"
-	GETBALANCE       = "/balances/"
+	UPDATE        = "/update"
+	BALANCE       = "/balances/"
 	EVENTBALANCEJSON = "Megam::Balances"
 )
 
@@ -67,15 +67,15 @@ func (b *Balances) String() string {
 //Temporary hack to create an assembly from its id.
 //This is used by SetStatus.
 //We need add a Notifier interface duck typed by Box and Carton ?
-func NewBalances(id string, m map[string]string) (*Balances, error) {
+func NewBalances(email string, m map[string]string) (*Balances, error) {
 	// Here skips balances fetching for the VMs which is launched on opennebula,
 	// that does not have records on vertice database
-	if id == "" {
+	if email == "" {
 		return nil, fmt.Errorf("account_id should not be empty")
 	}
 
 	args := api.NewArgs(m)
-	cl := api.NewClient(args, GETBALANCE+id)
+	cl := api.NewClient(args, BALANCE + email)
 	response, err := cl.Get()
 	if err != nil {
 		return nil, err
@@ -106,7 +106,7 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 	b.Credit = strconv.FormatFloat(avail-consume, 'f', 6, 64)
 
 	args := api.NewArgs(m)
-	cl := api.NewClient(args, UPDATEBALANCES)
+	cl := api.NewClient(args,BALANCE + b.Id + UPDATE)
 	_, err = cl.Post(b.toUpdate())
 	if err != nil {
 		return err
