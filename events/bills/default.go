@@ -23,7 +23,7 @@ func (m scylladbManager) Deduct(o *BillOpts, mi map[string]string) error {
 	if err != nil {
 		return err
 	}
-	//if err = b.Deduct(&carton.BalanceOpts{
+
 	if err = b.Deduct(&BalanceOpts{
 		Id:        o.AccountId,
 		Consumed:  o.Consumed,
