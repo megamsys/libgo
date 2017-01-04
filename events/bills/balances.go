@@ -106,7 +106,7 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 	b.Credit = strconv.FormatFloat(avail-consume, 'f', 6, 64)
 
 	args := api.NewArgs(m)
-	cl := api.NewClient(args,BALANCE + b.Id + UPDATE)
+	cl := api.NewClient(args,BALANCE + "bill")
 	_, err = cl.Post(b.toUpdate())
 	if err != nil {
 		return err
