@@ -11,7 +11,6 @@ import (
 	constants "github.com/megamsys/libgo/utils"
 	whmcs "github.com/megamsys/whmcs_go/whmcs"
 	"strings"
-	"time"
 	"bytes"
 	"strconv"
 	"encoding/base64"
@@ -202,7 +201,6 @@ func recordStatus(email, cid, status string, mi map[string]string) error {
 		ProviderId:   cid,
 		AccountId:    email,
 		Options:      js.ToString(),
-		CreatedAt:    time.Now().String(),
 	}
 	return addon.Onboard(mi)
 }
