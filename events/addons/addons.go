@@ -6,7 +6,6 @@ import (
 	constants "github.com/megamsys/libgo/utils"
 	"encoding/json"
 	"github.com/megamsys/libgo/events/alerts"
-	"time"
 	"fmt"
 )
 
@@ -23,7 +22,6 @@ type Addons struct {
 	ProviderId   string   `json:"provider_id" cql:"provider_id"`
 	AccountId    string   `json:"account_id" cql:"account_id"`
 	Options      []string `json:"options" cql:"options"`
-	CreatedAt    string   `json:"created_at" cql:"created_at"`
 }
 
 type ApiAddons struct {
@@ -38,7 +36,6 @@ func NewAddons(edata alerts.EventData) *Addons {
 		ProviderId: edata.M[PROVIDER_ID],
 		AccountId: edata.M[constants.ACCOUNT_ID],
 		Options: edata.D,
-		CreatedAt: time.Now().String(),
 	}
 }
 

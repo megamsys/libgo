@@ -20,7 +20,7 @@ import (
 	"github.com/megamsys/libgo/api"
 	"github.com/megamsys/libgo/utils"
 	"gopkg.in/yaml.v2"
-	//"strconv"
+	"strconv"
 	"time"
 )
 
@@ -55,15 +55,15 @@ func (bt *BilledHistoriesOpts) String() string {
 }
 
 func NewBilledHistories(topts *BillOpts) (*BilledHistories, error) {
-	//start, _ := strconv.ParseInt(topts.StartTime, 10, 64)
-	//end, _ := strconv.ParseInt(topts.EndTime, 10, 64)
+	start, _ := strconv.ParseInt(topts.StartTime, 10, 64)
+	end, _ := strconv.ParseInt(topts.EndTime, 10, 64)
 	return &BilledHistories{
 		AccountId:     topts.AccountId,
 		AssemblyId:    topts.AssemblyId,
 		BillType:      "VM",
 		BillingAmount: topts.Consumed,
-		StateDate:     time.Now(), //time.Unix(start, 0),
-		EndDate:       time.Now(), //time.Unix(end, 0),
+		StateDate:     time.Unix(start, 0),
+		EndDate:       time.Unix(end, 0),
 		CurrencyType:  "",
 	}, nil
 }
