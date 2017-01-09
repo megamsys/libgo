@@ -7,6 +7,17 @@ import (
   	"gopkg.in/check.v1"
 )
 
+func (s *S) testGet(path string) ([]byte, error) {
+  cl := NewClient(s.ApiArgs, path)
+  return cl.Get()
+}
+
+func (s *S) testPost(path string, item interface{}) ([]byte, error) {
+  cl := NewClient(s.ApiArgs, path)
+  return cl.Post(item)
+}
+
+/*
 func (s *S) TestGetUser(c *check.C) {
   response, err := s.testGet("/accounts/" + s.ApiArgs.Email)
   c.Assert(err, check.IsNil)
@@ -54,15 +65,7 @@ func (s *S) TestComponentPost(c *check.C) {
 //  c.Assert(nil, check.NotNil)
 }
 //
-func (s *S) testGet(path string) ([]byte, error) {
-  cl := NewClient(s.ApiArgs, path)
-  return cl.Get()
-}
 
-func (s *S) testPost(path string, item interface{}) ([]byte, error) {
-  cl := NewClient(s.ApiArgs, path)
-  return cl.Post(item)
-}
 
 // type Sensor struct {
 // 	Id                   string  `json:"id" cql:"id"`
