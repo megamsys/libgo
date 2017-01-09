@@ -20,8 +20,6 @@ import (
 	"github.com/megamsys/libgo/api"
 	"github.com/megamsys/libgo/utils"
 	"gopkg.in/yaml.v2"
-	"strconv"
-	"time"
 )
 
 const (
@@ -41,8 +39,8 @@ type BilledHistories struct {
 	AssemblyId    string    `json:"assembly_id" cql:"assembly_id"`
 	BillType      string    `json:"bill_type" cql:"bill_type"`
 	BillingAmount string    `json:"billing_amount" cql:"billing_amount"`
-	StateDate     time.Time `json:"start_date" cql:"start_date"`
-	EndDate       time.Time `json:"end_date" cql:"end_date"`
+	StateDate     string `json:"start_date" cql:"start_date"`
+	EndDate       string `json:"end_date" cql:"end_date"`
 	CurrencyType  string    `json:"currency_type" cql:"currency_type"`
 }
 
@@ -55,15 +53,13 @@ func (bt *BilledHistoriesOpts) String() string {
 }
 
 func NewBilledHistories(topts *BillOpts) (*BilledHistories, error) {
-	start, _ := strconv.ParseInt(topts.StartTime, 10, 64)
-	end, _ := strconv.ParseInt(topts.EndTime, 10, 64)
 	return &BilledHistories{
 		AccountId:     topts.AccountId,
 		AssemblyId:    topts.AssemblyId,
 		BillType:      "VM",
 		BillingAmount: topts.Consumed,
-		StateDate:     time.Unix(start, 0),
-		EndDate:       time.Unix(end, 0),
+		StateDate:     topts.StartTime,
+		EndDate:       topts.EndTime,
 		CurrencyType:  "",
 	}, nil
 }
