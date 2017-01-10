@@ -48,6 +48,7 @@ const (
 	ACCOUNT_ID    = "account_id"
 	ASSEMBLY_ID   = "assembly_id"
 	ASSEMBLY_NAME = "assembly_name"
+	QUOTA_ID      =  "quota_id"
 	DATA          = "data"
 	CREATED_AT    = "created_at"
 
@@ -194,9 +195,9 @@ const (
 	PARKED          = "parked"
 
 	ACTIVE = "active"
-	PENDING = "pending"
+	PENDING = "pending."
 	INIT = "init"
-	HOLD = "hold"
+	HOLD = "hold."
 	SUSPENDED = "suspended"
 
 

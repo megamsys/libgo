@@ -177,19 +177,19 @@ func (s Status) Description(name string) string {
 	error_common := "Oops something went wrong on"
 	switch s.String() {
 	case LAUNCHING:
-		return "Your " + name + " machine is initializing.."
+		return "Your machine is initializing.."
 	case BALANCECHECK:
 		return "Verifying credit balance.."
 	case INSUFFICIENT_FUND:
-		return "Insuffient funds on you wallet to launch " + name +" machine .."
+		return "Insuffient funds on you wallet to launch machine .."
 	case VMBOOTING:
-		return "Virtual machine " + name + " is booting ..."
+		return "Virtual machine is booting ..."
 	case LAUNCHED:
-		return "Machine " + name + " was initialized on cloud.."
+		return "Machine was initialized on cloud.."
 	case QUOTAUPDATING:
-		return "Machine " + name + " updating into quota.."
+		return "Machine is updating into quota.."
 	case QUOTAUPDATED:
-		return "Machine " + name + " updated into quota.."
+		return "Machine is updated into quota.."
 	case VNCHOSTUPDATING:
 		return name + " vnc_host is updating.."
 	case VNCHOSTUPDATED:
@@ -205,25 +205,25 @@ func (s Status) Description(name string) string {
 	case RUNNING:
 		return name + " is running.."
 	case APPDEPLOYING:
-		return "Your App " + name + " is deploying.."
+		return "Your App  is deploying.."
 	case APPDEPLOYED:
-		return "Your App " + name + " is deployed.."
+		return "Your App  is deployed.."
 	case STARTING:
-		return "Starting process initializing on " + name + ".."
+		return "Starting process initializing on .."
 	case STARTED:
 		return name + " was started.."
 	case STOPPING:
-		return "Stopping process initializing on " + name + ".."
+		return "Stopping process initializing on .."
 	case STOPPED:
 		return name + " was stopped.."
 	case UPGRADED:
 		return name + " was upgraded.."
 	case DESTROYING:
-		return "Destroying process initializing on " + name + ".."
+		return "Destroying process initializing on .."
 	case NUKED:
 		return name + " was removed.."
 	case SNAPSHOTTING:
-		return "Snapshotting process initializing on " + name + ".."
+		return "Snapshotting process initializing on .."
 	case SNAPSHOTTED:
 		return name + " was snapcreated.."
 	case COOKBOOKDOWNLOADING:
@@ -231,7 +231,7 @@ func (s Status) Description(name string) string {
 	case COOKBOOKDOWNLOADED:
 		return "Chef cookbooks are successfully downloaded.."
 	case COOKBOOKFAILURE:
-		return error_common + "Downloading Cookbooks on " + name + ".."
+		return error_common + "Downloading Cookbooks on .."
 	case CHEFCONFIGSETUPSTARTING:
 		return "Chef config setup_starting .."
 	case CHEFCONFIGSETUPSTARTED:
@@ -241,49 +241,49 @@ func (s Status) Description(name string) string {
 	case CLONED:
 		return "Cloned your git repository .."
 	case DNSNETWORKCREATING:
-		return "DNS CNAME creating " + name + ".."
+		return "DNS CNAME creating .."
 	case DNSNETWORKCREATED:
-		return "DNS CNAME created successfully " + name + ".."
+		return "DNS CNAME created successfully .."
 	case DNSNETWORKSKIPPED:
-		return "DNS CNAME skipped " + name + ".."
+		return "DNS CNAME skipped .."
 	case AUTHKEYSUPDATING:
 		return "SSH keys are updating on your " + name
 	case AUTHKEYSUPDATED:
 		return "SSH keys are updated on your " + name
 	case AUTHKEYSFAILURE:
-		return error_common + "Updating Ssh keys on " + name + ".."
+		return error_common + "Updating Ssh keys on .."
 	case INSTANCEIPSUPDATING:
 		return "Private and public ips are updating on your " + name
 	case INSTANCEIPSUPDATED:
 		return "Private and public ips are updated on your " + name
 	case INSTANCEIPSFAILURE:
-		return error_common + "Updating private and public ips on " + name + ".."
+		return error_common + "Updating private and public ips on .."
 	case CONTAINERNETWORKSUCCESS:
 		return "Private and public ips are updated on your " + name
 	case CONTAINERNETWORKFAILURE:
-		return error_common + "Updating private and public ips on " + name + ".."
+		return error_common + "Updating private and public ips on .."
 	case CONTAINERLAUNCHING:
-		return "Your " + name + " container is initializing.."
+		return "Your  container is initializing.."
 	case CONTAINERBOOTSTRAPPING:
 		return name + " was bootstrapping.."
 	case CONTAINERBOOTSTRAPPED:
 		return name + " was bootstrapped.."
 	case CONTAINERLAUNCHED:
-		return "Container " + name + " was initialized on cloud.."
+		return "Container  was initialized on cloud.."
 	case CONTAINEREXISTS:
 		return name + "was exists.."
 	case CONTAINERDELETE:
 		return name + "was deleted.."
 	case CONTAINERSTARTING:
-		return "Starting process initializing on " + name + ".."
+		return "Starting process initializing on .."
 	case CONTAINERSTARTED:
 		return name + " was started.."
 	case CONTAINERSTOPPING:
-		return "Stopping process initializing on " + name + ".."
+		return "Stopping process initializing on .."
 	case CONTAINERSTOPPED:
 		return name + " was stopped.."
 	case CONTAINERRESTARTING:
-		return "Restarting process initializing on " + name + ".."
+		return "Restarting process initializing on .."
 	case CONTAINERRESTARTED:
 		return name + " was restarted.."
 	case CONTAINERUPGRADED:
@@ -295,20 +295,22 @@ func (s Status) Description(name string) string {
 	case WAITUNTILL:
 	  return "Waiting 20 seconds for machine " + name +"to deploy.."
 	case PENDING + ".":
-		return "Machine " + name + "is in state of pending"
+		return "Machine is in state of pending"
 	case HOLD + ".":
-		return "Machine " + name + "is in state of hold"
+		return "Machine is in state of hold"
 	case ACTIVE + ".lcm_init":
-		return "Machine " + name + " activation initiated.."
+		return "Machine  activation initiated.."
 	case ACTIVE + ".boot":
-		return "Machine " + name + " activation booting.."
+		return "Machine  activation booting.."
 	case ACTIVE + ".prolog":
-		return "Machine " + name + "is in state of activation prologing"
+		return "Machine is in state of activation prologing"
 	case CONTAINERERROR:
 		return error_common + name + ".."
 	case ERROR:
 		return error_common + name + ".."
 	case PREERROR:
+		return error_common + name + ".."
+	case POST_ERROR:
 		return error_common + name + ".."
 	default:
 		return "arrgh"
