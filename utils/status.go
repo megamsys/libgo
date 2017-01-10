@@ -174,116 +174,124 @@ func (s Status) Event_type() string {
 }
 
 func (s Status) Description(name string) string {
-	error_common := "Oops something went wrong on"
+	error_common := "Oops something went wrong on .."
 	switch s.String() {
 	case LAUNCHING:
-		return "Your " + name + " machine is initializing.."
+		return "Your machine is initializing.."
 	case BALANCECHECK:
 		return "Verifying credit balance.."
 	case INSUFFICIENT_FUND:
-		return "Insuffient funds on you wallet to launch " + name +" machine .."
+		return "Insuffient funds on you wallet to launch machine .."
 	case VMBOOTING:
-		return "Virtual machine " + name + " is booting ..."
+		return "Created machine by the hypervisor, watch the console for boot ..."
 	case LAUNCHED:
-		return "Machine " + name + " was initialized on cloud.."
+		return "Machine was initialized on cloud.."
 	case QUOTAUPDATING:
-		return "Machine " + name + " updating into quota.."
+		return "Machine is updating into quota.."
 	case QUOTAUPDATED:
-		return "Machine " + name + " updated into quota.."
+		return "Machine is updated into quota.."
 	case VNCHOSTUPDATING:
-		return name + " vnc_host is updating.."
+		return "Enabling vnc console access.."
 	case VNCHOSTUPDATED:
-		return name + " vnc_host is updated.."
+		return "Enabled, you can access your machine console.."
 	case BOOTSTRAPPING:
-		return name + " was bootstrapping.."
+		return "Bootstrapping your machine.."
 	case BOOTSTRAPPED:
-		return name + " was bootstrapped.."
+		return "Bootstrapped your machine.."
 	case STATEUPPING:
-		return name + " is stateupping.."
+		return "Submitting request to initiate creation of DNS record"
 	case STATEUPPED:
-		return name + " is stateupped.."
+		return "Submission accepted to create DNS record... "
 	case RUNNING:
-		return name + " is running.."
+		return "Your machine is running.."
 	case APPDEPLOYING:
-		return "Your App " + name + " is deploying.."
+		return "Your application is deploying.."
 	case APPDEPLOYED:
-		return "Your App " + name + " is deployed.."
+		return "Your application is deployed.."
 	case STARTING:
-		return "Starting process initializing on " + name + ".."
+		return "Your machine is  starting.."
 	case STARTED:
-		return name + " was started.."
+		return "Your machine was started.."
 	case STOPPING:
-		return "Stopping process initializing on " + name + ".."
+		return "Stopping process initializing on .."
 	case STOPPED:
-		return name + " was stopped.."
+		return "Your machine was stopped.."
 	case UPGRADED:
-		return name + " was upgraded.."
+		return "Your machine was was upgraded.."
 	case DESTROYING:
-		return "Destroying process initializing on " + name + ".."
+		return "Your machine is getting removed."
 	case NUKED:
-		return name + " was removed.."
+		return "Your machine was removed.."
 	case SNAPSHOTTING:
-		return "Snapshotting process initializing on " + name + ".."
+		return "Snapshot in progress."
 	case SNAPSHOTTED:
-		return name + " was snapcreated.."
+		return "Snapshot created.."
+	case DISKATTACHING:
+		return "Attaching a volume to your machine"
+	case DISKATTACHED:
+		return "Attached a volume storage to your machine"
+	case DISKDETACHING:
+		return "Removing a volume storage from your machine"
+	case DISKDETACHED:
+		return "Removed a volume storage from your machine"
 	case COOKBOOKDOWNLOADING:
-		return "Chef cookbooks are downloading.."
+		return "Downloading infrastructure automation instructions."
 	case COOKBOOKDOWNLOADED:
-		return "Chef cookbooks are successfully downloaded.."
+		return "Downloaded infrastructure automation instructions.."
 	case COOKBOOKFAILURE:
-		return error_common + "Downloading Cookbooks on " + name + ".."
+		return error_common
 	case CHEFCONFIGSETUPSTARTING:
-		return "Chef config setup_starting .."
+		return "Preparing configuration parameters."
 	case CHEFCONFIGSETUPSTARTED:
-		return "Chef config setup_started .."
+		return "Prepared configuration paramter for the install.."
 	case CLONING:
 		return "Cloning your git repository .."
 	case CLONED:
 		return "Cloned your git repository .."
 	case DNSNETWORKCREATING:
-		return "DNS CNAME creating " + name + ".."
+		return "Creating DNS CNAME entry.."
 	case DNSNETWORKCREATED:
-		return "DNS CNAME created successfully " + name + ".."
+		return "Created DNS CNAME entry.."
 	case DNSNETWORKSKIPPED:
-		return "DNS CNAME skipped " + name + ".."
+		return "Skipped DNS CNAME."
 	case AUTHKEYSUPDATING:
-		return "SSH keys are updating on your " + name
+		return "Configuring, ssh with access credentials.."
 	case AUTHKEYSUPDATED:
-		return "SSH keys are updated on your " + name
+		return "Configured, ssh with access credentials.."
 	case AUTHKEYSFAILURE:
-		return error_common + "Updating Ssh keys on " + name + ".."
+		return error_common
 	case INSTANCEIPSUPDATING:
-		return "Private and public ips are updating on your " + name
+		return "Updating public and private ips"
 	case INSTANCEIPSUPDATED:
-		return "Private and public ips are updated on your " + name
+		return "Updated public and private ips"
 	case INSTANCEIPSFAILURE:
-		return error_common + "Updating private and public ips on " + name + ".."
+		return error_common
 	case CONTAINERNETWORKSUCCESS:
 		return "Private and public ips are updated on your " + name
 	case CONTAINERNETWORKFAILURE:
-		return error_common + "Updating private and public ips on " + name + ".."
+		return error_common + "Updating private and public ips on .."
 	case CONTAINERLAUNCHING:
-		return "Your " + name + " container is initializing.."
+		return "Your  container is initializing.."
 	case CONTAINERBOOTSTRAPPING:
 		return name + " was bootstrapping.."
 	case CONTAINERBOOTSTRAPPED:
 		return name + " was bootstrapped.."
 	case CONTAINERLAUNCHED:
-		return "Container " + name + " was initialized on cloud.."
+		return "Container  was initialized on cloud.."
 	case CONTAINEREXISTS:
 		return name + "was exists.."
 	case CONTAINERDELETE:
 		return name + "was deleted.."
 	case CONTAINERSTARTING:
-		return "Starting process initializing on " + name + ".."
+		return "Starting process initializing on .."
 	case CONTAINERSTARTED:
 		return name + " was started.."
 	case CONTAINERSTOPPING:
-		return "Stopping process initializing on " + name + ".."
+		return "Stopping process initializing on .."
 	case CONTAINERSTOPPED:
 		return name + " was stopped.."
 	case CONTAINERRESTARTING:
-		return "Restarting process initializing on " + name + ".."
+		return "Restarting process initializing on .."
 	case CONTAINERRESTARTED:
 		return name + " was restarted.."
 	case CONTAINERUPGRADED:
@@ -291,25 +299,27 @@ func (s Status) Description(name string) string {
 	case CONTAINERRUNNING:
 		return name + "was running.."
   case VMSTATECHECK:
-    return "Machine "+ name +" state checking"
+    return "Machine state checking"
 	case WAITUNTILL:
-	  return "Waiting 20 seconds for machine " + name +"to deploy.."
-	case PENDING + ".":
-		return "Machine " + name + "is in state of pending"
-	case HOLD + ".":
-		return "Machine " + name + "is in state of hold"
+	  return "[20 seconds] machine is deploying.."
+	case PENDING:
+		return "Selecting the node to deploy"
+	case HOLD:
+		return "Scheduling for deployment"
 	case ACTIVE + ".lcm_init":
-		return "Machine " + name + " activation initiated.."
+		return "Internally initialzing the machine for deployment."
 	case ACTIVE + ".boot":
-		return "Machine " + name + " activation booting.."
+		return "Waiting for the hypervisor to create the machine"
 	case ACTIVE + ".prolog":
-		return "Machine " + name + "is in state of activation prologing"
+		return "Transferring the disk images the host in which the machine will be running"
 	case CONTAINERERROR:
-		return error_common + name + ".."
+		return error_common
 	case ERROR:
-		return error_common + name + ".."
+		return error_common
 	case PREERROR:
-		return error_common + name + ".."
+		return error_common
+	case POST_ERROR:
+		return error_common
 	default:
 		return "arrgh"
 	}
