@@ -195,9 +195,9 @@ const (
 	PARKED          = "parked"
 
 	ACTIVE = "active"
-	PENDING = "pending."
+	PENDING = "pending"
 	INIT = "init"
-	HOLD = "hold."
+	HOLD = "hold"
 	SUSPENDED = "suspended"
 
 

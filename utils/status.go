@@ -154,15 +154,15 @@ func (s Status) Event_type() string {
 		return ONEINSTANCELCMSTATECHECKING
 	case VMSTATECHECK:
 		return ONEINSTANCEVMSTATECHECKING
-	case PENDING + ".":
+	case PENDING:
 		return ONEINSTANCEVMSTATEPENDING
-	case HOLD + ".":
+	case HOLD:
 		return ONEINSTANCEVMSTATEHOLD
-	case ACTIVE + ".lcm_init":
+	case ACTIVE + "_lcm_init":
 		return ONEINSTANCELCMSTATEINIT
-	case ACTIVE + ".boot":
+	case ACTIVE + "_boot":
 		return ONEINSTANCELCMSTATEBOOT
-	case ACTIVE + ".prolog":
+	case ACTIVE + "_prolog":
 		return ONEINSTANCELCMMSTATEPROLOG
 	case PREERROR:
 		return ONEINSTANCEPREERRORTYPE
@@ -306,11 +306,11 @@ func (s Status) Description(name string) string {
 		return "Selecting the node to deploy"
 	case HOLD:
 		return "Scheduling for deployment"
-	case ACTIVE + ".lcm_init":
+	case ACTIVE + "_lcm_init":
 		return "Internally initialzing the machine for deployment."
-	case ACTIVE + ".boot":
+	case ACTIVE + "_boot":
 		return "Waiting for the hypervisor to create the machine"
-	case ACTIVE + ".prolog":
+	case ACTIVE + "_prolog":
 		return "Transferring the disk images the host in which the machine will be running"
 	case CONTAINERERROR:
 		return error_common
