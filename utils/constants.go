@@ -91,6 +91,7 @@ const (
 	PROVIDER        = "provider"
 	PROVIDER_ONE    = "one"
 	PROVIDER_DOCKER = "docker"
+	PROVIDER_RANCHER = "rancher"
 
 	LAUNCHING         = "launching"
 	INITIALIZING      = "initializing"
