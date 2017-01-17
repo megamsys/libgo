@@ -26,7 +26,6 @@ func NewAuthly(c VerticeApi) *Authly {
 }
 
 func GetPort() string {
-	//port, _ := config.GetString("beego:http_port")
 	return "port"
 }
 

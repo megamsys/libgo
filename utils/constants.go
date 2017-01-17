@@ -30,9 +30,9 @@ const (
 	USERMAIL       = "email"
 	STATUS         = "status"
 	HOST_IP        = "host_ip"
-
 	VERTICEAPI     = "verticegateway"
 
+	REGULAR_HYPER  = "regular_hyper"
 	HOME           = "home"
 	DIR            = "dir"
 	ORG_ID         = "org_id"
