@@ -11,7 +11,7 @@ const (
 	WHMCS   = "WHMCS"
 	SENDER  = "sender"
 
-  SCYLLAMGR = "scylladb"
+	SCYLLAMGR = "scylladb"
 	//config keys by watchers
 	TOKEN          = "token"
 	CHANNEL        = "channel"
@@ -32,7 +32,7 @@ const (
 	HOST_IP        = "host_ip"
 	VERTICEAPI     = "verticegateway"
 
-	REGULAR_HYPER  = "regular_hyper"
+	VONE_CLOUD     = "vone_cloud"
 	HOME           = "home"
 	DIR            = "dir"
 	ORG_ID         = "org_id"
@@ -48,7 +48,7 @@ const (
 	ACCOUNT_ID    = "account_id"
 	ASSEMBLY_ID   = "assembly_id"
 	ASSEMBLY_NAME = "assembly_name"
-	QUOTA_ID      =  "quota_id"
+	QUOTA_ID      = "quota_id"
 	DATA          = "data"
 	CREATED_AT    = "created_at"
 
@@ -88,9 +88,9 @@ const (
 	BILLMGR = "bill"
 	ADDONS  = "addons"
 
-	PROVIDER        = "provider"
-	PROVIDER_ONE    = "one"
-	PROVIDER_DOCKER = "docker"
+	PROVIDER         = "provider"
+	PROVIDER_ONE     = "one"
+	PROVIDER_DOCKER  = "docker"
 	PROVIDER_RANCHER = "rancher"
 
 	LAUNCHING         = "launching"
@@ -129,12 +129,12 @@ const (
 	DISKDETACHING = "disk_detaching"
 	DISKDETACHED  = "disk_detached"
 
-	QUOTAUPDATING  = "quota_updating"
-	QUOTAUPDATED	 = "quota_updated"
+	QUOTAUPDATING = "quota_updating"
+	QUOTAUPDATED  = "quota_updated"
 
-	LCMSTATECHECK  = "check_lcmstate"
-	VMSTATECHECK   = "check_vmstate"
-	WAITUNTILL 		 = "waituntill"
+	LCMSTATECHECK = "check_lcmstate"
+	VMSTATECHECK  = "check_vmstate"
+	WAITUNTILL    = "waituntill"
 
 	VNCHOSTUPDATING    = "vnchostupdating"
 	VNCHOSTUPDATED     = "vnchostupdated"
@@ -195,19 +195,18 @@ const (
 	POST_ERROR      = "posterror"
 	PARKED          = "parked"
 
-	ACTIVE = "active"
-	PENDING = "pending"
-	INIT = "init"
-	HOLD = "hold"
+	ACTIVE    = "active"
+	PENDING   = "pending"
+	INIT      = "init"
+	HOLD      = "hold"
 	SUSPENDED = "suspended"
-
 
 	StateContainerInitializing = State(CONTAINERINITIALIZING)
 	StateContainerInitialized  = State(CONTAINERINITIALIZED)
 	StateContainerBootstrapped = State(CONTAINERBOOTSTRAPPED)
 	StateContainerRunning      = State(CONTAINERRUNNING)
-	StateDestroying  = State(DESTROYING)
-	StateDestroyed = State(DESTROYED)
+	StateDestroying            = State(DESTROYING)
+	StateDestroyed             = State(DESTROYED)
 	StateMachineParked         = State(PARKED)
 	// StateLaunched is the milestone state for box after launched in cloud.
 	StateInitializing = State(INITIALIZING)
@@ -234,7 +233,7 @@ const (
 	StatusLaunched = Status(LAUNCHED)
 
 	StatusQuotaUpdating = Status(QUOTAUPDATING)
-	StatusQuotaUpdated = Status(QUOTAUPDATED)
+	StatusQuotaUpdated  = Status(QUOTAUPDATED)
 
 	StatusInsufficientFund = Status(INSUFFICIENT_FUND)
 
@@ -266,22 +265,22 @@ const (
 	StatusUpgraded = Status(UPGRADED)
 
 	StatusDestroying = Status(DESTROYING)
-	StatusDestroyed = Status(DESTROYED)
+	StatusDestroyed  = Status(DESTROYED)
 
-	StatusNuked      = Status(NUKED)
+	StatusNuked = Status(NUKED)
 
 	StatusSnapCreating = Status(SNAPSHOTTING)
 	StatusSnapCreated  = Status(SNAPSHOTTED)
 	StatusSnapDeleting = Status(SNAPDESTORYING)
 	StatusSnapDeleted  = Status(SNAPDESTORYED)
 
-	StatusDiskAttaching = Status(DISKATTACHING)
-	StatusDiskAttached  = Status(DISKATTACHED)
-	StatusDiskDetaching = Status(DISKDETACHING)
-	StatusDiskDetached  = Status(DISKDETACHED)
+	StatusDiskAttaching    = Status(DISKATTACHING)
+	StatusDiskAttached     = Status(DISKATTACHED)
+	StatusDiskDetaching    = Status(DISKDETACHING)
+	StatusDiskDetached     = Status(DISKDETACHED)
 	StatusLcmStateChecking = Status(LCMSTATECHECK)
-	StatusWaitUntill = Status(WAITUNTILL)
-	StatusVmStateChecking = Status(VMSTATECHECK)
+	StatusWaitUntill       = Status(WAITUNTILL)
+	StatusVmStateChecking  = Status(VMSTATECHECK)
 
 	StatusCookbookDownloading = Status(COOKBOOKDOWNLOADING)
 	StatusCookbookDownloaded  = Status(COOKBOOKDOWNLOADED)
@@ -382,18 +381,18 @@ const (
 	ONEINSTANCESINSUFFIENTFUNDTYPE     = "compute.instance.insufficient_fund"
 	ONEINSTANCEUSERQUOTAUPDATING       = "compute.instance.quota_updating"
 	ONEINSTANCEUSERQUOTAUPDATED        = "compute.instance.quota_updated"
-	ONEINSTANCELCMSTATECHECKING	       = "compute.instance.lcmstate_checking"
+	ONEINSTANCELCMSTATECHECKING        = "compute.instance.lcmstate_checking"
 	ONEINSTANCEVMSTATECHECKING         = "compute.instance.vmstate_checking"
 
-  ONEINSTANCEWAITING 				= "compute.instance.waituntill"
+	ONEINSTANCEWAITING        = "compute.instance.waituntill"
 	ONEINSTANCEVMSTATEPENDING = "compute.instance.pending"
-	ONEINSTANCEVMSTATEPROLOG = "compute.instance.active"
-	ONEINSTANCEVMSTATEHOLD = "compute.instance.hold"
+	ONEINSTANCEVMSTATEPROLOG  = "compute.instance.active"
+	ONEINSTANCEVMSTATEHOLD    = "compute.instance.hold"
 
-  ONEINSTANCELCMMSTATEPROLOG = "compute.instance.active_prolog"
-	ONEINSTANCELCMSTATEBOOT	 = "compute.instance.active_boot"
+	ONEINSTANCELCMMSTATEPROLOG = "compute.instance.active_prolog"
+	ONEINSTANCELCMSTATEBOOT    = "compute.instance.active_boot"
 	ONEINSTANCELCMSTATERUNNING = "compute.instance.active_running"
-	ONEINSTANCELCMSTATEINIT = "compute.instance.active_lcm_init"
+	ONEINSTANCELCMSTATEINIT    = "compute.instance.active_lcm_init"
 
 	COOKBOOKDOWNLOADINGTYPE = "compute.instance.cookbook_downloading"
 	COOKBOOKDOWNLOADEDTYPE  = "compute.instance.cookbook_downloaded"
