@@ -124,7 +124,7 @@ func (s Status) Event_type() string {
 	case CONTAINERBOOTSTRAPPED:
 		return CONTAINERINSTANCEBOOTSTRAPPED
 	case CONTAINERLAUNCHED:
-			return CONTAINERINSTANCELAUNCHEDTYPE
+		return CONTAINERINSTANCELAUNCHEDTYPE
 	case CONTAINEREXISTS:
 		return CONTAINERINSTANCEEXISTS
 	case CONTAINERDELETE:
@@ -143,7 +143,7 @@ func (s Status) Event_type() string {
 		return CONTAINERINSTANCERESTARTED
 	case CONTAINERUPGRADED:
 		return CONTAINERINSTANCEUPGRADED
-  case CONTAINERRUNNING:
+	case CONTAINERRUNNING:
 		return CONTAINERINSTANCERUNNING
 	case CONTAINERERROR:
 		return CONTAINERINSTANCEERROR
@@ -300,10 +300,10 @@ func (s Status) Description(name string) string {
 		return name + " was upgraded.."
 	case CONTAINERRUNNING:
 		return name + "was running.."
-  case VMSTATECHECK:
-    return "Machine state checking"
+	case VMSTATECHECK:
+		return "Machine state checking"
 	case WAITUNTILL:
-	  return "[20 seconds] machine is deploying.."
+		return "[20 seconds] machine is deploying.."
 	case PENDING:
 		return "Selecting the node to deploy"
 	case HOLD:

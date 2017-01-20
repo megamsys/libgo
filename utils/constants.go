@@ -149,7 +149,7 @@ const (
 	BUILDSTOPPED       = "buildstopped"
 	SERVICESTARTING    = "servicestarting"
 	SERVICESTOPPED     = "servicestopped"
-  RESETPASSWORD      = "reset_password"
+	RESETPASSWORD      = "reset_password"
 
 	COOKBOOKDOWNLOADING     = "cookbook_downloading"
 	COOKBOOKDOWNLOADED      = "cookbook_downloaded"
@@ -254,9 +254,9 @@ const (
 	//fully up instance
 	StatusRunning = Status(RUNNING)
 
-  StatusResetPassword = Status(RESETPASSWORD)
-	StatusStarting = Status(STARTING)
-	StatusStarted  = Status(STARTED)
+	StatusResetPassword = Status(RESETPASSWORD)
+	StatusStarting      = Status(STARTING)
+	StatusStarted       = Status(STARTED)
 
 	StatusStopping = Status(STOPPING)
 	StatusStopped  = Status(STOPPED)
@@ -396,15 +396,15 @@ const (
 	ONEINSTANCELCMSTATERUNNING = "compute.instance.active_running"
 	ONEINSTANCELCMSTATEINIT    = "compute.instance.active_lcm_init"
 
-	COOKBOOKDOWNLOADINGTYPE = "compute.instance.cookbook_downloading"
-	COOKBOOKDOWNLOADEDTYPE  = "compute.instance.cookbook_downloaded"
-	COOKBOOKFAILURETYPE     = "compute.instance.cookbook_download_failure"
-	AUTHKEYSUPDATINGTYPE    = "compute.instance.authkeysupdating"
-	AUTHKEYSUPDATEDTYPE     = "compute.instance.authkeysupdated"
-	AUTHKEYSFAILURETYPE     = "compute.instance.authkeysfailure"
-	INSTANCEIPSUPDATINGTYPE = "compute.instance.ip_updating"
-	INSTANCEIPSUPDATEDTYPE  = "compute.instance.ip_updated"
-	INSTANCEIPSFAILURETYPE  = "compute.instance.ip_updatefailure"
+	COOKBOOKDOWNLOADINGTYPE  = "compute.instance.cookbook_downloading"
+	COOKBOOKDOWNLOADEDTYPE   = "compute.instance.cookbook_downloaded"
+	COOKBOOKFAILURETYPE      = "compute.instance.cookbook_download_failure"
+	AUTHKEYSUPDATINGTYPE     = "compute.instance.authkeysupdating"
+	AUTHKEYSUPDATEDTYPE      = "compute.instance.authkeysupdated"
+	AUTHKEYSFAILURETYPE      = "compute.instance.authkeysfailure"
+	INSTANCEIPSUPDATINGTYPE  = "compute.instance.ip_updating"
+	INSTANCEIPSUPDATEDTYPE   = "compute.instance.ip_updated"
+	INSTANCEIPSFAILURETYPE   = "compute.instance.ip_updatefailure"
 	INSTANCERESETOLDPASSWORD = "compute.instance.reset_password"
 
 	CONTAINERINSTANCELAUNCHINGTYPE = "compute.container.launching"
