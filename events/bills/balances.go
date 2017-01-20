@@ -73,8 +73,9 @@ func NewBalances(email string, m map[string]string) (*Balances, error) {
 	if email == "" {
 		return nil, fmt.Errorf("account_id should not be empty")
 	}
-
+	
 	args := api.NewArgs(m)
+	args.Email = email
 	cl := api.NewClient(args, BALANCE + email)
 	response, err := cl.Get()
 	if err != nil {
