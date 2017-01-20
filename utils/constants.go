@@ -149,6 +149,7 @@ const (
 	BUILDSTOPPED       = "buildstopped"
 	SERVICESTARTING    = "servicestarting"
 	SERVICESTOPPED     = "servicestopped"
+  RESETPASSWORD      = "reset_password"
 
 	COOKBOOKDOWNLOADING     = "cookbook_downloading"
 	COOKBOOKDOWNLOADED      = "cookbook_downloaded"
@@ -253,6 +254,7 @@ const (
 	//fully up instance
 	StatusRunning = Status(RUNNING)
 
+  StatusResetPassword = Status(RESETPASSWORD)
 	StatusStarting = Status(STARTING)
 	StatusStarted  = Status(STARTED)
 
@@ -403,6 +405,7 @@ const (
 	INSTANCEIPSUPDATINGTYPE = "compute.instance.ip_updating"
 	INSTANCEIPSUPDATEDTYPE  = "compute.instance.ip_updated"
 	INSTANCEIPSFAILURETYPE  = "compute.instance.ip_updatefailure"
+	INSTANCERESETOLDPASSWORD = "compute.instance.reset_password"
 
 	CONTAINERINSTANCELAUNCHINGTYPE = "compute.container.launching"
 	CONTAINERINSTANCEBOOTSTRAPPING = "compute.container.bootstrapping"

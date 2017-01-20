@@ -164,6 +164,8 @@ func (s Status) Event_type() string {
 		return ONEINSTANCELCMSTATEBOOT
 	case ACTIVE + "_prolog":
 		return ONEINSTANCELCMMSTATEPROLOG
+	case RESETPASSWORD:
+		return INSTANCERESETOLDPASSWORD
 	case PREERROR:
 		return ONEINSTANCEPREERRORTYPE
 	case ERROR:
@@ -312,6 +314,8 @@ func (s Status) Description(name string) string {
 		return "Waiting for the hypervisor to create the machine"
 	case ACTIVE + "_prolog":
 		return "Transferring the disk images the host in which the machine will be running"
+	case RESETPASSWORD:
+		return "Machine root password updating"
 	case CONTAINERERROR:
 		return error_common
 	case ERROR:
