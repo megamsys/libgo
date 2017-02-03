@@ -119,10 +119,20 @@ const (
 	DESTROYING     = "destroying"
 	DESTROYED      = "destroyed"
 	NUKED          = "nuked"
-	SNAPSHOTTING   = "snapshotting"
-	SNAPSHOTTED    = "snapshotted"
+	SNAPSHOTTING   = "snapshot_creating"
+	SNAPSHOTTED    = "snapshot_created"
 	SNAPDESTORYING = "snapshot_deleting"
 	SNAPDESTORYED  = "snapshot_deleted"
+	RESTORINGSNAP  = "snapshot_restoring"
+	SNAPRESTORED   = "snapshot_restored"
+	ACTIVESNAP     = "active"
+	DEACTIVESNAP   = "deactive"
+
+	IMAGECREATING   = "image_creating"
+	IMAGECREATED    = "image_created"
+	IMAGEREMOVED    = "image_removed"
+	IMAGEREMOVING    = "image_removing"
+
 
 	DISKATTACHING = "disk_attaching"
 	DISKATTACHED  = "disk_attached"
@@ -257,24 +267,25 @@ const (
 	StatusResetPassword = Status(RESETPASSWORD)
 	StatusStarting      = Status(STARTING)
 	StatusStarted       = Status(STARTED)
-
 	StatusStopping = Status(STOPPING)
 	StatusStopped  = Status(STOPPED)
-
 	StatusRestarting = Status(RESTARTING)
 	StatusRestarted  = Status(RESTARTED)
-
 	StatusUpgraded = Status(UPGRADED)
-
 	StatusDestroying = Status(DESTROYING)
 	StatusDestroyed  = Status(DESTROYED)
-
 	StatusNuked = Status(NUKED)
 
 	StatusSnapCreating = Status(SNAPSHOTTING)
 	StatusSnapCreated  = Status(SNAPSHOTTED)
 	StatusSnapDeleting = Status(SNAPDESTORYING)
 	StatusSnapDeleted  = Status(SNAPDESTORYED)
+	StatusSnapRestoring = Status(RESTORINGSNAP)
+	StatusSnapRestored = Status(SNAPRESTORED)
+	StatusBackupCreated = Status(IMAGECREATED)
+	StatusBackupCreating = Status(IMAGECREATING)
+	StatusBackupDeleting = Status(IMAGEREMOVING)
+	StatusBackupDeleted = Status(IMAGEREMOVED)
 
 	StatusDiskAttaching    = Status(DISKATTACHING)
 	StatusDiskAttached     = Status(DISKATTACHED)
