@@ -126,6 +126,10 @@ func (w whmcsBiller) Transaction(o *BillOpts, m map[string]string) error {
 	return nil
 }
 
+func (w whmcsBiller) RecurringSkews(o *BillOpts, m map[string]string) error {
+	return nil
+}
+
 func (w whmcsBiller) Invoice(o *BillOpts) error {
 	return nil
 }

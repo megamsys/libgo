@@ -52,12 +52,24 @@ const (
 	DATA          = "data"
 	CREATED_AT    = "created_at"
 
+  // events keys
 	ACCOUNTID    = "AccountId"
 	ASSEMBLYID   = "AssemblyId"
 	ASSEMBLYNAME = "AssemblyName"
 	CONSUMED     = "Consumed"
 	START_TIME   = "StartTime"
 	END_TIME     = "EndTime"
+
+	SOFT_ACTION = "SoftAction"
+	SOFT_LIMIT = "SoftLimit"
+	SOFT_GRACEPERIOD = "SoftGracePeriod"
+	HARD_ACTION = "HardAction"
+	HARD_LIMIT = "HardLimit"
+	HARD_GRACEPERIOD = "HardGracePeriod"
+	CURRENT_ACTION = "current_action"
+	GENERATED_AT = "generated_at"
+	NEXT_DUE_AT = "next_due_at"
+	NEXT_ACTION = "next_action"
 
 	//args for notification
 	NILAVU       = "nilavu"

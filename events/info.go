@@ -123,7 +123,7 @@ func (me *MultiEvent) Write() error {
 	var err error
 	me.Events = append(me.Events, &Event{}) //add the usernotification event
 	for _, e := range me.Events {
-		if W != nil {
+		if me.IsEnabled() {
      err = W.Write(e)
 		}
 	}
@@ -131,8 +131,5 @@ func (me *MultiEvent) Write() error {
 }
 
 func (me *MultiEvent) IsEnabled() bool {
-	if W != nil {
-	 return true
-	}
-  return false
+  return W != nil
 }

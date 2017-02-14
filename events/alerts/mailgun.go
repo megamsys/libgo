@@ -25,6 +25,7 @@ const (
 	RUNNING
 	FAILURE
 	INSUFFICIENT_FUND
+	SKEWS_ACTIONS
 )
 
 type Notifier interface {

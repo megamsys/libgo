@@ -2,6 +2,8 @@ package bills
 
 import (
 	"github.com/megamsys/libgo/utils"
+	"strconv"
+	"fmt"
 )
 
 func init() {
@@ -44,6 +46,25 @@ func (m scylladbManager) Transaction(o *BillOpts, mi map[string]string) error {
 		return err
 	}
 	return nil
+}
+
+func (m scylladbManager) RecurringSkews(o *BillOpts, mi map[string]string) error {
+ 	sk :=  &SkewsEvents{
+		AccountId: o.AccountId,
+		CatId: o.AssemblyId,
+		EventType: "VM",
+	}
+
+	b, err := NewBalances(o.AccountId, mi)
+	if err != nil {
+		return err
+	}
+  cb, _ := strconv.ParseFloat(b.Credit, 64)
+  if  cb <= 0 {
+    return sk.ActionSkewsEvents(o, b.Credit,mi)
+	}
+
+  return nil
 }
 
 func (m scylladbManager) Invoice(o *BillOpts) error {

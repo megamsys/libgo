@@ -57,7 +57,12 @@ func (self *Bill) Watch(eventsChannel *EventChannel) error {
 						if err != nil {
 							log.Warningf("Failed to process watch event: %v", err)
 						}
-					}
+				  case event.EventAction == alerts.SKEWS_ACTIONS:
+					  err := self.skews(event)
+					  if err != nil {
+						  log.Warningf("Failed to process watch event: %v", err)
+					  }
+				  }
 				case <-self.stop:
 					log.Info("bill watcher exiting")
 					return
@@ -97,6 +102,21 @@ func (self *Bill) deduct(evt *Event) error {
 			}
 		}
 	}
+	return nil
+}
+
+
+func (self *Bill) skews(evt *Event) error {
+	log.Infof("Event:BILL:skewsCheck")
+	result := &bills.BillOpts{}
+	_ = result.FillStruct(evt.EventData.M) //we will manage error later
+		if !self.skip(constants.SCYLLAMGR) {
+			err := bills.BillProviders[constants.SCYLLAMGR].RecurringSkews(result, self.M)
+			if err != nil {
+				return err
+			}
+		}
+	return nil
 	return nil
 }
 

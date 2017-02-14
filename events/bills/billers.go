@@ -19,6 +19,10 @@ type BillOpts struct {
 	Consumed   string
 	StartTime  string
 	EndTime    string
+	SoftGracePeriod string
+	SoftLimit       string
+	HardGracePeriod string
+	HardLimit       string
 	Timestamp  string
 	M   map[string]string
 }
@@ -32,6 +36,7 @@ type BillProvider interface {
 	Transaction(o *BillOpts, m map[string]string) error //deduct the bill transaction
 	Invoice(o *BillOpts) error     //invoice for a  range.
 	Notify(o *BillOpts) error      //notify an user
+	RecurringSkews(o *BillOpts, m map[string]string) error
 }
 
 // Provider returns the current configured manager, as defined in the
@@ -55,12 +60,16 @@ func Register(name string, provider BillProvider) {
 func SetField(obj interface{}, name string, value string) error {
 	structValue := reflect.ValueOf(obj).Elem()
 	structFieldValue := structValue.FieldByName(name)
+  if !structFieldValue.IsValid() {
+	 	return nil
+	}
 
-	//structFieldType := structFieldValue.Type()
 	val := reflect.ValueOf(value)
-	//if structFieldType != val.Type() {
-		//invalidTypeError := errors.New("Provided value type didn't match obj field type")
-	//}
+	//structFieldType := structFieldValue.Type()
+
+	// if structFieldType != val.Type() {
+	// 	return nil //invalidTypeError := errors.New("Provided value type didn't match obj field type")
+	// }
 
 	structFieldValue.Set(val)
 	return nil
