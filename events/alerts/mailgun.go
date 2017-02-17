@@ -25,7 +25,9 @@ const (
 	RUNNING
 	FAILURE
 	INSUFFICIENT_FUND
+	QUOTA_UNPAID
 	SKEWS_ACTIONS
+	SKEWS_QUOTA
 )
 
 type Notifier interface {
@@ -61,6 +63,8 @@ func (v *EventAction) String() string {
 		return "balance"
 	case INSUFFICIENT_FUND:
 		return "insufficientfunds"
+	case QUOTA_UNPAID:
+	  return "quotaoverdue"
 	case DESCRIPTION:
 		return "description"
 	case SNAPSHOTTING:
@@ -167,6 +171,8 @@ func subject(eva EventAction) string {
 		sub = "Piggy bank!"
 	case INSUFFICIENT_FUND:
 		sub = "Insufficient funds!"
+	case QUOTA_UNPAID:
+		sub = "Payment pending!"
 	case LAUNCHED:
 		sub = "Up!"
 	case RUNNING:

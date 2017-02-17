@@ -3,7 +3,7 @@ package bills
 import (
 	"github.com/megamsys/libgo/utils"
 	"strconv"
-	"fmt"
+	"strings"
 )
 
 func init() {
@@ -52,8 +52,12 @@ func (m scylladbManager) RecurringSkews(o *BillOpts, mi map[string]string) error
  	sk :=  &SkewsEvents{
 		AccountId: o.AccountId,
 		CatId: o.AssemblyId,
-		EventType: "VM",
+		EventType: o.SkewsType,
 	}
+
+  if  strings.Split(o.SkewsType, ".")[1] == "quota" {
+		return sk.SkewsQuotaUnpaid(o, mi)
+  }
 
 	b, err := NewBalances(o.AccountId, mi)
 	if err != nil {

@@ -19,10 +19,13 @@ type BillOpts struct {
 	Consumed   string
 	StartTime  string
 	EndTime    string
+	QuotaId    string
+	SkewsType   string
 	SoftGracePeriod string
 	SoftLimit       string
 	HardGracePeriod string
 	HardLimit       string
+	Resources       string
 	Timestamp  string
 	M   map[string]string
 }
