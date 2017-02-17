@@ -124,9 +124,9 @@ func (s *EventsSkews) Create(mi map[string]string) error {
 	return nil
 }
 
-func (s *EventsSkews) ActionSkewsEvents(o *BillOpts, currentBal string, mi map[string]string) error {
+func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string]string) error {
 	log.Debugf("checks skews actions for ondemand")
-	sk := make(map[string]*SkewsEvents, 0)
+	sk := make(map[string]*EventsSkews, 0)
 	// to get skews events for that particular cat_id/ asm_id
 	evts, err := NewEventsSkews(o.AccountId, o.AssemblyId, mi)
 	if err != nil {
@@ -137,24 +137,23 @@ func (s *EventsSkews) ActionSkewsEvents(o *BillOpts, currentBal string, mi map[s
 			sk[v.Actions.Match(constants.ACTION)] = &v
 		}
 	}
-	TYPE := s.Type(o, currentBal)
+	ACTION := s.action(o, currentBal)
 	if len(sk) > 0 {
-		if sk[TYPE] != nil {
+		if sk[ACTION] != nil {
 			switch true {
-			case TYPE == HARDSKEWS && sk[HARDSKEWS].IsExpired():
-				// we have to do force action to Hardaction
-				return nil
-			case TYPE == SOFTSKEWS && sk[SOFTSKEWS].IsExpired():
+			case ACTION == HARDSKEWS && sk[HARDSKEWS].isExpired():
+ 			  return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
+			case ACTION == SOFTSKEWS && sk[SOFTSKEWS].isExpired():
 				return sk[SOFTSKEWS].CreateEvent(o, HARDSKEWS, mi)
-			case TYPE == WARNING && sk[WARNING].IsExpired():
+			case ACTION == WARNING && sk[WARNING].isExpired():
 				return sk[SOFTSKEWS].CreateEvent(o, SOFTSKEWS, mi)
 			}
 			return nil
 		} else {
-			return s.CreateEvent(o, TYPE, mi)
+			return s.CreateEvent(o, ACTION, mi)
 		}
 	} else {
-		return s.CreateEvent(o, TYPE, mi)
+		return s.CreateEvent(o, ACTION, mi)
 	}
 	return nil
 }
@@ -162,7 +161,7 @@ func (s *EventsSkews) ActionSkewsEvents(o *BillOpts, currentBal string, mi map[s
 func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error {
 	log.Debugf("checks skews actions for ondemand")
 	actions := make(map[string]string, 0)
-	sk := make(map[string]*SkewsEvents, 0)
+	sk := make(map[string]*EventsSkews, 0)
 	// to get skews events for that particular cat_id/ asm_id
 	evts, err := NewEventsSkews(o.AccountId, o.AssemblyId, mi)
 	if err != nil {
@@ -176,11 +175,11 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 	}
 	if len(sk) > 0 {
 		switch true {
-		case actions[HARDSKEWS] == ACTIVE && sk[HARDSKEWS].IsExpired():
+		case actions[HARDSKEWS] == ACTIVE && sk[HARDSKEWS].isExpired():
 			return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
-		case actions[SOFTSKEWS] == ACTIVE && sk[SOFTSKEWS].IsExpired():
+		case actions[SOFTSKEWS] == ACTIVE && sk[SOFTSKEWS].isExpired():
 			return sk[SOFTSKEWS].CreateEvent(o, HARDSKEWS, mi)
-		case actions[WARNING] == ACTIVE && sk[WARNING].IsExpired():
+		case actions[WARNING] == ACTIVE && sk[WARNING].isExpired():
 			return sk[SOFTSKEWS].CreateEvent(o, SOFTSKEWS, mi)
 		}
 	}
@@ -188,7 +187,7 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 	return s.CreateEvent(o, WARNING, mi)
 }
 
-func (s *EventsSkews) type(o *BillOpts, currentBal string) string {
+func (s *EventsSkews) action(o *BillOpts, currentBal string) string {
 	cb, _ := strconv.ParseFloat(currentBal, 64)
 	slimit, _ := strconv.ParseFloat(o.SoftLimit, 64)
 	hlimit, _ := strconv.ParseFloat(o.HardLimit, 64)

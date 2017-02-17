@@ -187,7 +187,7 @@ func (s Status) Description(name string) string {
 	case INSUFFICIENT_FUND:
 		return "Insuffient funds on you wallet to launch machine .."
 	case QUOTA_UNPAID:
-		return "quota state is unpaid please make paid and reploy"
+		return "You have unpaid invoice. Pay your invoice, and redeploy."
 	case VMBOOTING:
 		return "Created machine by the hypervisor, watch the console for boot ..."
 	case LAUNCHED:

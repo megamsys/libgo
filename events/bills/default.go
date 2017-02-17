@@ -65,7 +65,7 @@ func (m scylladbManager) AuditUnpaid(o *BillOpts, mi map[string]string) error {
 	}
 	cb, _ := strconv.ParseFloat(b.Credit, 64)
 	if cb <= 0 {
-		return sk.ActionSkewsEvents(o, b.Credit, mi)
+		return sk.ActionEvents(o, b.Credit, mi)
 	}
 
 	return nil
