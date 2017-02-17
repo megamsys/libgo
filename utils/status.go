@@ -37,6 +37,8 @@ func (s Status) Event_type() string {
 		return ONEINSTANCESBALANCEVERIFYTYPE
 	case INSUFFICIENT_FUND:
 		return ONEINSTANCESINSUFFIENTFUNDTYPE
+	case QUOTA_UNPAID:
+		return ONEINSTANCESQUOTAUNPAID
 	case QUOTAUPDATING:
 		return ONEINSTANCEUSERQUOTAUPDATING
 	case QUOTAUPDATED:
@@ -184,6 +186,8 @@ func (s Status) Description(name string) string {
 		return "Verifying credit balance.."
 	case INSUFFICIENT_FUND:
 		return "Insuffient funds on you wallet to launch machine .."
+	case QUOTA_UNPAID:
+		return "You have unpaid invoice. Pay your invoice, and redeploy."
 	case VMBOOTING:
 		return "Created machine by the hypervisor, watch the console for boot ..."
 	case LAUNCHED:

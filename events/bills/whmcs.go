@@ -1,7 +1,9 @@
 package bills
 
 import (
+	"bytes"
 	"crypto/md5"
+	"encoding/base64"
 	b64 "encoding/base64"
 	"encoding/hex"
 	"fmt"
@@ -10,12 +12,10 @@ import (
 	"github.com/megamsys/libgo/pairs"
 	constants "github.com/megamsys/libgo/utils"
 	whmcs "github.com/megamsys/whmcs_go/whmcs"
-	"strings"
-	"bytes"
-	"strconv"
-	"encoding/base64"
-	"os"
 	"io"
+	"os"
+	"strconv"
+	"strings"
 )
 
 const (
@@ -50,7 +50,6 @@ func (w whmcsBiller) IsEnabled() bool {
 	return w.enabled
 }
 
-
 func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 	log.Debugf("User Onboarding...")
 
@@ -80,11 +79,11 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 		"country":      "IN",
 		"phonenumber":  bacc.Phone.Phone,
 		"password2":    string(sDec),
-		"customfields": GetBase64(map[string]string{m[constants.VERTICE_EMAIL]: bacc.Email,m[constants.VERTICE_ORGID]: org.Id, m[constants.VERTICE_APIKEY]: bacc.ApiKey}),
+		"customfields": GetBase64(map[string]string{m[constants.VERTICE_EMAIL]: bacc.Email, m[constants.VERTICE_ORGID]: org.Id, m[constants.VERTICE_APIKEY]: bacc.ApiKey}),
 	}
 
 	_, res, err := client.Accounts.Create(a)
-	if err !=nil {
+	if err != nil {
 		return err
 	}
 
@@ -94,35 +93,39 @@ func (w whmcsBiller) Onboard(o *BillOpts, m map[string]string) error {
 
 func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) (err error) {
 
-		add := &addons.Addons{
-			ProviderName: constants.WHMCS,
-			AccountId:    o.AccountId,
+	add := &addons.Addons{
+		ProviderName: constants.WHMCS,
+		AccountId:    o.AccountId,
+	}
+	if add.AccountId != "" {
+		err = add.Get(m)
+		if err != nil {
+			return err
 		}
-		if add.AccountId != "" {
-			err = add.Get(m)
-			if err != nil {
-				return err
-			}
-		} else {
-			return fmt.Errorf("account_id should not empty")
-		}
-		log.Debugf("Request WHMCS [POST] ==> " + m[constants.DOMAIN])
-		client := whmcs.NewClient(nil, m[constants.DOMAIN])
-		a := map[string]string{
-			"username":      m[constants.USERNAME],
-			"password":      GetMD5Hash(m[constants.PASSWORD]),
-			"clientid":      add.ProviderId,
-			"description":   o.AssemblyName,
-			"hours":         "1",
-			"amount":        o.Consumed,
-			"invoiceaction": "nextcron",
-		}
-		_, _, err = client.Billables.Create(a)
+	} else {
+		return fmt.Errorf("account_id should not empty")
+	}
+	log.Debugf("Request WHMCS [POST] ==> " + m[constants.DOMAIN])
+	client := whmcs.NewClient(nil, m[constants.DOMAIN])
+	a := map[string]string{
+		"username":      m[constants.USERNAME],
+		"password":      GetMD5Hash(m[constants.PASSWORD]),
+		"clientid":      add.ProviderId,
+		"description":   o.AssemblyName,
+		"hours":         "1",
+		"amount":        o.Consumed,
+		"invoiceaction": "nextcron",
+	}
+	_, _, err = client.Billables.Create(a)
 
 	return err
 }
 
 func (w whmcsBiller) Transaction(o *BillOpts, m map[string]string) error {
+	return nil
+}
+
+func (w whmcsBiller) AuditUnpaid(o *BillOpts, m map[string]string) error {
 	return nil
 }
 

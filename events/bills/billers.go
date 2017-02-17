@@ -13,25 +13,33 @@ var BillProviders map[string]BillProvider
 
 //BillOpts represents a billtransaction managed by the provider
 type BillOpts struct {
-	AccountId  string
-	AssemblyId string
-	AssemblyName string
-	Consumed   string
-	StartTime  string
-	EndTime    string
-	Timestamp  string
-	M   map[string]string
+	AccountId       string
+	AssemblyId      string
+	AssemblyName    string
+	Consumed        string
+	StartTime       string
+	EndTime         string
+	QuotaId         string
+	SkewsType       string
+	SoftGracePeriod string
+	SoftLimit       string
+	HardGracePeriod string
+	HardLimit       string
+	Resources       string
+	Timestamp       string
+	M               map[string]string
 }
 
 type BillProvider interface {
-	IsEnabled() bool               //is this billing provider enabled.
+	IsEnabled() bool                                    //is this billing provider enabled.
 	Onboard(o *BillOpts, m map[string]string) error     //onboard an user in the billing system
-	Nuke(o *BillOpts) error        //delete an user from the billing system
-	Suspend(o *BillOpts) error     //suspend an user from the billing system
+	Nuke(o *BillOpts) error                             //delete an user from the billing system
+	Suspend(o *BillOpts) error                          //suspend an user from the billing system
 	Deduct(o *BillOpts, m map[string]string) error      //deduct the balance credit
 	Transaction(o *BillOpts, m map[string]string) error //deduct the bill transaction
-	Invoice(o *BillOpts) error     //invoice for a  range.
-	Notify(o *BillOpts) error      //notify an user
+	Invoice(o *BillOpts) error                          //invoice for a  range.
+	Notify(o *BillOpts) error                           //notify an user
+	AuditUnpaid(o *BillOpts, m map[string]string) error
 }
 
 // Provider returns the current configured manager, as defined in the
@@ -55,12 +63,16 @@ func Register(name string, provider BillProvider) {
 func SetField(obj interface{}, name string, value string) error {
 	structValue := reflect.ValueOf(obj).Elem()
 	structFieldValue := structValue.FieldByName(name)
+	if !structFieldValue.IsValid() {
+		return nil
+	}
 
-	//structFieldType := structFieldValue.Type()
 	val := reflect.ValueOf(value)
-	//if structFieldType != val.Type() {
-		//invalidTypeError := errors.New("Provided value type didn't match obj field type")
-	//}
+	//structFieldType := structFieldValue.Type()
+
+	// if structFieldType != val.Type() {
+	// 	return nil //invalidTypeError := errors.New("Provided value type didn't match obj field type")
+	// }
 
 	structFieldValue.Set(val)
 	return nil

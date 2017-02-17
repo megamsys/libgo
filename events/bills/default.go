@@ -2,6 +2,8 @@ package bills
 
 import (
 	"github.com/megamsys/libgo/utils"
+	"strconv"
+	"strings"
 )
 
 func init() {
@@ -25,8 +27,8 @@ func (m scylladbManager) Deduct(o *BillOpts, mi map[string]string) error {
 	}
 
 	if err = b.Deduct(&BalanceOpts{
-		Id:        o.AccountId,
-		Consumed:  o.Consumed,
+		Id:       o.AccountId,
+		Consumed: o.Consumed,
 	}, mi); err != nil {
 		return err
 	}
@@ -43,6 +45,29 @@ func (m scylladbManager) Transaction(o *BillOpts, mi map[string]string) error {
 	if err = bt.BilledHistories(mi); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (m scylladbManager) AuditUnpaid(o *BillOpts, mi map[string]string) error {
+	sk := &EventsSkews{
+		AccountId: o.AccountId,
+		CatId:     o.AssemblyId,
+		EventType: o.SkewsType,
+	}
+
+	if strings.Split(o.SkewsType, ".")[1] == "quota" {
+		return sk.SkewsQuotaUnpaid(o, mi)
+	}
+
+	b, err := NewBalances(o.AccountId, mi)
+	if err != nil {
+		return err
+	}
+	cb, _ := strconv.ParseFloat(b.Credit, 64)
+	if cb <= 0 {
+		return sk.ActionEvents(o, b.Credit, mi)
+	}
+
 	return nil
 }
 

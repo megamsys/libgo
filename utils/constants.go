@@ -52,12 +52,28 @@ const (
 	DATA          = "data"
 	CREATED_AT    = "created_at"
 
-	ACCOUNTID    = "AccountId"
-	ASSEMBLYID   = "AssemblyId"
-	ASSEMBLYNAME = "AssemblyName"
-	CONSUMED     = "Consumed"
-	START_TIME   = "StartTime"
-	END_TIME     = "EndTime"
+	// events keys
+	ACCOUNTID        = "AccountId"
+	ASSEMBLYID       = "AssemblyId"
+	ASSEMBLYNAME     = "AssemblyName"
+	CONSUMED         = "Consumed"
+	START_TIME       = "StartTime"
+	END_TIME         = "EndTime"
+	RESOURCES        = "Resources"
+	BILL_TYPE        = "BillType"
+	SOFT_ACTION      = "SoftAction"
+	SOFT_LIMIT       = "SoftLimit"
+	SOFT_GRACEPERIOD = "SoftGracePeriod"
+	HARD_GRACEPERIOD = "HardGracePeriod"
+	HARD_ACTION      = "HardAction"
+	HARD_LIMIT       = "HardLimit"
+	SKEWS_TYPE       = "SkewsType"
+	QUOTAID          = "QuotaId"
+
+	ACTION              = "action"
+	ACTION_TRIGGERED_AT = "action_trigger_at"
+	NEXT_ACTION_DUE_AT  = "next_action_due_at"
+	NEXT_ACTION         = "next_action"
 
 	//args for notification
 	NILAVU       = "nilavu"
@@ -128,11 +144,10 @@ const (
 	ACTIVESNAP     = "active"
 	DEACTIVESNAP   = "deactive"
 
-	IMAGECREATING   = "image_creating"
-	IMAGECREATED    = "image_created"
-	IMAGEREMOVED    = "image_removed"
-	IMAGEREMOVING    = "image_removing"
-
+	IMAGECREATING = "image_creating"
+	IMAGECREATED  = "image_created"
+	IMAGEREMOVED  = "image_removed"
+	IMAGEREMOVING = "image_removing"
 
 	DISKATTACHING = "disk_attaching"
 	DISKATTACHED  = "disk_attached"
@@ -141,6 +156,7 @@ const (
 
 	QUOTAUPDATING = "quota_updating"
 	QUOTAUPDATED  = "quota_updated"
+	QUOTA_UNPAID  = "quota_unpaid"
 
 	LCMSTATECHECK = "check_lcmstate"
 	VMSTATECHECK  = "check_vmstate"
@@ -247,6 +263,7 @@ const (
 	StatusQuotaUpdated  = Status(QUOTAUPDATED)
 
 	StatusInsufficientFund = Status(INSUFFICIENT_FUND)
+	StatusQuotaUnpaid      = Status(QUOTA_UNPAID)
 
 	StatusVMBooting = Status(VMBOOTING)
 
@@ -267,25 +284,25 @@ const (
 	StatusResetPassword = Status(RESETPASSWORD)
 	StatusStarting      = Status(STARTING)
 	StatusStarted       = Status(STARTED)
-	StatusStopping = Status(STOPPING)
-	StatusStopped  = Status(STOPPED)
-	StatusRestarting = Status(RESTARTING)
-	StatusRestarted  = Status(RESTARTED)
-	StatusUpgraded = Status(UPGRADED)
-	StatusDestroying = Status(DESTROYING)
-	StatusDestroyed  = Status(DESTROYED)
-	StatusNuked = Status(NUKED)
+	StatusStopping      = Status(STOPPING)
+	StatusStopped       = Status(STOPPED)
+	StatusRestarting    = Status(RESTARTING)
+	StatusRestarted     = Status(RESTARTED)
+	StatusUpgraded      = Status(UPGRADED)
+	StatusDestroying    = Status(DESTROYING)
+	StatusDestroyed     = Status(DESTROYED)
+	StatusNuked         = Status(NUKED)
 
-	StatusSnapCreating = Status(SNAPSHOTTING)
-	StatusSnapCreated  = Status(SNAPSHOTTED)
-	StatusSnapDeleting = Status(SNAPDESTORYING)
-	StatusSnapDeleted  = Status(SNAPDESTORYED)
-	StatusSnapRestoring = Status(RESTORINGSNAP)
-	StatusSnapRestored = Status(SNAPRESTORED)
-	StatusBackupCreated = Status(IMAGECREATED)
+	StatusSnapCreating   = Status(SNAPSHOTTING)
+	StatusSnapCreated    = Status(SNAPSHOTTED)
+	StatusSnapDeleting   = Status(SNAPDESTORYING)
+	StatusSnapDeleted    = Status(SNAPDESTORYED)
+	StatusSnapRestoring  = Status(RESTORINGSNAP)
+	StatusSnapRestored   = Status(SNAPRESTORED)
+	StatusBackupCreated  = Status(IMAGECREATED)
 	StatusBackupCreating = Status(IMAGECREATING)
 	StatusBackupDeleting = Status(IMAGEREMOVING)
-	StatusBackupDeleted = Status(IMAGEREMOVED)
+	StatusBackupDeleted  = Status(IMAGEREMOVED)
 
 	StatusDiskAttaching    = Status(DISKATTACHING)
 	StatusDiskAttached     = Status(DISKATTACHED)
@@ -396,6 +413,7 @@ const (
 	ONEINSTANCEUSERQUOTAUPDATED        = "compute.instance.quota_updated"
 	ONEINSTANCELCMSTATECHECKING        = "compute.instance.lcmstate_checking"
 	ONEINSTANCEVMSTATECHECKING         = "compute.instance.vmstate_checking"
+	ONEINSTANCESQUOTAUNPAID            = "compute.instance.quota_unpaid"
 
 	ONEINSTANCEWAITING        = "compute.instance.waituntill"
 	ONEINSTANCEVMSTATEPENDING = "compute.instance.pending"
