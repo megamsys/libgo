@@ -27,8 +27,8 @@ func (m scylladbManager) Deduct(o *BillOpts, mi map[string]string) error {
 	}
 
 	if err = b.Deduct(&BalanceOpts{
-		Id:        o.AccountId,
-		Consumed:  o.Consumed,
+		Id:       o.AccountId,
+		Consumed: o.Consumed,
 	}, mi); err != nil {
 		return err
 	}
@@ -48,27 +48,27 @@ func (m scylladbManager) Transaction(o *BillOpts, mi map[string]string) error {
 	return nil
 }
 
-func (m scylladbManager) RecurringSkews(o *BillOpts, mi map[string]string) error {
- 	sk :=  &SkewsEvents{
+func (m scylladbManager) AuditUnpaid(o *BillOpts, mi map[string]string) error {
+	sk := &EventsSkews{
 		AccountId: o.AccountId,
-		CatId: o.AssemblyId,
+		CatId:     o.AssemblyId,
 		EventType: o.SkewsType,
 	}
 
-  if  strings.Split(o.SkewsType, ".")[1] == "quota" {
+	if strings.Split(o.SkewsType, ".")[1] == "quota" {
 		return sk.SkewsQuotaUnpaid(o, mi)
-  }
+	}
 
 	b, err := NewBalances(o.AccountId, mi)
 	if err != nil {
 		return err
 	}
-  cb, _ := strconv.ParseFloat(b.Credit, 64)
-  if  cb <= 0 {
-    return sk.ActionSkewsEvents(o, b.Credit,mi)
+	cb, _ := strconv.ParseFloat(b.Credit, 64)
+	if cb <= 0 {
+		return sk.ActionSkewsEvents(o, b.Credit, mi)
 	}
 
-  return nil
+	return nil
 }
 
 func (m scylladbManager) Invoice(o *BillOpts) error {

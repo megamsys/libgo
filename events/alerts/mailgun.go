@@ -27,7 +27,6 @@ const (
 	INSUFFICIENT_FUND
 	QUOTA_UNPAID
 	SKEWS_ACTIONS
-	SKEWS_QUOTA
 )
 
 type Notifier interface {
@@ -64,7 +63,7 @@ func (v *EventAction) String() string {
 	case INSUFFICIENT_FUND:
 		return "insufficientfunds"
 	case QUOTA_UNPAID:
-	  return "quotaoverdue"
+		return "quotaoverdue"
 	case DESCRIPTION:
 		return "description"
 	case SNAPSHOTTING:

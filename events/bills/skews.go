@@ -38,9 +38,9 @@ const (
 
 type ApiSkewsEvents struct {
 	JsonClaz string        `json:"json_claz"`
-	Results  []SkewsEvents `json:"results"`
+	Results  []EventsSkews `json:"results"`
 }
-type SkewsEvents struct {
+type EventsSkews struct {
 	Id        string          `json:"id"`
 	AccountId string          `json:"account_id"`
 	CatId     string          `json:"cat_id"`
@@ -52,7 +52,7 @@ type SkewsEvents struct {
 	EventType string          `json:"event_type"`
 }
 
-func NewEventsSkews(email, cat_id string, mi map[string]string) ([]SkewsEvents, error) {
+func NewEventsSkews(email, cat_id string, mi map[string]string) ([]EventsSkews, error) {
 
 	if email == "" {
 		return nil, fmt.Errorf("account_id should not be empty")
@@ -74,7 +74,7 @@ func NewEventsSkews(email, cat_id string, mi map[string]string) ([]SkewsEvents, 
 	return ac.Results, nil
 }
 
-func (s *SkewsEvents) CreateEvent(o *BillOpts, ACTION string, mi map[string]string) error {
+func (s *EventsSkews) CreateEvent(o *BillOpts, ACTION string, mi map[string]string) error {
 	var exp_at, gen_at time.Time
 	var action, next string
 	mm := make(map[string][]string, 0)
@@ -113,7 +113,7 @@ func (s *SkewsEvents) CreateEvent(o *BillOpts, ACTION string, mi map[string]stri
 	return s.Create(mi)
 }
 
-func (s *SkewsEvents) Create(mi map[string]string) error {
+func (s *EventsSkews) Create(mi map[string]string) error {
 	args := api.NewArgs(mi)
 	args.Email = s.AccountId
 	cl := api.NewClient(args, EVENTSKEWS_NEW)
@@ -124,7 +124,7 @@ func (s *SkewsEvents) Create(mi map[string]string) error {
 	return nil
 }
 
-func (s *SkewsEvents) ActionSkewsEvents(o *BillOpts, currentBal string, mi map[string]string) error {
+func (s *EventsSkews) ActionSkewsEvents(o *BillOpts, currentBal string, mi map[string]string) error {
 	log.Debugf("checks skews actions for ondemand")
 	sk := make(map[string]*SkewsEvents, 0)
 	// to get skews events for that particular cat_id/ asm_id
@@ -159,7 +159,7 @@ func (s *SkewsEvents) ActionSkewsEvents(o *BillOpts, currentBal string, mi map[s
 	return nil
 }
 
-func (s *SkewsEvents) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error {
+func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error {
 	log.Debugf("checks skews actions for ondemand")
 	actions := make(map[string]string, 0)
 	sk := make(map[string]*SkewsEvents, 0)
@@ -177,8 +177,7 @@ func (s *SkewsEvents) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 	if len(sk) > 0 {
 		switch true {
 		case actions[HARDSKEWS] == ACTIVE && sk[HARDSKEWS].IsExpired():
-			// we have to do force action to Hardaction
-			return nil
+			return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
 		case actions[SOFTSKEWS] == ACTIVE && sk[SOFTSKEWS].IsExpired():
 			return sk[SOFTSKEWS].CreateEvent(o, HARDSKEWS, mi)
 		case actions[WARNING] == ACTIVE && sk[WARNING].IsExpired():
@@ -189,7 +188,7 @@ func (s *SkewsEvents) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 	return s.CreateEvent(o, WARNING, mi)
 }
 
-func (s *SkewsEvents) Type(o *BillOpts, currentBal string) string {
+func (s *EventsSkews) type(o *BillOpts, currentBal string) string {
 	cb, _ := strconv.ParseFloat(currentBal, 64)
 	slimit, _ := strconv.ParseFloat(o.SoftLimit, 64)
 	hlimit, _ := strconv.ParseFloat(o.HardLimit, 64)
@@ -201,7 +200,7 @@ func (s *SkewsEvents) Type(o *BillOpts, currentBal string) string {
 	return WARNING
 }
 
-func (s *SkewsEvents) IsExpired() bool {
+func (s *EventsSkews) isExpired() bool {
 	t1, _ := time.Parse(time.RFC3339, s.Inputs.Match("generated_at"))
 	t2, _ := time.Parse(time.RFC3339, s.Inputs.Match("next_due_at"))
 	duration := t2.Sub(t1)
