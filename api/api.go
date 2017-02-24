@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"github.com/megamsys/libgo/utils"
 	log "github.com/Sirupsen/logrus"
+	"fmt"
 )
 const (
 	DELETE = "DELETE"
@@ -61,6 +62,7 @@ func (c ApiArgs) ToMap() map[string]string {
 }
 
 func (c *Client) Get() ([]byte, error) {
+	fmt.Println("Request [GET] ==> " + c.Url)
 		log.Debugf("Request [GET] ==> " + c.Url)
 	return c.run(GET)
 }

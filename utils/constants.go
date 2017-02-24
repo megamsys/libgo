@@ -43,14 +43,21 @@ const (
 	SCYLLAUSERNAME = "scylla_username"
 	SCYLLAPASSWORD = "scylla_password"
 
-	ASSEMBLIES_ID = "assemblies_id"
-	EVENT_TYPE    = "event_type"
-	ACCOUNT_ID    = "account_id"
-	ASSEMBLY_ID   = "assembly_id"
-	ASSEMBLY_NAME = "assembly_name"
-	QUOTA_ID      = "quota_id"
-	DATA          = "data"
-	CREATED_AT    = "created_at"
+	ASSEMBLIES_ID  = "assemblies_id"
+	EVENT_TYPE     = "event_type"
+	ACCOUNT_ID     = "account_id"
+	ASSEMBLY_ID    = "assembly_id"
+	ASSEMBLY_NAME  = "assembly_name"
+	QUOTA_ID       = "quota_id"
+	DATA           = "data"
+	CREATED_AT     = "created_at"
+	REGION         = "region"
+	DATASTORE      = "datastore"
+	RAW_IMAGE_ID   = "raw_image_id"
+	IMAGE_NAME     = "image_name"
+	IMAGE_ID       = "image_id"
+	INSTANCE_ID    = "instance_id"
+	MARKETPLACE_ID = "marketplace_id"
 
 	// events keys
 	ACCOUNTID        = "AccountId"
@@ -92,14 +99,18 @@ const (
 	IPV6PRI      = "ipv6private"
 	IPV6PUB      = "ipv6public"
 	STORAGE_TYPE = "storage_hddtype"
+	STORAGE      = "storage"
+	CPU          = "cpu"
+	RAM          = "ram"
 
-	TRUE           = "true"
-	ENABLED        = "enabled"
-	EventMachine   = "machine"
-	EventContainer = "container"
-	EventBill      = "bill"
-	EventUser      = "user"
-	EventStatus    = "status"
+	TRUE             = "true"
+	ENABLED          = "enabled"
+	EventMachine     = "machine"
+	EventMarketplace = "marketplaces"
+	EventContainer   = "container"
+	EventBill        = "bill"
+	EventUser        = "user"
+	EventStatus      = "status"
 
 	BILLMGR = "bill"
 	ADDONS  = "addons"
@@ -222,7 +233,9 @@ const (
 	POST_ERROR      = "posterror"
 	PARKED          = "parked"
 
+	CREATING  = "creating"
 	ACTIVE    = "active"
+	DEACTIVE  = "deactive"
 	PENDING   = "pending"
 	INIT      = "init"
 	HOLD      = "hold"
@@ -279,7 +292,10 @@ const (
 	StatusVncHostUpdating = Status(VNCHOSTUPDATING)
 	StatusVncHostUpdated  = Status(VNCHOSTUPDATED)
 	//fully up instance
-	StatusRunning = Status(RUNNING)
+	StatusRunning  = Status(RUNNING)
+	StatusActive   = Status(ACTIVE)
+	StatusDeactive = Status(DEACTIVE)
+	StatusCreating = Status(CREATING)
 
 	StatusResetPassword = Status(RESETPASSWORD)
 	StatusStarting      = Status(STARTING)
@@ -453,4 +469,7 @@ const (
 	CONTAINERNETWORKSUCCESSTYPE    = "compute.container.ip_allocate_success"
 	CONTAINERNETWORKFAILURETYPE    = "compute.container.ip_allocate_failure"
 	CONTAINERINSTANCEERROR         = "compute.container.posterror"
+
+	MARKETPLACESINSTANCECREATING   = "marketplaces.instance.creating"
+	
 )
