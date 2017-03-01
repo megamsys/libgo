@@ -2,11 +2,11 @@ package events
 
 import (
 	"errors"
+	log "github.com/Sirupsen/logrus"
+	"github.com/megamsys/libgo/utils"
 	"sort"
 	"sync"
 	"time"
-	log "github.com/Sirupsen/logrus"
-	"github.com/megamsys/libgo/utils"
 )
 
 type byTimestamp []*Event

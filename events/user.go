@@ -15,7 +15,7 @@ type AfterFuncs []AfterFunc
 type AfterFuncsMap map[alerts.EventAction]AfterFuncs
 
 var notifiers map[string]alerts.Notifier
-var Enabler map[string]bool = map[string]bool{constants.MAILGUN:false,constants.INFOBIP:false,constants.SLACK:false,constants.BILLMGR:false}
+var Enabler map[string]bool = map[string]bool{constants.MAILGUN: false, constants.INFOBIP: false, constants.SLACK: false, constants.BILLMGR: false}
 
 type User struct {
 	stop chan struct{}
@@ -39,8 +39,8 @@ func register(e EventsConfigMap) {
 
 func enabler(e EventsConfigMap) {
 	if e.Get(constants.MAILGUN)[constants.ENABLED] == constants.TRUE {
-	  Enabler[constants.MAILGUN] = true
-  }
+		Enabler[constants.MAILGUN] = true
+	}
 	if e.Get(constants.INFOBIP)[constants.ENABLED] == constants.TRUE {
 		Enabler[constants.INFOBIP] = true
 	}

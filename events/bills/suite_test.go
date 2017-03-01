@@ -1,15 +1,14 @@
 package bills
 
 import (
-
-	"testing"
 	"gopkg.in/check.v1"
+	"testing"
 )
 
 func Test(t *testing.T) { check.TestingT(t) }
 
 type S struct {
-  m map[string]string
+	m map[string]string
 }
 
 var _ = check.Suite(&S{})

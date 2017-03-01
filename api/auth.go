@@ -1,9 +1,9 @@
 package api
 
 import (
-	"time"
-  "net/url"
+	"net/url"
 	"strings"
+	"time"
 )
 
 type Authly struct {
@@ -36,10 +36,10 @@ func (auth *Authly) GetURL() string {
 func (authly *Authly) AuthHeader() error {
 	headMap := make(map[string]string)
 	key := ""
-  v, err := url.Parse(authly.Keys[HOST])
-    if err != nil {
-        return err
-    }
+	v, err := url.Parse(authly.Keys[HOST])
+	if err != nil {
+		return err
+	}
 	timeStampedPath := authly.Date + "\n" + v.Path + authly.UrlSuffix
 	md5Body := GetMD5Hash(authly.JSONBody)
 	switch true {

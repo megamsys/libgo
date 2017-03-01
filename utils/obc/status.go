@@ -231,9 +231,9 @@ func (s Status) Event_type() string {
 }
 
 func (s Status) Description(host string) string {
-	tmpl := strings.ToUpper(strings.Split(s.String(),".")[0])
-	TPL_RUN := "Host " + host + " template ["+ tmpl +"] running.. "
-	TPL_FINISHED := "Host " + host + " template ["+ tmpl +"] finished. "
+	tmpl := strings.ToUpper(strings.Split(s.String(), ".")[0])
+	TPL_RUN := "Host " + host + " template [" + tmpl + "] running.. "
+	TPL_FINISHED := "Host " + host + " template [" + tmpl + "] finished. "
 	switch s.String() {
 	case TPL_HOSTINFOS_RUN:
 		return TPL_RUN

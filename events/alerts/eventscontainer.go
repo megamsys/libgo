@@ -2,20 +2,20 @@ package alerts
 
 import (
 	log "github.com/Sirupsen/logrus"
-  "github.com/megamsys/libgo/api"
+	"github.com/megamsys/libgo/api"
 	"github.com/megamsys/libgo/pairs"
 	constants "github.com/megamsys/libgo/utils"
 )
 
 const (
-	EVENTCONTAINER_NEW          = "/eventscontainer/content"
+	EVENTCONTAINER_NEW = "/eventscontainer/content"
 )
 
 type EventsContainer struct {
-	EventType  string    `json:"event_type" cql:"event_type"`
-	AccountId  string    `json:"account_id" cql:"account_id"`
-	AssemblyId string    `json:"assembly_id" cql:"assembly_id"`
-	Data       pairs.JsonPairs  `json:"data" cql:"data"`
+	EventType  string          `json:"event_type" cql:"event_type"`
+	AccountId  string          `json:"account_id" cql:"account_id"`
+	AssemblyId string          `json:"assembly_id" cql:"assembly_id"`
+	Data       pairs.JsonPairs `json:"data" cql:"data"`
 }
 
 func (v *VerticeApi) NotifyContainer(eva EventAction, edata EventData) error {

@@ -91,7 +91,7 @@ func (s *Scylla) GetEventsByNodeId(email, id string, limit int) (*[]EventsObc, e
 
 func parseMapToOutputObc(edata EventData) EventsObc {
 	return EventsObc{
-		Id: uuid.New(),
+		Id:        uuid.New(),
 		EventType: edata.M[constants.EVENT_TYPE],
 		AccountId: edata.M[constants.ACCOUNT_ID],
 		HostIp:    edata.M[constants.HOST_IP],

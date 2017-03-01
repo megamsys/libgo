@@ -2,8 +2,8 @@ package events
 
 import (
 	log "github.com/Sirupsen/logrus"
-	"github.com/megamsys/libgo/events/alerts"
 	"github.com/megamsys/libgo/events/addons"
+	"github.com/megamsys/libgo/events/alerts"
 )
 
 type Addons struct {
@@ -48,7 +48,7 @@ func (self *Addons) Close() {
 
 func (self *Addons) OnboardFunc(evt *Event) error {
 	log.Info("RECV addons onboarded")
-    add := addons.NewAddons(evt.EventData)
+	add := addons.NewAddons(evt.EventData)
 	err := add.Onboard(self.M)
 	if err != nil {
 		return err

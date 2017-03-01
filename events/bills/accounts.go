@@ -20,20 +20,19 @@ import (
 	"github.com/megamsys/libgo/api"
 )
 
-const(
-	ORGANIZATIONGET ="/organizations"
-	ACCOUNTS_GET = "/accounts/"
-
-	)
+const (
+	ORGANIZATIONGET = "/organizations"
+	ACCOUNTS_GET    = "/accounts/"
+)
 
 type ApiAccounts struct {
-	JsonClaz string `json:"json_claz" cql:"json_claz"`
-	Results Accounts `json:"results" cql:"results"`
+	JsonClaz string   `json:"json_claz" cql:"json_claz"`
+	Results  Accounts `json:"results" cql:"results"`
 }
 
 type ApiOrganizations struct {
-	JsonClaz string `json:"json_claz" cql:"json_claz"`
-	Results Organization `json:"results" cql:"results"`
+	JsonClaz string       `json:"json_claz" cql:"json_claz"`
+	Results  Organization `json:"results" cql:"results"`
 }
 
 type Accounts struct {
@@ -51,11 +50,11 @@ type Accounts struct {
 }
 
 type Organization struct {
-	Id        string `json:"id" cql:"id"`
+	Id         string `json:"id" cql:"id"`
 	AccountsId string `json:"accounts_id" cql:"accounts_id"`
-	CreatedAt string `json:"created_at" cql:"created_at"`
-	JsonClaz  string `json:"json_claz" cql:"json_claz"`
-	Name      string `json:"name" cql:"name"`
+	CreatedAt  string `json:"created_at" cql:"created_at"`
+	JsonClaz   string `json:"json_claz" cql:"json_claz"`
+	Name       string `json:"name" cql:"name"`
 }
 
 type Name struct {
@@ -103,7 +102,7 @@ type States struct {
 
 func NewAccounts(m map[string]string) (*Accounts, error) {
 	args := api.NewArgs(m)
-	cl := api.NewClient(args, ACCOUNTS_GET + args.Email)
+	cl := api.NewClient(args, ACCOUNTS_GET+args.Email)
 	response, err := cl.Get()
 	if err != nil {
 		return nil, err

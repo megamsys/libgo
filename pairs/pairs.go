@@ -73,21 +73,20 @@ func (p *JsonPairs) NukeAndSet(m map[string][]string) {
 func (p *JsonPairs) NukeKeys(m string) {
 	swap := make(JsonPairs, 0)
 	for _, j := range *p { //j is key, value of JsonPair
-			if j.K != m {
-			  swap = append(swap, j)
-			}
+		if j.K != m {
+			swap = append(swap, j)
+		}
 	}
-*p = swap
+	*p = swap
 }
 
-
 //Delete old keys and update them with the new values
-func ArrayToJsonPairs(m []string) (*JsonPairs) {
+func ArrayToJsonPairs(m []string) *JsonPairs {
 	pairs := make(JsonPairs, 0)
 	for _, k := range m {
-	pair := &JsonPair{}
-	_ = json.Unmarshal([]byte(k), pair)
-	pairs = append(pairs, pair)
+		pair := &JsonPair{}
+		_ = json.Unmarshal([]byte(k), pair)
+		pairs = append(pairs, pair)
 	}
 	return &pairs
 }

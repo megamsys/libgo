@@ -117,10 +117,10 @@ const (
 	STORAGEERROR = "storage_error"
 	COMPUTEERROR = "compute_error"
 
-	StatusHostRunning   = Status(HOSTRUNNING)
-	StatusMasterRunning = Status(MASTERRUNNING)
-	StatusNetowrkRunning       = Status(NETWORKRUNNING)
-	StatusRunning = Status(RUNNING)
+	StatusHostRunning    = Status(HOSTRUNNING)
+	StatusMasterRunning  = Status(MASTERRUNNING)
+	StatusNetowrkRunning = Status(NETWORKRUNNING)
+	StatusRunning        = Status(RUNNING)
 
 	StatusComputeError = Status(COMPUTEERROR)
 	StatusNetworkError = Status(NETWORKERROR)
@@ -247,8 +247,7 @@ const (
 	OBCHOSTINSTALLRUNNINGTYPE       = "obc.host.setup.running"
 	OBCMASTERINSTALLRUNNINGTYPE     = "obc.master.setup.running"
 
-  OBCNETWORKERRORTYPE = "obc.host.setup.network_error"
-  OBCCOMPUTEERRORTYPE = "obc.host.setup.compute_error"
+	OBCNETWORKERRORTYPE = "obc.host.setup.network_error"
+	OBCCOMPUTEERRORTYPE = "obc.host.setup.compute_error"
 	OBCSTORAGEERRORTYPE = "obc.host.setup.storage_error"
-
 )

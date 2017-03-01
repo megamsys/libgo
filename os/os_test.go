@@ -19,7 +19,7 @@ func (s *osSuite) TestHostOS(c *gc.C) {
 	case "darwin":
 		c.Assert(os, gc.Equals, OSX)
 	case "linux":
-		if os != Ubuntu && os != CentOS && os != Arch && os != Debian{
+		if os != Ubuntu && os != CentOS && os != Arch && os != Debian {
 			c.Fatalf("unknown linux version: %v", os)
 		}
 	case "freebsd":

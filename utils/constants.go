@@ -43,14 +43,21 @@ const (
 	SCYLLAUSERNAME = "scylla_username"
 	SCYLLAPASSWORD = "scylla_password"
 
-	ASSEMBLIES_ID = "assemblies_id"
-	EVENT_TYPE    = "event_type"
-	ACCOUNT_ID    = "account_id"
-	ASSEMBLY_ID   = "assembly_id"
-	ASSEMBLY_NAME = "assembly_name"
-	QUOTA_ID      = "quota_id"
-	DATA          = "data"
-	CREATED_AT    = "created_at"
+	ASSEMBLIES_ID  = "assemblies_id"
+	EVENT_TYPE     = "event_type"
+	ACCOUNT_ID     = "account_id"
+	ASSEMBLY_ID    = "assembly_id"
+	ASSEMBLY_NAME  = "assembly_name"
+	QUOTA_ID       = "quota_id"
+	DATA           = "data"
+	CREATED_AT     = "created_at"
+	REGION         = "region"
+	DATASTORE      = "datastore"
+	RAW_IMAGE_ID   = "raw_image_id"
+	IMAGE_NAME     = "image_name"
+	IMAGE_ID       = "image_id"
+	INSTANCE_ID    = "instance_id"
+	MARKETPLACE_ID = "marketplace_id"
 
 	// events keys
 	ACCOUNTID        = "AccountId"
@@ -92,14 +99,20 @@ const (
 	IPV6PRI      = "ipv6private"
 	IPV6PUB      = "ipv6public"
 	STORAGE_TYPE = "storage_hddtype"
+	STORAGE      = "storage"
+	CPU          = "cpu"
+	RAM          = "ram"
 
-	TRUE           = "true"
-	ENABLED        = "enabled"
-	EventMachine   = "machine"
-	EventContainer = "container"
-	EventBill      = "bill"
-	EventUser      = "user"
-	EventStatus    = "status"
+	YES              = "yes"
+	FALSE            = "false"
+	TRUE             = "true"
+	ENABLED          = "enabled"
+	EventMachine     = "machine"
+	EventMarketplace = "marketplaces"
+	EventContainer   = "container"
+	EventBill        = "bill"
+	EventUser        = "user"
+	EventStatus      = "status"
 
 	BILLMGR = "bill"
 	ADDONS  = "addons"
@@ -206,6 +219,11 @@ const (
 	CONTAINERUPGRADED      = "containerupgraded"
 	CONTAINERRUNNING       = "containerrunning"
 	CONTAINERERROR         = "containererror"
+	DATABLOCK_CREATING     = "datablock_creating"
+	DATABLOCK_CREATED      = "datablock_created"
+	IMAGE_SAVING           = "image_saving"
+	IMAGE_SAVED            = "image_saved"
+	IMAGE_READY            = "image_ready"
 
 	ERROR            = "error"
 	PREERROR         = "preerror"
@@ -222,7 +240,9 @@ const (
 	POST_ERROR      = "posterror"
 	PARKED          = "parked"
 
+	CREATING  = "creating"
 	ACTIVE    = "active"
+	DEACTIVE  = "deactive"
 	PENDING   = "pending"
 	INIT      = "init"
 	HOLD      = "hold"
@@ -279,7 +299,10 @@ const (
 	StatusVncHostUpdating = Status(VNCHOSTUPDATING)
 	StatusVncHostUpdated  = Status(VNCHOSTUPDATED)
 	//fully up instance
-	StatusRunning = Status(RUNNING)
+	StatusRunning  = Status(RUNNING)
+	StatusActive   = Status(ACTIVE)
+	StatusDeactive = Status(DEACTIVE)
+	StatusCreating = Status(CREATING)
 
 	StatusResetPassword = Status(RESETPASSWORD)
 	StatusStarting      = Status(STARTING)
@@ -368,6 +391,12 @@ const (
 	StatusVmStartError   = Status(VMRESUME_ERROR)
 	StatusVmStopError    = Status(VMPOWEROFF_ERROR)
 
+	StatusDataBlockCreating = Status(DATABLOCK_CREATING)
+	StatusDataBlockCreated  = Status(DATABLOCK_CREATED)
+	StatusImageSaving       = Status(IMAGE_SAVING)
+	StatusImageSaved        = Status(IMAGE_SAVED)
+	StatusImageReady        = Status(IMAGE_READY)
+
 	ONEINSTANCELAUNCHINGTYPE           = "compute.instance.launching"
 	ONEINSTANCEBOOTINGTYPE             = "compute.instance.booting"
 	ONEINSTANCEVNCHOSTUPDATING         = "compute.instance.vnchostupdating"
@@ -453,4 +482,26 @@ const (
 	CONTAINERNETWORKSUCCESSTYPE    = "compute.container.ip_allocate_success"
 	CONTAINERNETWORKFAILURETYPE    = "compute.container.ip_allocate_failure"
 	CONTAINERINSTANCEERROR         = "compute.container.posterror"
+
+	MARKETPLACEINSTANCELAUNCHINGTYPE = "marketplaces.instance.launching"
+	MARKETPLACEINSTANCELAUNCHEDTYPE  = "marketplaces.instance.launched"
+	MARKETPLACEBLOCKCREATING         = "marketplaces.instance.block_creating"
+	MARKETPLACEBLOCKCREATED          = "marketplaces.instance.block_created"
+	MARKETPLACELCMSTATECHECKING      = "marketplaces.instance.lcmstate_checking"
+	MARKETPLACEVMSTATECHECKING       = "marketplaces.instance.vmstate_checking"
+	MARKETPLACEWAITING               = "marketplaces.instance.waituntill"
+	MARKETPLACEVMSTATEPENDING        = "marketplaces.instance.pending"
+	MARKETPLACEVMSTATEPROLOG         = "marketplaces.instance.active"
+	MARKETPLACEVMSTATEHOLD           = "marketplaces.instance.hold"
+	MARKETPLACELCMSTATEPROLOG        = "marketplaces.instance.active_prolog"
+	MARKETPLACELCMSTATEBOOT          = "marketplaces.instance.active_boot"
+	MARKETPLACELCMSTATERUNNING       = "marketplaces.instance.active_running"
+	MARKETPLACELCMSTATEINIT          = "marketplaces.instance.active_lcm_init"
+	MARKETPLACEBOOTINGTYPE           = "marketplaces.instance.booting"
+	MARKETPLACEVNCHOSTUPDATING       = "marketplaces.instance.vnchostupdating"
+	MARKETPLACEVNCHOSTUPDATED        = "marketplaces.instance.vnchostupdated"
+	MARKETPLACEPREERRORTYPE          = "marketplaces.instance.preerror"
+	MARKETPLACEIMAGESAVING           = "marketplaces.image.saving"
+	MARKETPLACEIMAGESAVED            = "marketplaces.image.saved"
+	MARKETPLACEIMAGEREADY            = "marketplaces.image.ready"
 )

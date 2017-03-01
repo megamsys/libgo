@@ -11,13 +11,13 @@ import (
 )
 
 const (
-	HOST = "url"
-	PATH = "path"
-	EMAIL = "email"
-	PASSWORD = "password"
-	MASTER_KEY = "master_key"
-	API_KEY    = "api_key"
-	ORG_ID = "org_id"
+	HOST                       = "url"
+	PATH                       = "path"
+	EMAIL                      = "email"
+	PASSWORD                   = "password"
+	MASTER_KEY                 = "master_key"
+	API_KEY                    = "api_key"
+	ORG_ID                     = "org_id"
 	X_Megam_EMAIL              = "X-Megam-EMAIL"
 	X_Megam_MASTERKEY          = "X-Megam-MASTERKEY"
 	X_Megam_PUTTUSAVI          = "X-Megam-PUTTUSAVI"
@@ -29,7 +29,6 @@ const (
 	Accept                     = "Accept"
 	application_vnd_megam_json = "application/vnd.megam+json"
 )
-
 
 func CalcHMAC(secret string, message string) string {
 	key := []byte(secret)

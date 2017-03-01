@@ -1,20 +1,20 @@
 package addons
 
 import (
+	"encoding/json"
+	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/api"
-	constants "github.com/megamsys/libgo/utils"
-	"encoding/json"
 	"github.com/megamsys/libgo/events/alerts"
-	"fmt"
+	constants "github.com/megamsys/libgo/utils"
 )
 
 const (
-	ADDONS_NEW = "/addons/content"
-	GETADDONS = "/addons/"
+	ADDONS_NEW    = "/addons/content"
+	GETADDONS     = "/addons/"
 	PROVIDER_NAME = "provider_name"
-	PROVIDER_ID = "provider_id"
-	)
+	PROVIDER_ID   = "provider_id"
+)
 
 type Addons struct {
 	Id           string   `json:"id" cql:"id"`
@@ -25,17 +25,17 @@ type Addons struct {
 }
 
 type ApiAddons struct {
-	JsonClaz  string `json:"json_claz"`
+	JsonClaz string   `json:"json_claz"`
 	Results  []Addons `json:"results"`
 }
 
 func NewAddons(edata alerts.EventData) *Addons {
 	return &Addons{
-		Id: "",
+		Id:           "",
 		ProviderName: edata.M[PROVIDER_NAME],
-		ProviderId: edata.M[PROVIDER_ID],
-		AccountId: edata.M[constants.ACCOUNT_ID],
-		Options: edata.D,
+		ProviderId:   edata.M[PROVIDER_ID],
+		AccountId:    edata.M[constants.ACCOUNT_ID],
+		Options:      edata.D,
 	}
 }
 
@@ -54,10 +54,10 @@ func (s *Addons) Get(m map[string]string) error {
 	// Here skips balances fetching for the VMs which is launched on opennebula,
 	// that does not have records on vertice database
 	if s.AccountId == "" {
-	 return fmt.Errorf("account_id should not be empty")
+		return fmt.Errorf("account_id should not be empty")
 	}
 	args := api.NewArgs(m)
-	cl := api.NewClient(args, GETADDONS + s.ProviderName)
+	cl := api.NewClient(args, GETADDONS+s.ProviderName)
 	response, err := cl.Get()
 	if err != nil {
 		return err

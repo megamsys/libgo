@@ -10,9 +10,9 @@ import (
 const EVENTBILL_NEW = "/eventsbilling/content"
 
 type EventsBill struct {
-	EventType  string   `json:"event_type" cql:"event_type"`
-	AccountId  string   `json:"account_id" cql:"account_id"`
-	AssemblyId string   `json:"assembly_id" cql:"assembly_id"`
+	EventType  string          `json:"event_type" cql:"event_type"`
+	AccountId  string          `json:"account_id" cql:"account_id"`
+	AssemblyId string          `json:"assembly_id" cql:"assembly_id"`
 	Data       pairs.JsonPairs `json:"data" cql:"data"`
 }
 

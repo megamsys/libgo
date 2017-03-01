@@ -177,6 +177,49 @@ func (s Status) Event_type() string {
 	}
 }
 
+func (s Status) MkEvent_type() string {
+	switch s.String() {
+	case DATABLOCK_CREATING:
+		return MARKETPLACEBLOCKCREATING
+	case DATABLOCK_CREATED:
+		return MARKETPLACEBLOCKCREATED
+	case LAUNCHING:
+		return MARKETPLACEINSTANCELAUNCHINGTYPE
+	case LAUNCHED:
+		return MARKETPLACEINSTANCELAUNCHEDTYPE
+	case VMBOOTING:
+	case VNCHOSTUPDATING:
+		return MARKETPLACEVNCHOSTUPDATING
+	case VNCHOSTUPDATED:
+		return MARKETPLACEVNCHOSTUPDATED
+	case WAITUNTILL:
+		return MARKETPLACEWAITING
+	case LCMSTATECHECK:
+		return MARKETPLACELCMSTATECHECKING
+	case VMSTATECHECK:
+		return MARKETPLACEVMSTATECHECKING
+	case PENDING:
+		return MARKETPLACEVMSTATEPENDING
+	case HOLD:
+		return MARKETPLACEVMSTATEHOLD
+	case ACTIVE + "_lcm_init":
+		return MARKETPLACELCMSTATEINIT
+	case ACTIVE + "_boot":
+		return MARKETPLACELCMSTATEBOOT
+	case ACTIVE + "_prolog":
+		return MARKETPLACELCMSTATEPROLOG
+	case PREERROR:
+		return MARKETPLACEPREERRORTYPE
+	case IMAGE_SAVING:
+		return MARKETPLACEIMAGESAVING
+	case IMAGE_SAVED:
+		return MARKETPLACEIMAGESAVED
+	case IMAGE_READY:
+		return MARKETPLACEIMAGEREADY
+	}
+	return "arrah"
+}
+
 func (s Status) Description(name string) string {
 	error_common := "Oops something went wrong on .."
 	switch s.String() {
@@ -320,6 +363,12 @@ func (s Status) Description(name string) string {
 		return "Transferring the disk images the host in which the machine will be running"
 	case RESETPASSWORD:
 		return "Machine root password updating"
+	case IMAGE_SAVING:
+		return "Saving marketplaces image"
+	case IMAGE_SAVED:
+		return "Marketplaces image saved successfully"
+	case IMAGE_READY:
+		return "Marketplaces image ready to publish"
 	case CONTAINERERROR:
 		return error_common
 	case ERROR:

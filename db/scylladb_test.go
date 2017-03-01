@@ -1,11 +1,12 @@
 package db
 
 import (
-//	"fmt"
-//  "github.com/megamsys/gocassa"
-	"testing"
+	//	"fmt"
+	//  "github.com/megamsys/gocassa"
 	"gopkg.in/check.v1"
+	"testing"
 )
+
 func Test(t *testing.T) { check.TestingT(t) }
 
 type S struct {
@@ -13,15 +14,16 @@ type S struct {
 }
 
 type Customer struct {
-	Id   string  `json: "id" cql:"id"`
-	Name string  `json: "name" cql:"name"`
+	Id   string `json: "id" cql:"id"`
+	Name string `json: "name" cql:"name"`
 }
 
 type Customers struct {
-  Customers []*Customers
+	Customers []*Customers
 }
 
 var _ = check.Suite(&S{})
+
 /*
 func (s *S) TestGetRecord(c *check.C) {
 	cus := &Customer{}

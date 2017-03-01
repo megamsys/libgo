@@ -10,7 +10,6 @@ import (
 )
 
 type Context struct {
-
 }
 
 type Client struct {
@@ -23,11 +22,10 @@ type Client struct {
 	versionHeader  string
 }
 
-
 func NewClient(c VerticeApi, path string) *Client {
 	auth := NewAuthly(c)
 	auth.UrlSuffix = path
-	return  &Client{
+	return &Client{
 		HTTPClient:     &http.Client{},
 		context:        &Context{},
 		Authly:         auth,
@@ -44,8 +42,8 @@ func (c *Client) detectClientError(err error) error {
 
 func (c *Client) Do(request *http.Request) (*http.Response, error) {
 	for headerKey, headerVal := range c.Authly.AuthMap {
-	  request.Header.Add(headerKey, headerVal)
-  }
+		request.Header.Add(headerKey, headerVal)
+	}
 	request.Close = true
 	response, err := c.HTTPClient.Do(request)
 
@@ -72,7 +70,7 @@ version is %s.
 		result, _ := ioutil.ReadAll(response.Body)
 		return response, errors.New(string(result))
 	}
-  //defer response.Body.Close()
+	//defer response.Body.Close()
 	return response, nil
 
 }
