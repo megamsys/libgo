@@ -1,10 +1,11 @@
 package safe
+
 import (
 	"fmt"
 	"time"
 )
 
-func WaitCondition(timeout, retry time.Duration, cond func() (bool,error)) error {
+func WaitCondition(timeout, retry time.Duration, cond func() (bool, error)) error {
 	var condition bool
 	var err error
 	ok := make(chan struct{})
@@ -17,7 +18,7 @@ func WaitCondition(timeout, retry time.Duration, cond func() (bool,error)) error
 			default:
 				condition, err = cond()
 				if err != nil {
-          close(Error)
+					close(Error)
 					return
 				}
 				if condition {

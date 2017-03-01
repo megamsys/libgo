@@ -25,8 +25,8 @@ import (
 )
 
 const (
-	UPDATE        = "/update"
-	BALANCE       = "/balances/"
+	UPDATE           = "/update"
+	BALANCE          = "/balances/"
 	EVENTBALANCEJSON = "Megam::Balances"
 )
 
@@ -40,10 +40,10 @@ type ApiBalances struct {
 	Results  []Balances `json:"results" json:"results"`
 }
 type Balances struct {
-	Id        string    `json:"id" cql:"id"`
-	AccountId string    `json:"account_id" cql:"account_id"`
-	Credit    string    `json:"credit" cql:"credit"`
-	JsonClaz  string    `json:"json_claz" cql:"json_claz"`
+	Id        string `json:"id" cql:"id"`
+	AccountId string `json:"account_id" cql:"account_id"`
+	Credit    string `json:"credit" cql:"credit"`
+	JsonClaz  string `json:"json_claz" cql:"json_claz"`
 }
 
 type updateBalances struct {
@@ -54,7 +54,6 @@ type updateBalances struct {
 	CreatedAt time.Time `json:"created_at" cql:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" cql:"updated_at"`
 }
-
 
 func (b *Balances) String() string {
 	if d, err := yaml.Marshal(b); err != nil {
@@ -73,10 +72,10 @@ func NewBalances(email string, m map[string]string) (*Balances, error) {
 	if email == "" {
 		return nil, fmt.Errorf("account_id should not be empty")
 	}
-	
+
 	args := api.NewArgs(m)
 	args.Email = email
-	cl := api.NewClient(args, BALANCE + email)
+	cl := api.NewClient(args, BALANCE+email)
 	response, err := cl.Get()
 	if err != nil {
 		return nil, err
@@ -107,8 +106,8 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 	b.Credit = strconv.FormatFloat(avail-consume, 'f', 6, 64)
 
 	args := api.NewArgs(m)
-        args.Email = bopts.Id
-	cl := api.NewClient(args,BALANCE + "bill")
+	args.Email = bopts.Id
+	cl := api.NewClient(args, BALANCE+"bill")
 	_, err = cl.Post(b.toUpdate())
 	if err != nil {
 		return err
@@ -117,12 +116,12 @@ func (b *Balances) Deduct(bopts *BalanceOpts, m map[string]string) error {
 }
 
 func (b *Balances) toUpdate() *updateBalances {
- return &updateBalances{
-	 Id:        b.Id,
-	 AccountId: b.AccountId,
-	 Credit:    b.Credit,
-	 JsonClaz:  b.JsonClaz,
-	 CreatedAt: time.Now(),
-	 UpdatedAt: time.Now(),
- }
+	return &updateBalances{
+		Id:        b.Id,
+		AccountId: b.AccountId,
+		Credit:    b.Credit,
+		JsonClaz:  b.JsonClaz,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
 }

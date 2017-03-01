@@ -142,7 +142,7 @@ func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string
 		if sk[ACTION] != nil {
 			switch true {
 			case ACTION == HARDSKEWS && sk[HARDSKEWS].isExpired():
- 			  return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
+				return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
 			case ACTION == SOFTSKEWS && sk[SOFTSKEWS].isExpired():
 				return sk[SOFTSKEWS].CreateEvent(o, HARDSKEWS, mi)
 			case ACTION == WARNING && sk[WARNING].isExpired():

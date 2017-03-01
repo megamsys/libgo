@@ -2,19 +2,19 @@ package alerts
 
 import (
 	log "github.com/Sirupsen/logrus"
-  "github.com/megamsys/libgo/api"
+	"github.com/megamsys/libgo/api"
 	"github.com/megamsys/libgo/pairs"
 	constants "github.com/megamsys/libgo/utils"
 )
 
 const (
-	EVENTSVM_NEW     = "/eventsvm/content"
+	EVENTSVM_NEW = "/eventsvm/content"
 )
 
 type EventsVm struct {
-	EventType  string   `json:"event_type" cql:"event_type"`
-	AccountId  string   `json:"account_id" cql:"account_id"`
-	AssemblyId string   `json:"assembly_id" cql:"assembly_id"`
+	EventType  string          `json:"event_type" cql:"event_type"`
+	AccountId  string          `json:"account_id" cql:"account_id"`
+	AssemblyId string          `json:"assembly_id" cql:"assembly_id"`
 	Data       pairs.JsonPairs `json:"data" cql:"data"`
 }
 

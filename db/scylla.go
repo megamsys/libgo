@@ -6,15 +6,15 @@ import (
 )
 
 type Options struct {
-	TableName string
-	Pks       []string
-	Ccms      []string
-	Username  string
-	Password  string
-	Keyspace  string
-	Hosts     []string
-	PksClauses   map[string]interface{}
-	CcmsClauses  map[string]interface{}
+	TableName   string
+	Pks         []string
+	Ccms        []string
+	Username    string
+	Password    string
+	Keyspace    string
+	Hosts       []string
+	PksClauses  map[string]interface{}
+	CcmsClauses map[string]interface{}
 }
 
 //A global function which helps to avoid passing config of riak everywhere.
@@ -33,7 +33,7 @@ func newDBConn(ops Options) (*ScyllaDB, error) {
 }
 
 func (t *ScyllaDB) newScyllaTable(ops Options, data interface{}) *ScyllaTable {
-	log.Debugf("%s (%s)", cmd.Colorfy("  > [scylla] fetch", "blue", "", "bold"),ops.TableName)
+	log.Debugf("%s (%s)", cmd.Colorfy("  > [scylla] fetch", "blue", "", "bold"), ops.TableName)
 	tbl := t.table(ops.TableName, ops.Pks, ops.Ccms, data)
 	return tbl
 }
@@ -57,7 +57,7 @@ func Fetchdb(tinfo Options, data interface{}) error {
 }
 
 // dat referes the structure of table and data for array of row
-func FetchListdb(tinfo Options, limit int,dat, data interface{}) error {
+func FetchListdb(tinfo Options, limit int, dat, data interface{}) error {
 	t, err := newDBConn(tinfo)
 	if err != nil {
 		return err
@@ -73,7 +73,6 @@ func FetchListdb(tinfo Options, limit int,dat, data interface{}) error {
 	}
 	return nil
 }
-
 
 func Storedb(tinfo Options, data interface{}) error {
 	c, err := newDBConn(tinfo)

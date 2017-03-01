@@ -3,20 +3,21 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	log "github.com/Sirupsen/logrus"
+	"github.com/megamsys/libgo/utils"
+	"io/ioutil"
 	"net/http"
 	"reflect"
 	"strings"
-	"io/ioutil"
-	"github.com/megamsys/libgo/utils"
-	log "github.com/Sirupsen/logrus"
-	"fmt"
 )
+
 const (
 	DELETE = "DELETE"
-	POST = "POST"
-	GET = "GET"
+	POST   = "POST"
+	GET    = "GET"
 	UPDATE = "UPDATE"
 )
+
 type VerticeApi interface {
 	ToMap() map[string]string
 }
@@ -62,8 +63,7 @@ func (c ApiArgs) ToMap() map[string]string {
 }
 
 func (c *Client) Get() ([]byte, error) {
-	fmt.Println("Request [GET] ==> " + c.Url)
-		log.Debugf("Request [GET] ==> " + c.Url)
+	log.Debugf("Request [GET] ==> " + c.Url)
 	return c.run(GET)
 }
 
@@ -74,33 +74,33 @@ func (c *Client) Post(data interface{}) ([]byte, error) {
 	}
 	c.Authly.JSONBody = jsonbody
 	log.Debugf("Request [POST] ==> " + c.Url)
-	log.Debugf("[Body]  (%s)",string(jsonbody))
- return c.run(POST)
+	log.Debugf("[Body]  (%s)", string(jsonbody))
+	return c.run(POST)
 }
 
 func (c *Client) Delete() ([]byte, error) {
 	log.Debugf("Request [DELETE] ==> " + c.Url)
- return c.run(DELETE)
+	return c.run(DELETE)
 }
 
 func (c *Client) run(method string) ([]byte, error) {
-		err := c.Authly.AuthHeader()
-		if err != nil {
-			return nil, err
-		}
-		request, err := http.NewRequest(method, c.Url, bytes.NewReader(c.Authly.JSONBody))
-		if err != nil {
-			return nil, err
-		}
-		response, err := c.Do(request)
-		if err != nil {
-			return nil, err
-		}
+	err := c.Authly.AuthHeader()
+	if err != nil {
+		return nil, err
+	}
+	request, err := http.NewRequest(method, c.Url, bytes.NewReader(c.Authly.JSONBody))
+	if err != nil {
+		return nil, err
+	}
+	response, err := c.Do(request)
+	if err != nil {
+		return nil, err
+	}
 
-		jsonData, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			return nil, err
-		}
-		defer response.Body.Close()
-		return jsonData, nil
+	jsonData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	return jsonData, nil
 }

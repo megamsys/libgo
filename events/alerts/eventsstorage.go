@@ -10,8 +10,8 @@ import (
 const EVENTSTORAGE_NEW = "/eventsstorage/content"
 
 type EventsStorage struct {
-	EventType string   `json:"event_type" cql:"event_type"`
-	AccountId string   `json:"account_id" cql:"account_id"`
+	EventType string          `json:"event_type" cql:"event_type"`
+	AccountId string          `json:"account_id" cql:"account_id"`
 	Data      pairs.JsonPairs `json:"data" cql:"data"`
 }
 

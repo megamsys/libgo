@@ -176,7 +176,7 @@ func (m *Manager) Run(args []string) {
 		status = 1
 	}
 	context := m.newContext(args, m.stdout, m.stderr, m.stdin)
-  if m.mode != nil && verbosity {
+	if m.mode != nil && verbosity {
 		m.mode(2)
 	}
 

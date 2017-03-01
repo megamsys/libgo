@@ -24,7 +24,7 @@ import (
 
 const (
 	NEWBILLEDHISTORY = "/billedhistories/content"
-	BILLJSONCLAZ   = "Megam::Billedhistories"
+	BILLJSONCLAZ     = "Megam::Billedhistories"
 )
 
 type BilledHistoriesOpts struct {
@@ -35,13 +35,13 @@ type BilledHistoriesOpts struct {
 }
 
 type BilledHistories struct {
-	AccountId     string    `json:"-" cql:"account_id"`
-	AssemblyId    string    `json:"assembly_id" cql:"assembly_id"`
-	BillType      string    `json:"bill_type" cql:"bill_type"`
-	BillingAmount string    `json:"billing_amount" cql:"billing_amount"`
+	AccountId     string `json:"-" cql:"account_id"`
+	AssemblyId    string `json:"assembly_id" cql:"assembly_id"`
+	BillType      string `json:"bill_type" cql:"bill_type"`
+	BillingAmount string `json:"billing_amount" cql:"billing_amount"`
 	StateDate     string `json:"start_date" cql:"start_date"`
 	EndDate       string `json:"end_date" cql:"end_date"`
-	CurrencyType  string    `json:"currency_type" cql:"currency_type"`
+	CurrencyType  string `json:"currency_type" cql:"currency_type"`
 }
 
 func (bt *BilledHistoriesOpts) String() string {

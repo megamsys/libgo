@@ -103,6 +103,8 @@ const (
 	CPU          = "cpu"
 	RAM          = "ram"
 
+	YES              = "yes"
+	FALSE            = "false"
 	TRUE             = "true"
 	ENABLED          = "enabled"
 	EventMachine     = "machine"
@@ -217,6 +219,11 @@ const (
 	CONTAINERUPGRADED      = "containerupgraded"
 	CONTAINERRUNNING       = "containerrunning"
 	CONTAINERERROR         = "containererror"
+	DATABLOCK_CREATING     = "datablock_creating"
+	DATABLOCK_CREATED      = "datablock_created"
+	IMAGE_SAVING           = "image_saving"
+	IMAGE_SAVED            = "image_saved"
+	IMAGE_READY            = "image_ready"
 
 	ERROR            = "error"
 	PREERROR         = "preerror"
@@ -384,6 +391,12 @@ const (
 	StatusVmStartError   = Status(VMRESUME_ERROR)
 	StatusVmStopError    = Status(VMPOWEROFF_ERROR)
 
+	StatusDataBlockCreating = Status(DATABLOCK_CREATING)
+	StatusDataBlockCreated  = Status(DATABLOCK_CREATED)
+	StatusImageSaving       = Status(IMAGE_SAVING)
+	StatusImageSaved        = Status(IMAGE_SAVED)
+	StatusImageReady        = Status(IMAGE_READY)
+
 	ONEINSTANCELAUNCHINGTYPE           = "compute.instance.launching"
 	ONEINSTANCEBOOTINGTYPE             = "compute.instance.booting"
 	ONEINSTANCEVNCHOSTUPDATING         = "compute.instance.vnchostupdating"
@@ -470,6 +483,25 @@ const (
 	CONTAINERNETWORKFAILURETYPE    = "compute.container.ip_allocate_failure"
 	CONTAINERINSTANCEERROR         = "compute.container.posterror"
 
-	MARKETPLACESINSTANCECREATING   = "marketplaces.instance.creating"
-	
+	MARKETPLACEINSTANCELAUNCHINGTYPE = "marketplaces.instance.launching"
+	MARKETPLACEINSTANCELAUNCHEDTYPE  = "marketplaces.instance.launched"
+	MARKETPLACEBLOCKCREATING         = "marketplaces.instance.block_creating"
+	MARKETPLACEBLOCKCREATED          = "marketplaces.instance.block_created"
+	MARKETPLACELCMSTATECHECKING      = "marketplaces.instance.lcmstate_checking"
+	MARKETPLACEVMSTATECHECKING       = "marketplaces.instance.vmstate_checking"
+	MARKETPLACEWAITING               = "marketplaces.instance.waituntill"
+	MARKETPLACEVMSTATEPENDING        = "marketplaces.instance.pending"
+	MARKETPLACEVMSTATEPROLOG         = "marketplaces.instance.active"
+	MARKETPLACEVMSTATEHOLD           = "marketplaces.instance.hold"
+	MARKETPLACELCMSTATEPROLOG        = "marketplaces.instance.active_prolog"
+	MARKETPLACELCMSTATEBOOT          = "marketplaces.instance.active_boot"
+	MARKETPLACELCMSTATERUNNING       = "marketplaces.instance.active_running"
+	MARKETPLACELCMSTATEINIT          = "marketplaces.instance.active_lcm_init"
+	MARKETPLACEBOOTINGTYPE           = "marketplaces.instance.booting"
+	MARKETPLACEVNCHOSTUPDATING       = "marketplaces.instance.vnchostupdating"
+	MARKETPLACEVNCHOSTUPDATED        = "marketplaces.instance.vnchostupdated"
+	MARKETPLACEPREERRORTYPE          = "marketplaces.instance.preerror"
+	MARKETPLACEIMAGESAVING           = "marketplaces.image.saving"
+	MARKETPLACEIMAGESAVED            = "marketplaces.image.saved"
+	MARKETPLACEIMAGEREADY            = "marketplaces.image.ready"
 )

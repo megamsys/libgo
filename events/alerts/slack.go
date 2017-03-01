@@ -21,7 +21,6 @@ func (s *slacker) satisfied(eva EventAction) bool {
 	return true
 }
 
-
 func (s *slacker) Notify(eva EventAction, edata EventData) error {
 	if !s.satisfied(eva) {
 		return nil

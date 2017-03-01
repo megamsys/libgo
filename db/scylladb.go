@@ -68,10 +68,10 @@ func (st *ScyllaTable) read(fields, ids map[string]interface{}, out interface{})
 	return st.T.Read(fields, ids, out).WithOptions(op).Run()
 }
 
-func (st *ScyllaTable) readMulti(fields map[string]interface{},limit int,out interface{}) error {
+func (st *ScyllaTable) readMulti(fields map[string]interface{}, limit int, out interface{}) error {
 	log.Debugf(cmd.Colorfy("  > [scylla] read", "blue", "", "bold"))
 	op := gocassa.Options{AllowFiltering: true}
-	return st.T.List(fields, nil, limit,out).WithOptions(op).Run()
+	return st.T.List(fields, nil, limit, out).WithOptions(op).Run()
 }
 
 func (st *ScyllaTable) insert(data interface{}) error {

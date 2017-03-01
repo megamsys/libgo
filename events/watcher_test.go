@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/megamsys/libgo/events/alerts"
-	"gopkg.in/check.v1"
 	constants "github.com/megamsys/libgo/utils"
+	"gopkg.in/check.v1"
 )
 
 func Test(t *testing.T) { check.TestingT(t) }
