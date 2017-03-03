@@ -19,7 +19,7 @@ func NewJsonPair(k string, v string) *JsonPair {
 	}
 }
 
-//match for a value in the JSONPair and send the value
+//match for a key in the JSONPair and send the value
 func (p *JsonPairs) Match(k string) string {
 	for _, j := range *p {
 		if j.K == k {
