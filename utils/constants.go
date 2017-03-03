@@ -58,6 +58,7 @@ const (
 	IMAGE_ID       = "image_id"
 	INSTANCE_ID    = "instance_id"
 	MARKETPLACE_ID = "marketplace_id"
+	POLICY_FAILURE = "policy_failure"
 
 	// events keys
 	ACCOUNTID        = "AccountId"
@@ -94,10 +95,10 @@ const (
 	COST         = "cost"
 	STARTTIME    = "starttime"
 	ENDTIME      = "endtime"
-	IPV4PUB      = "ipv4public"
-	IPV4PRI      = "ipv4private"
-	IPV6PRI      = "ipv6private"
-	IPV6PUB      = "ipv6public"
+	PUBLICIPV4   = "public_ipv4"
+	PRIVATEIPV4  = "private_ipv4"
+	PUBLICIPV6   = "public_ipv6"
+	PRIVATEIPV6  = "private_ipv6"
 	STORAGE_TYPE = "storage_hddtype"
 	STORAGE      = "storage"
 	CPU          = "cpu"
@@ -135,6 +136,12 @@ const (
 	CONTAINERINITIALIZING = "containerinitializing"
 	CONTAINERINITIALIZED  = "containerinitialized"
 
+	START        = "start"
+	STOP         = "stop"
+	HARD_STOP    = "hard-stop"
+	RESTART      = "restart"
+	HARD_RESTART = "hard-restart"
+	
 	STATEUPPING    = "stateup_starting"
 	STATEUPPED     = "stateup_started"
 	RUNNING        = "running"
@@ -162,10 +169,12 @@ const (
 	IMAGEREMOVED  = "image_removed"
 	IMAGEREMOVING = "image_removing"
 
-	DISKATTACHING = "disk_attaching"
-	DISKATTACHED  = "disk_attached"
-	DISKDETACHING = "disk_detaching"
-	DISKDETACHED  = "disk_detached"
+	DISKATTACHING     = "disk_attaching"
+	DISKATTACHED      = "disk_attached"
+	DISKDETACHING     = "disk_detaching"
+	DISKDETACHED      = "disk_detached"
+	ATTACH_INPROGRESS = "attach_inprogress"
+	DETACH_INPROGRESS = "detach_inprogress"
 
 	QUOTAUPDATING = "quota_updating"
 	QUOTAUPDATED  = "quota_updated"
@@ -223,7 +232,7 @@ const (
 	DATABLOCK_CREATED      = "datablock_created"
 	IMAGE_SAVING           = "image_saving"
 	IMAGE_SAVED            = "image_saved"
-	IMAGE_READY            = "image_ready"
+	IMAGE_READY            = "ready"
 
 	ERROR            = "error"
 	PREERROR         = "preerror"
@@ -285,8 +294,8 @@ const (
 	StatusInsufficientFund = Status(INSUFFICIENT_FUND)
 	StatusQuotaUnpaid      = Status(QUOTA_UNPAID)
 
-	StatusVMBooting = Status(VMBOOTING)
-
+	StatusVMBooting   = Status(VMBOOTING)
+	StatusInitialized = Status(INITIALIZED)
 	// StatusBootstrapped is the status for box after being booted by the agent in cloud
 	StatusBootstrapped  = Status(BOOTSTRAPPED)
 	StatusBootstrapping = Status(BOOTSTRAPPING)
@@ -390,12 +399,15 @@ const (
 	StatusStatedownError = Status(STATEDOWN_ERROR)
 	StatusVmStartError   = Status(VMRESUME_ERROR)
 	StatusVmStopError    = Status(VMPOWEROFF_ERROR)
+	StatusPolicyFailure  = Status(POLICY_FAILURE)
 
 	StatusDataBlockCreating = Status(DATABLOCK_CREATING)
 	StatusDataBlockCreated  = Status(DATABLOCK_CREATED)
 	StatusImageSaving       = Status(IMAGE_SAVING)
 	StatusImageSaved        = Status(IMAGE_SAVED)
 	StatusImageReady        = Status(IMAGE_READY)
+	StatusAttachInprogres   = Status(ATTACH_INPROGRESS)
+	StatusDetachInprogres   = Status(DETACH_INPROGRESS)
 
 	ONEINSTANCELAUNCHINGTYPE           = "compute.instance.launching"
 	ONEINSTANCEBOOTINGTYPE             = "compute.instance.booting"
