@@ -141,7 +141,7 @@ const (
 	HARD_STOP    = "hard-stop"
 	RESTART      = "restart"
 	HARD_RESTART = "hard-restart"
-	
+
 	STATEUPPING    = "stateup_starting"
 	STATEUPPED     = "stateup_started"
 	RUNNING        = "running"

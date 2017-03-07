@@ -59,6 +59,7 @@ type BWContext struct {
 	// Result of the forward phase (for the current action).
 	FWResult Result
 
+	CauseOf error
 	// List of parameters given to the executor.
 	Params []interface{}
 }
@@ -155,7 +156,7 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 			if a.OnError != nil {
 				a.OnError(fwCtx, err)
 			}
-			p.rollback(i-1, params)
+			p.rollback(i-1, params, err)
 			return err
 		}
 	}
@@ -163,13 +164,17 @@ func (p *Pipeline) Execute(params ...interface{}) error {
 	return nil
 }
 
-func (p *Pipeline) rollback(index int, params []interface{}) {
-	bwCtx := BWContext{Params: params}
+func (p *Pipeline) rollback(index int, params []interface{}, err error) {
+	bwCtx := BWContext{Params: params, CauseOf: err}
 	for i := index; i >= 0; i-- {
 		log.Debugf(cmd.Colorfy(fmt.Sprintf("  => step %d: %s action", i, p.actions[i].Name), "red", "", "bold"))
 		if p.actions[i].Backward != nil {
-			bwCtx.FWResult = p.actions[i].result
-			p.actions[i].Backward(bwCtx)
+			if p.actions[i].result != nil {
+				bwCtx.FWResult = p.actions[i].result
+				p.actions[i].Backward(bwCtx)
+			} else {
+				log.Debugf(cmd.Colorfy(fmt.Sprintf("  => ROLLBACK result is nil step %d: %s action", i, p.actions[i].Name), "red", "", "bold"))
+			}
 		}
 	}
 }

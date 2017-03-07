@@ -374,7 +374,7 @@ func (s Status) Description(name string) string {
 	case ERROR:
 		return error_common
 	case PREERROR:
-		return error_common
+		return name
 	case POST_ERROR:
 		return error_common
 	default:
