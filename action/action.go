@@ -172,9 +172,9 @@ func (p *Pipeline) rollback(index int, params []interface{}, err error) {
 			if p.actions[i].result != nil {
 				bwCtx.FWResult = p.actions[i].result
 				p.actions[i].Backward(bwCtx)
-			 } else {
-			 	log.Debugf(cmd.Colorfy(fmt.Sprintf("  => ROLLBACK result is nil step %d: %s action", i, p.actions[i].Name), "red", "", "bold"))
-			 }
+			} else {
+				log.Debugf(cmd.Colorfy(fmt.Sprintf("  => ROLLBACK result is nil step %d: %s action", i, p.actions[i].Name), "red", "", "bold"))
+			}
 		}
 	}
 }
