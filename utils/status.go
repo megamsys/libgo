@@ -65,6 +65,10 @@ func (s Status) Event_type() string {
 		return ONEINSTANCESTOPPINGTYPE
 	case STOPPED:
 		return ONEINSTANCESTOPPEDTYPE
+	case SUSPENDING:
+		return ONEINSTANCESUSPENDINGTYPE
+	case SUSPENDED:
+		return ONEINSTANCESUSPENDEDTYPE
 	case UPGRADED:
 		return ONEINSTANCEUPGRADEDTYPE
 	case DESTROYING:
@@ -265,6 +269,10 @@ func (s Status) Description(name string) string {
 		return "Stopping process initializing on .."
 	case STOPPED:
 		return "Your machine was stopped.."
+	case SUSPENDING:
+		return "Suspend process initializing on .."
+	case SUSPENDED:
+		return "Your machine was suspended.."
 	case UPGRADED:
 		return "Your machine was was upgraded.."
 	case DESTROYING:
