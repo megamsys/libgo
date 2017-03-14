@@ -141,6 +141,7 @@ const (
 	HARD_STOP    = "hard-stop"
 	RESTART      = "restart"
 	HARD_RESTART = "hard-restart"
+	SUSPEND      = "suspend"
 
 	STATEUPPING    = "stateup_starting"
 	STATEUPPED     = "stateup_started"
@@ -249,13 +250,14 @@ const (
 	POST_ERROR      = "posterror"
 	PARKED          = "parked"
 
-	CREATING  = "creating"
-	ACTIVE    = "active"
-	DEACTIVE  = "deactive"
-	PENDING   = "pending"
-	INIT      = "init"
-	HOLD      = "hold"
-	SUSPENDED = "suspended"
+	CREATING   = "creating"
+	ACTIVE     = "active"
+	DEACTIVE   = "deactive"
+	PENDING    = "pending"
+	INIT       = "init"
+	HOLD       = "hold"
+	SUSPENDED  = "suspended"
+	SUSPENDING = "suspending"
 
 	StateContainerInitializing = State(CONTAINERINITIALIZING)
 	StateContainerInitialized  = State(CONTAINERINITIALIZED)
@@ -318,6 +320,8 @@ const (
 	StatusStarted       = Status(STARTED)
 	StatusStopping      = Status(STOPPING)
 	StatusStopped       = Status(STOPPED)
+	StatusSuspending    = Status(SUSPENDING)
+	StatusSuspended     = Status(SUSPENDED)
 	StatusRestarting    = Status(RESTARTING)
 	StatusRestarted     = Status(RESTARTED)
 	StatusUpgraded      = Status(UPGRADED)
@@ -439,6 +443,8 @@ const (
 	ONEINSTANCESTARTEDTYPE             = "compute.instance.started"
 	ONEINSTANCESTOPPINGTYPE            = "compute.instance.stopping"
 	ONEINSTANCESTOPPEDTYPE             = "compute.instance.stopped"
+	ONEINSTANCESUSPENDINGTYPE          = "compute.instance.suspending"
+	ONEINSTANCESUSPENDEDTYPE           = "compute.instance.suspended"
 	ONEINSTANCERESTARTINGTYPE          = "compute.instance.restarting"
 	ONEINSTANCERESTARTEDTYPE           = "compute.instance.restarted"
 	ONEINSTANCEUPGRADEDTYPE            = "compute.instance.upgraded"
