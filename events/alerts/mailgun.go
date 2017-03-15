@@ -27,7 +27,10 @@ const (
 	INSUFFICIENT_FUND
 	QUOTA_UNPAID
 	SKEWS_ACTIONS
+	SKEWS_WARNING
 )
+
+var Mailer map[string]string
 
 type Notifier interface {
 	Notify(eva EventAction, edata EventData) error
@@ -74,6 +77,8 @@ func (v *EventAction) String() string {
 		return "running"
 	case FAILURE:
 		return "failure"
+	case SKEWS_WARNING:
+		return constants.SKEWS_WARNING
 	default:
 		return "arrgh"
 	}
@@ -90,7 +95,7 @@ type mailgunner struct {
 }
 
 func NewMailgun(m map[string]string, n map[string]string) Notifier {
-	return &mailgunner{
+	mg := &mailgunner{
 		api_key: m[constants.API_KEY],
 		sender:  m[constants.SENDER],
 		domain:  m[constants.DOMAIN],
@@ -99,6 +104,20 @@ func NewMailgun(m map[string]string, n map[string]string) Notifier {
 		home:    n[constants.HOME],
 		dir:     n[constants.DIR],
 	}
+	mg.makeGlobal()
+	return mg
+}
+
+func (m *mailgunner) makeGlobal() {
+	mm := make(map[string]string, 0)
+	mm[constants.API_KEY] = m.api_key
+	mm[constants.SENDER] = m.sender
+	mm[constants.DOMAIN] = m.domain
+	mm[constants.NILAVU] = m.nilavu
+	mm[constants.LOGO] = m.logo
+	mm[constants.HOME] = m.home
+	mm[constants.DIR] = m.dir
+	Mailer = mm
 }
 
 func (m *mailgunner) satisfied(eva EventAction) bool {
@@ -184,6 +203,8 @@ func subject(eva EventAction) string {
 		sub = "Ahoy! Snapshot created"
 	case FAILURE:
 		sub = "Your application failure"
+	case SKEWS_WARNING:
+		return "Payment Reminder !"
 	default:
 		break
 	}

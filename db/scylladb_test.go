@@ -14,8 +14,8 @@ type S struct {
 }
 
 type Customer struct {
-	Id   string `json: "id" cql:"id"`
-	Name string `json: "name" cql:"name"`
+	Id   string `json:"id" cql:"id"`
+	Name string `json:"name" cql:"name"`
 }
 
 type Customers struct {

@@ -33,8 +33,6 @@ func (s *Scylla) Notify(eva EventAction, edata EventData) error {
 	et := strings.Split(value, ".")
 	if et[0] == "obc" {
 		return s.NotifyOBC(eva, edata)
-	} else {
-		return nil
 	}
 	return nil
 }

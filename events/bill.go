@@ -107,6 +107,7 @@ func (self *Bill) deduct(evt *Event) error {
 
 func (self *Bill) skews(evt *Event) error {
 	log.Infof("Event:BILL:skewsCheck")
+
 	result := &bills.BillOpts{}
 	_ = result.FillStruct(evt.EventData.M) //we will manage error later
 	if !self.skip(constants.SCYLLAMGR) {

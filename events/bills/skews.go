@@ -1,5 +1,5 @@
 /*
-** Copyright [2013-2016] [Megam Systems]
+** Copyright [2013-2017] [Megam Systems]
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -107,6 +107,7 @@ func (s *EventsSkews) CreateEvent(o *BillOpts, ACTION string, mi map[string]stri
 	mm[constants.NEXT_ACTION_DUE_AT] = []string{exp_at.Format(time.RFC3339)}
 	mm[constants.ACTION] = []string{action}
 	mm[constants.NEXT_ACTION] = []string{next}
+	mm[constants.ASSEMBLIESID] = []string{o.AssembliesId}
 
 	s.Inputs.NukeAndSet(mm)
 	s.Status = ACTIVE
@@ -121,7 +122,24 @@ func (s *EventsSkews) Create(mi map[string]string) error {
 	if err != nil {
 		return err
 	}
-	return nil
+	return s.PushSkews(mi)
+}
+
+func (s *EventsSkews) PushSkews(mi map[string]string) error {
+	req := api.NewRequest(s.AccountId)
+	req.CatId = s.Inputs.Match(constants.ASSEMBLIESID)
+	skew_action := s.Inputs.Match(constants.ACTION)
+	switch skew_action {
+	case HARDSKEWS:
+		req.Action = constants.DESTROY
+		req.Category = constants.STATE
+	case SOFTSKEWS:
+		req.Action = constants.SUSPEND
+		req.Category = constants.CONTROL
+	case WARNING:
+		return nil
+	}
+	return req.PushRequest(mi)
 }
 
 func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string]string) error {
@@ -149,13 +167,10 @@ func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string
 				return sk[SOFTSKEWS].CreateEvent(o, SOFTSKEWS, mi)
 			}
 			return nil
-		} else {
-			return s.CreateEvent(o, ACTION, mi)
 		}
-	} else {
-		return s.CreateEvent(o, ACTION, mi)
 	}
-	return nil
+
+	return s.CreateEvent(o, ACTION, mi)
 }
 
 func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error {
@@ -200,8 +215,8 @@ func (s *EventsSkews) action(o *BillOpts, currentBal string) string {
 }
 
 func (s *EventsSkews) isExpired() bool {
-	t1, _ := time.Parse(time.RFC3339, s.Inputs.Match("generated_at"))
-	t2, _ := time.Parse(time.RFC3339, s.Inputs.Match("next_due_at"))
+	t1, _ := time.Parse(time.RFC3339, s.Inputs.Match(constants.ACTION_TRIGGERED_AT))
+	t2, _ := time.Parse(time.RFC3339, s.Inputs.Match(constants.NEXT_ACTION_DUE_AT))
 	duration := t2.Sub(t1)
 	return t1.Add(duration).Sub(time.Now()) < time.Minute
 }

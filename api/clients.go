@@ -1,6 +1,7 @@
 package api
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -26,7 +27,7 @@ func NewClient(c VerticeApi, path string) *Client {
 	auth := NewAuthly(c)
 	auth.UrlSuffix = path
 	return &Client{
-		HTTPClient:     &http.Client{},
+		HTTPClient:     &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}},
 		context:        &Context{},
 		Authly:         auth,
 		Url:            auth.GetURL(),

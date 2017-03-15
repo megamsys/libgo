@@ -15,6 +15,7 @@ var BillProviders map[string]BillProvider
 type BillOpts struct {
 	AccountId       string
 	AssemblyId      string
+	AssembliesId    string
 	AssemblyName    string
 	Consumed        string
 	StartTime       string
