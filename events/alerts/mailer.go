@@ -1,7 +1,6 @@
 package alerts
 
 import (
-	"fmt"
 	log "github.com/Sirupsen/logrus"
 	constants "github.com/megamsys/libgo/utils"
 	"net/smtp"
@@ -135,7 +134,6 @@ func (m *mailer) satisfied(eva EventAction) bool {
 }
 
 func (m *mailer) Notify(eva EventAction, edata EventData) error {
-	fmt.Println("***********************Notify*****************")
 	if !m.satisfied(eva) {
 		return nil
 	}
@@ -146,7 +144,6 @@ func (m *mailer) Notify(eva EventAction, edata EventData) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(edata.M[constants.EMAIL], "***********************Notify*****body************", bdy)
 	m.Send(bdy, "", subject(eva), edata.M[constants.EMAIL])
 	return nil
 }
@@ -158,7 +155,6 @@ func (m *mailer) Send(bdy string, sender string, subject string, receiver string
 	}
 
 	auth := smtp.PlainAuth(m.identity, m.username, m.password, m.domain)
-	//	mime := "MIME-version: 1.0;\nContent-Type: text/plain; charset=\"UTF-8\";\n\n"
 
 	msg := "From: " + sender + "\r\n" +
 		"To: " + receiver + "\r\n" +
