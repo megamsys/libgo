@@ -31,9 +31,9 @@ func (s *S) SetUpSuite(c *check.C) {
 	meta[constants.DIR] = dir
 	mailer[constants.ENABLED] = "true"
 	mailer[constants.DOMAIN] = "smtp.mailgun.org"
-	mailer[constants.USERNAME] = "postmaster@ojamail.megambox.com"
+	mailer[constants.USERNAME] = "test@ojamail.megambox.com"
 	mailer[constants.SENDER] = "info@megam.io"
-	mailer[constants.PASSWORD] = "b311ed99d8d544b10ca001bd5fdbcbe1"
+	mailer[constants.PASSWORD] = "123456789"
 	mailer[constants.IDENTITY] = ""
 	mailer[constants.NILAVU] = "https://console.megam.io"
 	mailer[constants.LOGO] = "https://s3-ap-southeast-1.amazonaws.com/megampub/images/mailers/megam_vertice.png"

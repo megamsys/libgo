@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"errors"
 	"fmt"
+	log "github.com/Sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -63,8 +64,8 @@ version is %s.
 
 `
 	if !validateVersion(supported, c.currentVersion) {
-		fmt.Println(format)
-		fmt.Println(supported)
+		log.Debugf(format)
+		log.Debugf(supported)
 	}
 	if response.StatusCode > 399 {
 		defer response.Body.Close()

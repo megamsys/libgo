@@ -18,6 +18,5 @@ package bills
 //   }
 //
 //   err := b.BilledHistories(map[string]string{ "url": "http://192.168.1.8:9000/v2", "api_key": "", "master_key": "3b8eb672aa7c8db82e5d34a0744740b20ed59e1f6814cfb63364040b0994ee3f" })
-// 	fmt.Println(err)
-//   c.Assert(nil, check.NotNil)
+//   c.Assert(err, check.IsNil)
 // }
