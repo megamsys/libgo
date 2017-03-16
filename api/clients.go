@@ -1,8 +1,10 @@
 package api
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
+	log "github.com/Sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -26,7 +28,7 @@ func NewClient(c VerticeApi, path string) *Client {
 	auth := NewAuthly(c)
 	auth.UrlSuffix = path
 	return &Client{
-		HTTPClient:     &http.Client{},
+		HTTPClient:     &http.Client{Transport: &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}}},
 		context:        &Context{},
 		Authly:         auth,
 		Url:            auth.GetURL(),
@@ -62,8 +64,8 @@ version is %s.
 
 `
 	if !validateVersion(supported, c.currentVersion) {
-		fmt.Println(format)
-		fmt.Println(supported)
+		log.Debugf(format)
+		log.Debugf(supported)
 	}
 	if response.StatusCode > 399 {
 		defer response.Body.Close()

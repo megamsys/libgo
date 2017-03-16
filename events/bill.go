@@ -78,7 +78,7 @@ func (self *Bill) skip(k string) bool {
 
 func (self *Bill) insufficientFund(evt *Event) error {
 	var err error
-	a := notifiers[constants.MAILGUN]
+	a := notifiers[constants.SMTP]
 	err = a.Notify(evt.EventAction, evt.EventData)
 	if err != nil {
 		return err
@@ -107,6 +107,7 @@ func (self *Bill) deduct(evt *Event) error {
 
 func (self *Bill) skews(evt *Event) error {
 	log.Infof("Event:BILL:skewsCheck")
+
 	result := &bills.BillOpts{}
 	_ = result.FillStruct(evt.EventData.M) //we will manage error later
 	if !self.skip(constants.SCYLLAMGR) {

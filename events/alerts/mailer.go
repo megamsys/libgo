@@ -2,8 +2,8 @@ package alerts
 
 import (
 	log "github.com/Sirupsen/logrus"
-	mailgun "github.com/mailgun/mailgun-go"
 	constants "github.com/megamsys/libgo/utils"
+	"net/smtp"
 	"strings"
 )
 
@@ -27,7 +27,10 @@ const (
 	INSUFFICIENT_FUND
 	QUOTA_UNPAID
 	SKEWS_ACTIONS
+	SKEWS_WARNING
 )
+
+var Mailer map[string]string
 
 type Notifier interface {
 	Notify(eva EventAction, edata EventData) error
@@ -74,52 +77,63 @@ func (v *EventAction) String() string {
 		return "running"
 	case FAILURE:
 		return "failure"
+	case SKEWS_WARNING:
+		return constants.SKEWS_WARNING
 	default:
 		return "arrgh"
 	}
 }
 
-type mailgunner struct {
-	api_key string
-	domain  string
-	sender  string
-	nilavu  string
-	logo    string
-	home    string
-	dir     string
+type mailer struct {
+	username string
+	password string
+	identity string
+	domain   string
+	sender   string
+	nilavu   string
+	logo     string
+	home     string
+	dir      string
 }
 
-func NewMailgun(m map[string]string, n map[string]string) Notifier {
-	return &mailgunner{
-		api_key: m[constants.API_KEY],
-		sender:  m[constants.SENDER],
-		domain:  m[constants.DOMAIN],
-		nilavu:  m[constants.NILAVU],
-		logo:    m[constants.LOGO],
-		home:    n[constants.HOME],
-		dir:     n[constants.DIR],
+func NewMailer(m map[string]string, n map[string]string) Notifier {
+	mg := &mailer{
+		username: m[constants.USERNAME],
+		password: m[constants.PASSWORD],
+		identity: m[constants.IDENTITY],
+		sender:   m[constants.SENDER],
+		domain:   m[constants.DOMAIN],
+		nilavu:   m[constants.NILAVU],
+		logo:     m[constants.LOGO],
+		home:     n[constants.HOME],
+		dir:      n[constants.DIR],
 	}
+	mg.makeGlobal()
+	return mg
 }
 
-func (m *mailgunner) satisfied(eva EventAction) bool {
+func (m *mailer) makeGlobal() {
+	mm := make(map[string]string, 0)
+	mm[constants.USERNAME] = m.username
+	mm[constants.PASSWORD] = m.password
+	mm[constants.IDENTITY] = m.identity
+	mm[constants.SENDER] = m.sender
+	mm[constants.DOMAIN] = m.domain
+	mm[constants.NILAVU] = m.nilavu
+	mm[constants.LOGO] = m.logo
+	mm[constants.HOME] = m.home
+	mm[constants.DIR] = m.dir
+	Mailer = mm
+}
+
+func (m *mailer) satisfied(eva EventAction) bool {
 	if eva == STATUS {
 		return false
 	}
 	return true
 }
 
-/*{
-		"email":     "nkishore@megam.io",
-		"logo":      "vertice.png",
-		"nilavu":    "console.megam.io",
-		"appname": "vertice.megambox.com"
-		"type": "torpedo"
-		"token": "9090909090",
-		"days":      "20",
-		"cost":      "$12",
-}*/
-
-func (m *mailgunner) Notify(eva EventAction, edata EventData) error {
+func (m *mailer) Notify(eva EventAction, edata EventData) error {
 	if !m.satisfied(eva) {
 		return nil
 	}
@@ -134,26 +148,33 @@ func (m *mailgunner) Notify(eva EventAction, edata EventData) error {
 	return nil
 }
 
-func (m *mailgunner) Send(msg string, sender string, subject string, to string) error {
+func (m *mailer) Send(bdy string, sender string, subject string, receiver string) error {
+	var addr string
 	if len(strings.TrimSpace(sender)) <= 0 {
 		sender = m.sender
 	}
-	mg := mailgun.NewMailgun(m.domain, m.api_key, "")
-	g := mailgun.NewMessage(
-		sender,
-		subject,
-		"You are in !",
-		to,
-	)
-	g.SetHtml(msg)
-	g.SetTracking(false)
-	//g.SetTrackingClicks(false)
-	//g.SetTrackingOpens(false)
-	_, id, err := mg.Send(g)
+
+	auth := smtp.PlainAuth(m.identity, m.username, m.password, m.domain)
+
+	msg := "From: " + sender + "\r\n" +
+		"To: " + receiver + "\r\n" +
+		"MIME-Version: 1.0" + "\r\n" +
+		"Content-type: text/html" + "\r\n" +
+		"Subject: " + subject + "\r\n\r\n" +
+		bdy + "\r\n"
+
+	domain := strings.Split(m.domain, ":")
+	if len(domain) < 2 || domain[1] == "" {
+		addr = m.domain + ":587"
+	} else {
+		addr = m.domain
+	}
+
+	err := smtp.SendMail(addr, auth, sender, []string{receiver}, []byte(msg))
 	if err != nil {
 		return err
 	}
-	log.Infof("Mailgun sent %s", id)
+	log.Infof("Mailgun sent to %v", receiver)
 	return nil
 }
 
@@ -184,6 +205,8 @@ func subject(eva EventAction) string {
 		sub = "Ahoy! Snapshot created"
 	case FAILURE:
 		sub = "Your application failure"
+	case SKEWS_WARNING:
+		return "Payment Reminder !"
 	default:
 		break
 	}

@@ -14,8 +14,8 @@ type S struct {
 }
 
 type Customer struct {
-	Id   string `json: "id" cql:"id"`
-	Name string `json: "name" cql:"name"`
+	Id   string `json:"id" cql:"id"`
+	Name string `json:"name" cql:"name"`
 }
 
 type Customers struct {
@@ -38,7 +38,6 @@ func (s *S) TestGetRecord(c *check.C) {
 		CcmsClauses: map[string]interface{}{},
 	}
 		err := Fetchdb(ops, cus)
-		fmt.Println(cus)
 	c.Assert(err, check.NotNil)
 }
 
@@ -55,7 +54,6 @@ func (s *S) TestGetListOfRecords(c *check.C) {
 		CcmsClauses: map[string]interface{}{},
 	}
 		err := FetchListdb(ops,20, cu,cus)
-		fmt.Println(cus)
 	c.Assert(err, check.NotNil)
 }*/
 
@@ -76,7 +74,6 @@ ops := Options{
 	CcmsClauses: map[string]interface{}{},
 }
 	err := Storedb(ops, cus)
-	fmt.Println(c)
 c.Assert(err, check.NotNil )
 }
 */

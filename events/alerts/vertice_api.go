@@ -42,8 +42,6 @@ func (s *VerticeApi) Notify(eva EventAction, edata EventData) error {
 		return s.NotifyContainer(eva, edata)
 	} else if et[0] == "marketplaces" {
 		return s.NotifyMarketplace(eva, edata)
-	} else {
-		return nil
 	}
 	return nil
 }

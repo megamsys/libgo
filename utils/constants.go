@@ -3,7 +3,7 @@ package utils
 const (
 
 	//keys for watchers
-	MAILGUN = "mailgun"
+	SMTP    = "smtp"
 	SLACK   = "slack"
 	INFOBIP = "infobip"
 	SCYLLA  = "scylla"
@@ -17,6 +17,7 @@ const (
 	CHANNEL        = "channel"
 	USERNAME       = "username"
 	PASSWORD       = "password"
+	IDENTITY       = "identity"
 	WHMCS_PASSWORD = "whmcs_password"
 	WHMCS_APIKEY   = "whmcs_apikey"
 	APPLICATION_ID = "application_id"
@@ -63,6 +64,7 @@ const (
 	// events keys
 	ACCOUNTID        = "AccountId"
 	ASSEMBLYID       = "AssemblyId"
+	ASSEMBLIESID     = "AssembliesId"
 	ASSEMBLYNAME     = "AssemblyName"
 	CONSUMED         = "Consumed"
 	START_TIME       = "StartTime"
@@ -77,8 +79,11 @@ const (
 	HARD_LIMIT       = "HardLimit"
 	SKEWS_TYPE       = "SkewsType"
 	QUOTAID          = "QuotaId"
+	SKEWS_WARNING    = "skews_warning"
 
 	ACTION              = "action"
+	STATE               = "state"
+	CONTROL             = "control"
 	ACTION_TRIGGERED_AT = "action_trigger_at"
 	NEXT_ACTION_DUE_AT  = "next_action_due_at"
 	NEXT_ACTION         = "next_action"
@@ -142,6 +147,7 @@ const (
 	RESTART      = "restart"
 	HARD_RESTART = "hard-restart"
 	SUSPEND      = "suspend"
+	DESTROY      = "destroy"
 
 	STATEUPPING    = "stateup_starting"
 	STATEUPPED     = "stateup_started"

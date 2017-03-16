@@ -15,7 +15,7 @@ type AfterFuncs []AfterFunc
 type AfterFuncsMap map[alerts.EventAction]AfterFuncs
 
 var notifiers map[string]alerts.Notifier
-var Enabler map[string]bool = map[string]bool{constants.MAILGUN: false, constants.INFOBIP: false, constants.SLACK: false, constants.BILLMGR: false}
+var Enabler map[string]bool = map[string]bool{constants.SMTP: false, constants.INFOBIP: false, constants.SLACK: false, constants.BILLMGR: false}
 
 type User struct {
 	stop chan struct{}
@@ -29,7 +29,7 @@ func NewUser(e EventsConfigMap, fnmap AfterFuncsMap) *User {
 
 func register(e EventsConfigMap) {
 	notifiers = make(map[string]alerts.Notifier)
-	notifiers[constants.MAILGUN] = newMailgun(e.Get(constants.MAILGUN), e.Get(constants.META))
+	notifiers[constants.SMTP] = newMailer(e.Get(constants.SMTP), e.Get(constants.META))
 	notifiers[constants.INFOBIP] = newInfobip(e.Get(constants.INFOBIP))
 	notifiers[constants.SLACK] = newSlack(e.Get(constants.SLACK))
 	notifiers[constants.SCYLLA] = newScylla(e.Get(constants.META))
@@ -38,17 +38,10 @@ func register(e EventsConfigMap) {
 }
 
 func enabler(e EventsConfigMap) {
-	if e.Get(constants.MAILGUN)[constants.ENABLED] == constants.TRUE {
-		Enabler[constants.MAILGUN] = true
-	}
-	if e.Get(constants.INFOBIP)[constants.ENABLED] == constants.TRUE {
-		Enabler[constants.INFOBIP] = true
-	}
-	if e.Get(constants.SLACK)[constants.ENABLED] == constants.TRUE {
-		Enabler[constants.SLACK] = true
-	}
-	if e.Get(constants.BILLMGR)[constants.ENABLED] == constants.TRUE {
-		Enabler[constants.BILLMGR] = true
+	for key, _ := range Enabler {
+		if e.Get(key)[constants.ENABLED] == constants.TRUE {
+			Enabler[key] = true
+		}
 	}
 }
 
@@ -56,8 +49,8 @@ func IsEnabled(event string) bool {
 	return Enabler[event]
 }
 
-func newMailgun(m map[string]string, n map[string]string) alerts.Notifier {
-	return alerts.NewMailgun(m, n)
+func newMailer(m map[string]string, n map[string]string) alerts.Notifier {
+	return alerts.NewMailer(m, n)
 }
 
 func newInfobip(m map[string]string) alerts.Notifier {
