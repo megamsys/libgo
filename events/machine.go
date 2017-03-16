@@ -88,7 +88,7 @@ func (self *Machine) snapdone(evt *Event) error {
 
 func (self *Machine) insufficientFund(evt *Event) error {
 	var err error
-	a := notifiers[constants.MAILGUN]
+	a := notifiers[constants.SMTP]
 	err = a.Notify(evt.EventAction, evt.EventData)
 	if err != nil {
 		return err

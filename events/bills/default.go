@@ -95,7 +95,7 @@ func (m scylladbManager) skewsWarning(o *BillOpts, sk *EventsSkews) error {
 	mm[constants.NEXT_ACTION_DUE_AT] = sk.Inputs.Match(constants.NEXT_ACTION_DUE_AT)
 	mm[constants.ACTION] = sk.Inputs.Match(constants.ACTION)
 	mm[constants.NEXT_ACTION] = sk.Inputs.Match(constants.NEXT_ACTION)
-	notifier := alerts.NewMailgun(alerts.Mailer, alerts.Mailer)
+	notifier := alerts.NewMailer(alerts.Mailer, alerts.Mailer)
 	return notifier.Notify(alerts.SKEWS_WARNING, alerts.EventData{M: mm})
 }
 

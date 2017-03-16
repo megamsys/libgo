@@ -4,17 +4,10 @@ import (
 	constants "github.com/megamsys/libgo/utils"
 	"gopkg.in/check.v1"
 	"os"
-	"testing"
 )
 
 var st = os.Getenv("NIL_SLACK_TOKEN")
 var ch = "ahoy"
-
-func Test(t *testing.T) { check.TestingT(t) }
-
-type S struct{}
-
-var _ = check.Suite(&S{})
 
 func (s *S) TestSlack(c *check.C) {
 	if st == "" {

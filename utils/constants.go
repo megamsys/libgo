@@ -3,7 +3,7 @@ package utils
 const (
 
 	//keys for watchers
-	MAILGUN = "mailgun"
+	SMTP    = "smtp"
 	SLACK   = "slack"
 	INFOBIP = "infobip"
 	SCYLLA  = "scylla"
@@ -17,6 +17,7 @@ const (
 	CHANNEL        = "channel"
 	USERNAME       = "username"
 	PASSWORD       = "password"
+	IDENTITY       = "identity"
 	WHMCS_PASSWORD = "whmcs_password"
 	WHMCS_APIKEY   = "whmcs_apikey"
 	APPLICATION_ID = "application_id"

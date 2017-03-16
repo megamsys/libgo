@@ -78,7 +78,7 @@ func (self *Bill) skip(k string) bool {
 
 func (self *Bill) insufficientFund(evt *Event) error {
 	var err error
-	a := notifiers[constants.MAILGUN]
+	a := notifiers[constants.SMTP]
 	err = a.Notify(evt.EventAction, evt.EventData)
 	if err != nil {
 		return err
