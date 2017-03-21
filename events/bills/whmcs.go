@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	b64 "encoding/base64"
 	"encoding/hex"
-	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/events/addons"
 	"github.com/megamsys/libgo/pairs"
