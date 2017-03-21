@@ -98,13 +98,9 @@ func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) (err error) {
 		AccountId:    o.AccountId,
 	}
 
-	if add.AccountId != "" {
-		err = add.Get(m)
-		if err != nil {
-			return err
-		}
-	} else {
-		return fmt.Errorf("account_id should not empty")
+	addon, err := add.Get(m)
+	if err != nil {
+		return err
 	}
 
 	log.Debugf("Request WHMCS [POST] ==> " + m[constants.DOMAIN])
@@ -112,7 +108,7 @@ func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) (err error) {
 	a := map[string]string{
 		"username":      m[constants.USERNAME],
 		"password":      GetMD5Hash(m[constants.WHMCS_PASSWORD]),
-		"clientid":      add.ProviderId,
+		"clientid":      addon.ProviderId,
 		"description":   o.AssemblyName,
 		"hours":         "0.17",
 		"amount":        o.Consumed,
