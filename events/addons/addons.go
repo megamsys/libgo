@@ -68,6 +68,6 @@ func (s *Addons) Get(m map[string]string) (*Addons, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &o.Results[0], nil
 }
