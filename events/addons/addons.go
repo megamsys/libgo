@@ -50,24 +50,24 @@ func (s *Addons) Onboard(m map[string]string) error {
 	return nil
 }
 
-func (s *Addons) Get(m map[string]string) error {
+func (s *Addons) Get(m map[string]string) (*Addons, error) {
 	// Here skips balances fetching for the VMs which is launched on opennebula,
 	// that does not have records on vertice database
 	if s.AccountId == "" {
-		return fmt.Errorf("account_id should not be empty")
+		return nil, fmt.Errorf("account_id should not be empty")
 	}
 	args := api.NewArgs(m)
+	args.Email = s.AccountId
 	cl := api.NewClient(args, GETADDONS+s.ProviderName)
 	response, err := cl.Get()
 	if err != nil {
-		return err
+		return nil, err
 	}
-
 	o := &ApiAddons{}
 	err = json.Unmarshal(response, o)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	s = &o.Results[0]
-	return nil
+	
+	return &o.Results[0], nil
 }
