@@ -1,13 +1,12 @@
 package bills
 
 // import (
-// //	"fmt"
-// // constants   "github.com/megamsys/libgo/utils"
-// "testing"
+// 	"fmt"
+//  constants   "github.com/megamsys/libgo/utils"
+//  "testing"
 // 	"gopkg.in/check.v1"
 // )
 
-// func Test(t *testing.T) { check.TestingT(t) }
 //
 // func (s *S) TestOnboard(c *check.C) {
 // 	w := &whmcsBiller{}
@@ -27,18 +26,19 @@ package bills
 // 	c.Assert(err, check.IsNil)
 // }
 //
+
 // func (s *S) TestDeduct(c *check.C) {
 // 	w := &whmcsBiller{}
 // 	o := &BillOpts{
-//     AccountId: "info@megam.io",
-// 		AssemblyName: "ASM123"
+//     AccountId: "hello@megam.io",
+// 		AssemblyName: "ASM7862622526115144200",
 //   }
-//   m := make(map[string]string)
-// 	mp[constants.USERNAME] = "test@megam.io"
+//   mp := make(map[string]string)
+// 	mp[constants.USERNAME] = "vertice"
 // 	mp[constants.WHMCS_PASSWORD] = "asdf"
-// 	mp[constants.WHMCS_APIKEY] = "1234"
-// 	mp[constants.DOMAIN] = "http://192.168.0.100"
+// 	mp[constants.WHMCS_APIKEY] = "detAWE123"
+// 	mp[constants.DOMAIN] = "https://192.168.0.100/"
 // 	mp[constants.PIGGYBANKS] = "scylladb,whmcs"
-//   err := w.Onboard(o,mp)
+//   err := w.Deduct(o,mp)
 // 	c.Assert(err, check.IsNil)
 // }

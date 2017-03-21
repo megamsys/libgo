@@ -1,9 +1,7 @@
 package bills
 
 import (
-	"github.com/megamsys/libgo/events/alerts"
 	"github.com/megamsys/libgo/utils"
-	constants "github.com/megamsys/libgo/utils"
 	"strconv"
 	"strings"
 )
@@ -62,7 +60,6 @@ func (m scylladbManager) AuditUnpaid(o *BillOpts, mi map[string]string) error {
 		if err != nil {
 			return err
 		}
-		return m.skewsWarning(o, sk)
 	}
 
 	b, err := NewBalances(o.AccountId, mi)
@@ -71,32 +68,10 @@ func (m scylladbManager) AuditUnpaid(o *BillOpts, mi map[string]string) error {
 	}
 	cb, _ := strconv.ParseFloat(b.Credit, 64)
 	if cb <= 0 {
-		err = sk.ActionEvents(o, b.Credit, mi)
-		if err != nil {
-			return err
-		}
-		return m.skewsWarning(o, sk)
+		return sk.ActionEvents(o, b.Credit, mi)
 	}
 
 	return nil
-}
-
-func (m scylladbManager) skewsWarning(o *BillOpts, sk *EventsSkews) error {
-	mm := make(map[string]string, 0)
-	mm[constants.EMAIL] = sk.AccountId
-	mm[constants.VERTNAME] = o.AssemblyName
-	mm[constants.SOFT_ACTION] = SOFTSKEWS
-	mm[constants.SOFT_GRACEPERIOD] = o.SoftGracePeriod
-	mm[constants.SOFT_LIMIT] = o.SoftLimit
-	mm[constants.HARD_GRACEPERIOD] = o.HardGracePeriod
-	mm[constants.HARD_ACTION] = HARDSKEWS
-	mm[constants.HARD_LIMIT] = o.HardLimit
-	mm[constants.ACTION_TRIGGERED_AT] = sk.Inputs.Match(constants.ACTION_TRIGGERED_AT)
-	mm[constants.NEXT_ACTION_DUE_AT] = sk.Inputs.Match(constants.NEXT_ACTION_DUE_AT)
-	mm[constants.ACTION] = sk.Inputs.Match(constants.ACTION)
-	mm[constants.NEXT_ACTION] = sk.Inputs.Match(constants.NEXT_ACTION)
-	notifier := alerts.NewMailer(alerts.Mailer, alerts.Mailer)
-	return notifier.Notify(alerts.SKEWS_WARNING, alerts.EventData{M: mm})
 }
 
 func (m scylladbManager) Invoice(o *BillOpts) error {
