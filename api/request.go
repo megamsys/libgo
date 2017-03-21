@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	REQUEST_CREATE = "requests/content"
+	REQUEST_CREATE = "/requests/content"
 )
 
 type Requests struct {
@@ -14,6 +14,7 @@ type Requests struct {
 	CatId     string `json:"cat_id" cql:"cat_id"`
 	Action    string `json:"action" cql:"action"`
 	Category  string `json:"category" cql:"category"`
+	CatType   string `json:"cattype" cql:"cattype"`
 	//	CreatedAt time.Time `json:"created_at" cql:"created_at"`
 }
 

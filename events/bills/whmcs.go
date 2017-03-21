@@ -97,6 +97,7 @@ func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) (err error) {
 		ProviderName: constants.WHMCS,
 		AccountId:    o.AccountId,
 	}
+
 	if add.AccountId != "" {
 		err = add.Get(m)
 		if err != nil {
@@ -105,19 +106,19 @@ func (w whmcsBiller) Deduct(o *BillOpts, m map[string]string) (err error) {
 	} else {
 		return fmt.Errorf("account_id should not empty")
 	}
+
 	log.Debugf("Request WHMCS [POST] ==> " + m[constants.DOMAIN])
 	client := whmcs.NewClient(nil, m[constants.DOMAIN])
 	a := map[string]string{
 		"username":      m[constants.USERNAME],
-		"password":      GetMD5Hash(m[constants.PASSWORD]),
+		"password":      GetMD5Hash(m[constants.WHMCS_PASSWORD]),
 		"clientid":      add.ProviderId,
 		"description":   o.AssemblyName,
-		"hours":         "1",
+		"hours":         "0.17",
 		"amount":        o.Consumed,
 		"invoiceaction": "nextcron",
 	}
 	_, _, err = client.Billables.Create(a)
-
 	return err
 }
 

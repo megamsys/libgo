@@ -1,7 +1,7 @@
 {
 	"ImportPath": "github.com/megamsys/libgo",
-	"GoVersion": "go1.7",
-	"GodepVersion": "v74",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
 	"Packages": [
 		"./..."
 	],
@@ -12,25 +12,20 @@
 		},
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.10.0-38-g3ec0642",
-			"Rev": "3ec0642a7fb6488f65b06f9040adc67e3990296a"
+			"Comment": "v0.11.5-8-g547e984",
+			"Rev": "547e984ad93a90192134fc0fdb57a468edb514fe"
 		},
 		{
 			"ImportPath": "github.com/golang/snappy",
-			"Rev": "d9eb7a3d35ec988b8585d4a0068e462c27d28380"
+			"Rev": "553a641470496b2327abcac10b36396bd98e45c9"
 		},
 		{
 			"ImportPath": "github.com/google/btree",
-			"Rev": "7d79101e329e5a3adf994758c578dab82b90c017"
+			"Rev": "316fb6d3f031ae8f4d457c6c5186b9e3ded70435"
 		},
 		{
 			"ImportPath": "github.com/hailocab/go-hostpool",
 			"Rev": "e80d13ce29ede4452c43dea11e79b9bc8a15b478"
-		},
-		{
-			"ImportPath": "github.com/mailgun/mailgun-go",
-			"Comment": "v1.0.2",
-			"Rev": "369a1fa57ce6fb314e627087b9fff0db5c266c0f"
 		},
 		{
 			"ImportPath": "github.com/megamsys/gocassa",
@@ -64,16 +59,16 @@
 		},
 		{
 			"ImportPath": "github.com/megamsys/whmcs_go/whmcs",
-			"Rev": "e7b012c072e1a0a81afb5aa6f00a4191db5a6ca2"
+			"Rev": "cc294cec29502307c795c0f07f5fb2c6283800cd"
 		},
 		{
 			"ImportPath": "github.com/mitchellh/mapstructure",
-			"Rev": "ca63d7c062ee3c9f34db231e352b60012b4fd0c1"
+			"Rev": "53818660ed4955e899c0bcafa97299a388bd7c8e"
 		},
 		{
 			"ImportPath": "github.com/pborman/uuid",
-			"Comment": "v1.0-15-gb984ec7",
-			"Rev": "b984ec7fa9ff9e428bd0cf0abf429384dfbe3e37"
+			"Comment": "v1.0-21-g1b00554",
+			"Rev": "1b00554d822231195d1babd97ff4a781231955c9"
 		},
 		{
 			"ImportPath": "github.com/sajari/fuzzy",
@@ -85,15 +80,15 @@
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/ssh/terminal",
-			"Rev": "6318898455d3ac20e7e44d0a080d43f8c3ff120b"
+			"Rev": "728b753d0135da6801d45a38e6f43ff55779c5c2"
 		},
 		{
 			"ImportPath": "golang.org/x/sys/unix",
-			"Rev": "30de6d19a3bd89a5f38ae4028e23aaa5582648af"
+			"Rev": "99f16d856c9836c42d24e7ab64ea72916925fa97"
 		},
 		{
 			"ImportPath": "gopkg.in/check.v1",
-			"Rev": "4f90aeace3a26ad7021961c297b22c42160c7b25"
+			"Rev": "20d25e2804050c1cd24a7eea1e7a6447dd0e74ec"
 		},
 		{
 			"ImportPath": "gopkg.in/inf.v0",
@@ -102,7 +97,7 @@
 		},
 		{
 			"ImportPath": "gopkg.in/yaml.v2",
-			"Rev": "e4d366fc3c7938e2958e662b4258c7a89e1f0e3e"
+			"Rev": "a3f3340b5840cee44f372bddb5880fcbc419b46a"
 		},
 		{
 			"ImportPath": "launchpad.net/gnuflag",

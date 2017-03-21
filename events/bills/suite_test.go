@@ -1,6 +1,7 @@
 package bills
 
 import (
+	"github.com/megamsys/libgo/utils"
 	"gopkg.in/check.v1"
 	"testing"
 )
@@ -14,4 +15,8 @@ type S struct {
 var _ = check.Suite(&S{})
 
 func (s *S) SetUpSuite(c *check.C) {
+	m := make(map[string]string, 0)
+	m[utils.MASTER_KEY] = "asdf"
+	m[utils.API_URL] = "http://192.168.0.100:9000/v2"
+	s.m = m
 }

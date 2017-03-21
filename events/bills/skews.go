@@ -20,6 +20,7 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/megamsys/libgo/api"
+	"github.com/megamsys/libgo/events/alerts"
 	"github.com/megamsys/libgo/pairs"
 	constants "github.com/megamsys/libgo/utils"
 	"strconv"
@@ -111,10 +112,10 @@ func (s *EventsSkews) CreateEvent(o *BillOpts, ACTION string, mi map[string]stri
 
 	s.Inputs.NukeAndSet(mm)
 	s.Status = ACTIVE
-	return s.Create(mi)
+	return s.Create(mi, o)
 }
 
-func (s *EventsSkews) Create(mi map[string]string) error {
+func (s *EventsSkews) Create(mi map[string]string, o *BillOpts) error {
 	args := api.NewArgs(mi)
 	args.Email = s.AccountId
 	cl := api.NewClient(args, EVENTSKEWS_NEW)
@@ -122,7 +123,33 @@ func (s *EventsSkews) Create(mi map[string]string) error {
 	if err != nil {
 		return err
 	}
-	return s.PushSkews(mi)
+
+	err = s.PushSkews(mi)
+	if err != nil {
+		return err
+	}
+	return s.skewsWarning(o)
+}
+
+func (sk *EventsSkews) skewsWarning(o *BillOpts) error {
+	mm := make(map[string]string, 0)
+	softDue, _ := time.ParseDuration(o.SoftGracePeriod)
+	hardDue, _ := time.ParseDuration(o.HardGracePeriod)
+	mm[constants.EMAIL] = sk.AccountId
+	mm[constants.VERTNAME] = o.AssemblyName
+	mm[constants.SOFT_ACTION] = SOFTSKEWS
+	mm[constants.SOFT_GRACEPERIOD] = strconv.FormatInt(int64(softDue.Seconds()/3600/24), 10)
+	mm[constants.SOFT_LIMIT] = o.SoftLimit
+	mm[constants.HARD_GRACEPERIOD] = strconv.FormatInt(int64(hardDue.Seconds()/3600/24), 10)
+	mm[constants.HARD_ACTION] = HARDSKEWS
+	mm[constants.HARD_LIMIT] = o.HardLimit
+	mm[constants.ACTION_TRIGGERED_AT] = sk.Inputs.Match(constants.ACTION_TRIGGERED_AT)
+	mm[constants.NEXT_ACTION_DUE_AT] = sk.Inputs.Match(constants.NEXT_ACTION_DUE_AT)
+	mm[constants.ACTION] = sk.Inputs.Match(constants.ACTION)
+	mm[constants.NEXT_ACTION] = sk.Inputs.Match(constants.NEXT_ACTION)
+
+	notifier := alerts.NewMailer(alerts.Mailer, alerts.Mailer)
+	return notifier.Notify(alerts.SKEWS_WARNING, alerts.EventData{M: mm})
 }
 
 func (s *EventsSkews) PushSkews(mi map[string]string) error {
@@ -133,9 +160,11 @@ func (s *EventsSkews) PushSkews(mi map[string]string) error {
 	case HARDSKEWS:
 		req.Action = constants.DESTROY
 		req.Category = constants.STATE
+		req.CatType = "torpedo"
 	case SOFTSKEWS:
 		req.Action = constants.SUSPEND
 		req.Category = constants.CONTROL
+		req.CatType = "torpedo"
 	case WARNING:
 		return nil
 	}
@@ -152,10 +181,11 @@ func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string
 	}
 	for _, v := range evts {
 		if v.Status == ACTIVE {
-			sk[v.Actions.Match(constants.ACTION)] = &v
+			sk[v.Inputs.Match(constants.ACTION)] = &v
 		}
 	}
 	ACTION := s.action(o, currentBal)
+
 	if len(sk) > 0 {
 		if sk[ACTION] != nil {
 			switch true {
@@ -164,7 +194,7 @@ func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string
 			case ACTION == SOFTSKEWS && sk[SOFTSKEWS].isExpired():
 				return sk[SOFTSKEWS].CreateEvent(o, HARDSKEWS, mi)
 			case ACTION == WARNING && sk[WARNING].isExpired():
-				return sk[SOFTSKEWS].CreateEvent(o, SOFTSKEWS, mi)
+				return sk[WARNING].CreateEvent(o, SOFTSKEWS, mi)
 			}
 			return nil
 		}
@@ -184,8 +214,8 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 	}
 	for _, v := range evts {
 		if v.Status == ACTIVE {
-			sk[v.Actions.Match(constants.ACTION)] = &v
-			actions[v.Actions.Match(constants.ACTION)] = ACTIVE
+			sk[v.Inputs.Match(constants.ACTION)] = &v
+			actions[v.Inputs.Match(constants.ACTION)] = ACTIVE
 		}
 	}
 	if len(sk) > 0 {
@@ -195,8 +225,9 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 		case actions[SOFTSKEWS] == ACTIVE && sk[SOFTSKEWS].isExpired():
 			return sk[SOFTSKEWS].CreateEvent(o, HARDSKEWS, mi)
 		case actions[WARNING] == ACTIVE && sk[WARNING].isExpired():
-			return sk[SOFTSKEWS].CreateEvent(o, SOFTSKEWS, mi)
+			return sk[WARNING].CreateEvent(o, SOFTSKEWS, mi)
 		}
+		return nil
 	}
 
 	return s.CreateEvent(o, WARNING, mi)
