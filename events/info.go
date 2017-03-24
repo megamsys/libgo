@@ -15,7 +15,7 @@ const (
 
 type StoredEvent struct {
 	Id         string          `json:"id"`
-	AccountsId string          `json:"AccountsId" riak:"index"`
+	AccountsId string          `json:"AccountsId"`
 	Type       string          `json:"type"`
 	Action     string          `json:"action"`
 	Inputs     pairs.JsonPairs `json:"inputs"`

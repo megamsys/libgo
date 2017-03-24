@@ -182,6 +182,7 @@ const (
 	DISKDETACHED      = "disk_detached"
 	ATTACH_INPROGRESS = "attach_inprogress"
 	DETACH_INPROGRESS = "detach_inprogress"
+	INPROGRESS        = "inprogress"
 
 	QUOTAUPDATING = "quota_updating"
 	QUOTAUPDATED  = "quota_updated"
@@ -286,6 +287,7 @@ const (
 
 	StatePreError  = State(PREDEPLOY_ERROR)
 	StatePostError = State(POST_ERROR)
+	StateError     = State(ERROR)
 
 	// StatusLaunching is the initial status of a box
 	// it should transition shortly to a more specific status
@@ -335,6 +337,7 @@ const (
 	StatusDestroyed     = Status(DESTROYED)
 	StatusNuked         = Status(NUKED)
 
+	StatusInprogress     = Status(INPROGRESS)
 	StatusSnapCreating   = Status(SNAPSHOTTING)
 	StatusSnapCreated    = Status(SNAPSHOTTED)
 	StatusSnapDeleting   = Status(SNAPDESTORYING)
