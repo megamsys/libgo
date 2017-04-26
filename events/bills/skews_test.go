@@ -1,8 +1,8 @@
 package bills
 
-// import (
-// 	"gopkg.in/check.v1"
-// )
+import (
+	"gopkg.in/check.v1"
+)
 
 // func (s *S) TestNewSkews(c *check.C) {
 //   email := "hello@virtengine.com"
@@ -31,3 +31,6 @@ package bills
 //     err := sk.ActionEvents(o, "-2", s.m)
 //     c.Assert(nil, check.NotNil)
 // }
+
+func (s *S) TestCreateEvent(c *check.C) {
+}

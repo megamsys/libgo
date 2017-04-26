@@ -78,9 +78,13 @@ func NewEventsSkews(email, cat_id string, mi map[string]string) ([]EventsSkews, 
 func (s *EventsSkews) CreateEvent(o *BillOpts, ACTION string, mi map[string]string) error {
 	var exp_at, gen_at time.Time
 	var action, next string
+	var err error
 	mm := make(map[string][]string, 0)
 	if s.Inputs != nil {
-		gen_at, _ = time.Parse(time.RFC3339, s.Inputs.Match(constants.ACTION_TRIGGERED_AT))
+		gen_at, err = time.Parse(time.RFC3339, s.Inputs.Match(constants.ACTION_TRIGGERED_AT))
+		if err != nil {
+			return err
+		}
 	} else {
 		gen_at = time.Now()
 	}
@@ -123,15 +127,14 @@ func (s *EventsSkews) Create(mi map[string]string, o *BillOpts) error {
 	if err != nil {
 		return err
 	}
-
 	err = s.PushSkews(mi)
 	if err != nil {
 		return err
 	}
-	return s.skewsWarning(o)
+	return s.skewsMailer(o)
 }
 
-func (sk *EventsSkews) skewsWarning(o *BillOpts) error {
+func (sk *EventsSkews) skewsMailer(o *BillOpts) error {
 	mm := make(map[string]string, 0)
 	softDue, _ := time.ParseDuration(o.SoftGracePeriod)
 	hardDue, _ := time.ParseDuration(o.HardGracePeriod)
@@ -147,7 +150,6 @@ func (sk *EventsSkews) skewsWarning(o *BillOpts) error {
 	mm[constants.NEXT_ACTION_DUE_AT] = sk.Inputs.Match(constants.NEXT_ACTION_DUE_AT)
 	mm[constants.ACTION] = sk.Inputs.Match(constants.ACTION)
 	mm[constants.NEXT_ACTION] = sk.Inputs.Match(constants.NEXT_ACTION)
-
 	notifier := alerts.NewMailer(alerts.Mailer, alerts.Mailer)
 	return notifier.Notify(alerts.SKEWS_WARNING, alerts.EventData{M: mm})
 }
@@ -179,28 +181,32 @@ func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string
 	if err != nil {
 		return err
 	}
-	for _, v := range evts {
-		if v.Status == ACTIVE {
-			sk[v.Inputs.Match(constants.ACTION)] = &v
-		}
-	}
-	ACTION := s.action(o, currentBal)
 
-	if len(sk) > 0 {
-		if sk[ACTION] != nil {
+	// this approach used for an assembly have multiple skews record
+	//
+	// for _, v := range evts {
+	// 	if v.Status == ACTIVE {
+	// 		sk[v.Inputs.Match(constants.ACTION)] = &v
+	// 	}
+	// }
+
+	if len(evts) > 0 {
+		action := evts[0].Inputs.Match(constants.ACTION)
+		sk[action] = &evts[0]
+		if sk[action] != nil || sk[action].Status == ACTIVE {
 			switch true {
-			case ACTION == HARDSKEWS && sk[HARDSKEWS].isExpired():
+			case action == HARDSKEWS && sk[HARDSKEWS].isExpired():
 				return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
-			case ACTION == SOFTSKEWS && sk[SOFTSKEWS].isExpired():
+			case action == SOFTSKEWS && sk[SOFTSKEWS].isExpired():
 				return sk[SOFTSKEWS].CreateEvent(o, HARDSKEWS, mi)
-			case ACTION == WARNING && sk[WARNING].isExpired():
+			case action == WARNING && sk[WARNING].isExpired():
 				return sk[WARNING].CreateEvent(o, SOFTSKEWS, mi)
 			}
 			return nil
 		}
 	}
-
-	return s.CreateEvent(o, ACTION, mi)
+	action := s.action(o, currentBal)
+	return s.CreateEvent(o, action, mi)
 }
 
 func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error {
@@ -219,6 +225,7 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 		}
 	}
 	if len(sk) > 0 {
+
 		switch true {
 		case actions[HARDSKEWS] == ACTIVE && sk[HARDSKEWS].isExpired():
 			return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
