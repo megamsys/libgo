@@ -182,14 +182,6 @@ func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string
 		return err
 	}
 
-	// this approach used for an assembly have multiple skews record
-	//
-	// for _, v := range evts {
-	// 	if v.Status == ACTIVE {
-	// 		sk[v.Inputs.Match(constants.ACTION)] = &v
-	// 	}
-	// }
-
 	if len(evts) > 0 {
 		action := evts[0].Inputs.Match(constants.ACTION)
 		sk[action] = &evts[0]
@@ -210,7 +202,7 @@ func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string
 }
 
 func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error {
-	log.Debugf("checks skews actions for ondemand")
+	log.Debugf("checks skews actions for quota (%s).", o.QuotaId)
 	actions := make(map[string]string, 0)
 	sk := make(map[string]*EventsSkews, 0)
 	// to get skews events for that particular cat_id/ asm_id
@@ -218,14 +210,11 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 	if err != nil {
 		return err
 	}
-	for _, v := range evts {
-		if v.Status == ACTIVE {
-			sk[v.Inputs.Match(constants.ACTION)] = &v
-			actions[v.Inputs.Match(constants.ACTION)] = ACTIVE
-		}
-	}
-	if len(sk) > 0 {
 
+	if len(evts) > 0 || evts[0].Status == ACTIVE {
+		action := evts[0].Inputs.Match(constants.ACTION)
+		sk[action] = &evts[0]
+		actions[action] = ACTIVE
 		switch true {
 		case actions[HARDSKEWS] == ACTIVE && sk[HARDSKEWS].isExpired():
 			return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
@@ -236,7 +225,6 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 		}
 		return nil
 	}
-
 	return s.CreateEvent(o, WARNING, mi)
 }
 
