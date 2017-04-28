@@ -32,6 +32,8 @@ const (
 	STATUS         = "status"
 	HOST_IP        = "host_ip"
 	VERTICEAPI     = "verticegateway"
+	TORPEDO        = "torpedo"
+	CONTAINER      = "container"
 
 	VONE_CLOUD     = "vone_cloud"
 	HOME           = "home"
@@ -64,6 +66,10 @@ const (
 	MEMORY_COST_HOUR = "ram_cost_hour"
 	DISK_COST_HOUR   = "disk_cost_hour"
 
+	CPU_COST    = "cpu_cost"
+	MEMORY_COST = "memory_cost"
+	DISK_COST   = "disk_cost"
+
 	// events keys
 	ACCOUNTID        = "AccountId"
 	ASSEMBLYID       = "AssemblyId"
@@ -83,6 +89,7 @@ const (
 	SKEWS_TYPE       = "SkewsType"
 	QUOTAID          = "QuotaId"
 	SKEWS_WARNING    = "skews_warning"
+	NETWORK_UNAVAIL  = "network_unavail"
 
 	ACTION              = "action"
 	STATE               = "state"
@@ -308,8 +315,10 @@ const (
 	StatusInsufficientFund = Status(INSUFFICIENT_FUND)
 	StatusQuotaUnpaid      = Status(QUOTA_UNPAID)
 
-	StatusVMBooting   = Status(VMBOOTING)
-	StatusInitialized = Status(INITIALIZED)
+	StatusVMBooting      = Status(VMBOOTING)
+	StatusInitialized    = Status(INITIALIZED)
+	StatusNetworkUnavail = Status(NETWORK_UNAVAIL)
+
 	// StatusBootstrapped is the status for box after being booted by the agent in cloud
 	StatusBootstrapped  = Status(BOOTSTRAPPED)
 	StatusBootstrapping = Status(BOOTSTRAPPING)
@@ -474,6 +483,8 @@ const (
 	ONEINSTANCELCMSTATECHECKING        = "compute.instance.lcmstate_checking"
 	ONEINSTANCEVMSTATECHECKING         = "compute.instance.vmstate_checking"
 	ONEINSTANCESQUOTAUNPAID            = "compute.instance.quota_unpaid"
+
+	ONEINSTANCENETWORKUNAVAILABLE = "compute.instance.network_unavail"
 
 	ONEINSTANCEWAITING        = "compute.instance.waituntill"
 	ONEINSTANCEVMSTATEPENDING = "compute.instance.pending"
