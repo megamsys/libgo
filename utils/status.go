@@ -89,6 +89,8 @@ func (s Status) Event_type() string {
 		return ONEINSTANCEAPPDEPLOYING
 	case APPDEPLOYED:
 		return ONEINSTANCEAPPDEPLOYED
+	case NETWORK_UNAVAIL:
+		return ONEINSTANCENETWORKUNAVAILABLE
 	case VNCHOSTUPDATING:
 		return ONEINSTANCEVNCHOSTUPDATING
 	case VNCHOSTUPDATED:
@@ -382,6 +384,8 @@ func (s Status) Description(name string) string {
 	case ERROR:
 		return error_common
 	case PREERROR:
+		return name
+	case NETWORK_UNAVAIL:
 		return name
 	case POST_ERROR:
 		return error_common
