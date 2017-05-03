@@ -56,10 +56,7 @@ func (m scylladbManager) AuditUnpaid(o *BillOpts, mi map[string]string) error {
 	}
 
 	if strings.Split(o.SkewsType, ".")[1] == "quota" {
-		err := sk.SkewsQuotaUnpaid(o, mi)
-		if err != nil {
-			return err
-		}
+		return sk.SkewsQuotaUnpaid(o, mi)
 	}
 
 	b, err := NewBalances(o.AccountId, mi)
@@ -71,7 +68,7 @@ func (m scylladbManager) AuditUnpaid(o *BillOpts, mi map[string]string) error {
 		return sk.ActionEvents(o, b.Credit, mi)
 	}
 
-	return nil
+	return sk.DeactiveEvents(o, mi)
 }
 
 func (m scylladbManager) Invoice(o *BillOpts) error {

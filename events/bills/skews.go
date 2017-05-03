@@ -30,6 +30,7 @@ import (
 const (
 	EVENTSKEWS          = "/eventsskews"
 	EVENTSKEWS_NEW      = "/eventsskews/content"
+	EVENTSKEWS_UPDATE   = "/eventsskews/update"
 	EVENTEVENTSKEWSJSON = "Megam::Skews"
 	HARDSKEWS           = "terminate"
 	SOFTSKEWS           = "suspend"
@@ -73,6 +74,14 @@ func NewEventsSkews(email, cat_id string, mi map[string]string) ([]EventsSkews, 
 		return nil, err
 	}
 	return ac.Results, nil
+}
+
+func (s *EventsSkews) update(mi map[string]string) error {
+	args := api.NewArgs(mi)
+	args.Email = s.AccountId
+	cl := api.NewClient(args, EVENTSKEWS_UPDATE)
+	_, err := cl.Post(s)
+	return err
 }
 
 func (s *EventsSkews) CreateEvent(o *BillOpts, ACTION string, mi map[string]string) error {
@@ -173,6 +182,24 @@ func (s *EventsSkews) PushSkews(mi map[string]string) error {
 	return req.PushRequest(mi)
 }
 
+func (s *EventsSkews) DeactiveEvents(o *BillOpts, mi map[string]string) error {
+	evts, err := NewEventsSkews(o.AccountId, o.AssemblyId, mi)
+	if err != nil {
+		return err
+	}
+
+	if len(evts) > 0 {
+		for _, evt := range evts {
+			if evt != nil && evt.Status == ACTIVE {
+				evt.Status = "deactive"
+				evt.update()
+			}
+		}
+
+	}
+	return nil
+}
+
 func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string]string) error {
 	log.Debugf("checks skews actions for ondemand")
 	sk := make(map[string]*EventsSkews, 0)
@@ -185,7 +212,7 @@ func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string
 	if len(evts) > 0 {
 		action := evts[0].Inputs.Match(constants.ACTION)
 		sk[action] = &evts[0]
-		if sk[action] != nil || sk[action].Status == ACTIVE {
+		if sk[action] != nil && sk[action].Status == ACTIVE {
 			switch true {
 			case action == HARDSKEWS && sk[HARDSKEWS].isExpired():
 				return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
