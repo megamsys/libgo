@@ -144,8 +144,8 @@ func (m *mailer) Notify(eva EventAction, edata EventData) error {
 	if err != nil {
 		return err
 	}
-	m.Send(bdy, "", subject(eva), edata.M[constants.EMAIL])
-	return nil
+
+	return m.Send(bdy, "", subject(eva), edata.M[constants.EMAIL])
 }
 
 func (m *mailer) Send(bdy string, sender string, subject string, receiver string) error {

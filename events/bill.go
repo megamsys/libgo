@@ -112,7 +112,7 @@ func (self *Bill) skews(evt *Event) error {
 	_ = result.FillStruct(evt.EventData.M) //we will manage error later
 	if !self.skip(constants.SCYLLAMGR) {
 		p := bills.BillProviders[constants.SCYLLAMGR]
-		if evt.EventAction == alerts.SKEWS_ACTIONS {
+		if evt.EventAction == alerts.SKEWS_ACTIONS || evt.EventAction == alerts.QUOTA_UNPAID {
 			return p.AuditUnpaid(result, self.M)
 		}
 	}

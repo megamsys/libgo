@@ -16,7 +16,7 @@ var _ = check.Suite(&S{})
 
 func (s *S) SetUpSuite(c *check.C) {
 	m := make(map[string]string, 0)
-	m[utils.MASTER_KEY] = "asdf"
+	m[utils.MASTER_KEY] = "asdft"
 	m[utils.API_URL] = "http://192.168.0.100:9000/v2"
 	s.m = m
 }

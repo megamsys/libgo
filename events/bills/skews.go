@@ -30,6 +30,7 @@ import (
 const (
 	EVENTSKEWS          = "/eventsskews"
 	EVENTSKEWS_NEW      = "/eventsskews/content"
+	EVENTSKEWS_UPDATE   = "/eventsskews/update"
 	EVENTEVENTSKEWSJSON = "Megam::Skews"
 	HARDSKEWS           = "terminate"
 	SOFTSKEWS           = "suspend"
@@ -38,8 +39,8 @@ const (
 )
 
 type ApiSkewsEvents struct {
-	JsonClaz string        `json:"json_claz"`
-	Results  []EventsSkews `json:"results"`
+	JsonClaz string         `json:"json_claz"`
+	Results  []*EventsSkews `json:"results"`
 }
 type EventsSkews struct {
 	Id        string          `json:"id"`
@@ -53,7 +54,7 @@ type EventsSkews struct {
 	EventType string          `json:"event_type"`
 }
 
-func NewEventsSkews(email, cat_id string, mi map[string]string) ([]EventsSkews, error) {
+func NewEventsSkews(email, cat_id string, mi map[string]string) ([]*EventsSkews, error) {
 
 	if email == "" {
 		return nil, fmt.Errorf("account_id should not be empty")
@@ -75,12 +76,24 @@ func NewEventsSkews(email, cat_id string, mi map[string]string) ([]EventsSkews, 
 	return ac.Results, nil
 }
 
+func (s *EventsSkews) update(mi map[string]string) error {
+	args := api.NewArgs(mi)
+	args.Email = s.AccountId
+	cl := api.NewClient(args, EVENTSKEWS_UPDATE)
+	_, err := cl.Post(s)
+	return err
+}
+
 func (s *EventsSkews) CreateEvent(o *BillOpts, ACTION string, mi map[string]string) error {
 	var exp_at, gen_at time.Time
 	var action, next string
+	var err error
 	mm := make(map[string][]string, 0)
 	if s.Inputs != nil {
-		gen_at, _ = time.Parse(time.RFC3339, s.Inputs.Match(constants.ACTION_TRIGGERED_AT))
+		gen_at, err = time.Parse(time.RFC3339, s.Inputs.Match(constants.ACTION_TRIGGERED_AT))
+		if err != nil {
+			return err
+		}
 	} else {
 		gen_at = time.Now()
 	}
@@ -123,15 +136,14 @@ func (s *EventsSkews) Create(mi map[string]string, o *BillOpts) error {
 	if err != nil {
 		return err
 	}
-
 	err = s.PushSkews(mi)
 	if err != nil {
 		return err
 	}
-	return s.skewsWarning(o)
+	return s.skewsMailer(o)
 }
 
-func (sk *EventsSkews) skewsWarning(o *BillOpts) error {
+func (sk *EventsSkews) skewsMailer(o *BillOpts) error {
 	mm := make(map[string]string, 0)
 	softDue, _ := time.ParseDuration(o.SoftGracePeriod)
 	hardDue, _ := time.ParseDuration(o.HardGracePeriod)
@@ -147,7 +159,6 @@ func (sk *EventsSkews) skewsWarning(o *BillOpts) error {
 	mm[constants.NEXT_ACTION_DUE_AT] = sk.Inputs.Match(constants.NEXT_ACTION_DUE_AT)
 	mm[constants.ACTION] = sk.Inputs.Match(constants.ACTION)
 	mm[constants.NEXT_ACTION] = sk.Inputs.Match(constants.NEXT_ACTION)
-
 	notifier := alerts.NewMailer(alerts.Mailer, alerts.Mailer)
 	return notifier.Notify(alerts.SKEWS_WARNING, alerts.EventData{M: mm})
 }
@@ -171,6 +182,24 @@ func (s *EventsSkews) PushSkews(mi map[string]string) error {
 	return req.PushRequest(mi)
 }
 
+func (s *EventsSkews) DeactiveEvents(o *BillOpts, mi map[string]string) error {
+	evts, err := NewEventsSkews(o.AccountId, o.AssemblyId, mi)
+	if err != nil {
+		return err
+	}
+
+	if len(evts) > 0 {
+		for _, evt := range evts {
+			if evt != nil && evt.Status == ACTIVE {
+				evt.Status = "deactive"
+				evt.update(mi)
+			}
+		}
+
+	}
+	return nil
+}
+
 func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string]string) error {
 	log.Debugf("checks skews actions for ondemand")
 	sk := make(map[string]*EventsSkews, 0)
@@ -179,32 +208,28 @@ func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string
 	if err != nil {
 		return err
 	}
-	for _, v := range evts {
-		if v.Status == ACTIVE {
-			sk[v.Inputs.Match(constants.ACTION)] = &v
-		}
-	}
-	ACTION := s.action(o, currentBal)
 
-	if len(sk) > 0 {
-		if sk[ACTION] != nil {
+	if len(evts) > 0 {
+		action := evts[0].Inputs.Match(constants.ACTION)
+		sk[action] = evts[0]
+		if sk[action] != nil && sk[action].Status == ACTIVE {
 			switch true {
-			case ACTION == HARDSKEWS && sk[HARDSKEWS].isExpired():
+			case action == HARDSKEWS && sk[HARDSKEWS].isExpired():
 				return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
-			case ACTION == SOFTSKEWS && sk[SOFTSKEWS].isExpired():
+			case action == SOFTSKEWS && sk[SOFTSKEWS].isExpired():
 				return sk[SOFTSKEWS].CreateEvent(o, HARDSKEWS, mi)
-			case ACTION == WARNING && sk[WARNING].isExpired():
+			case action == WARNING && sk[WARNING].isExpired():
 				return sk[WARNING].CreateEvent(o, SOFTSKEWS, mi)
 			}
 			return nil
 		}
 	}
-
-	return s.CreateEvent(o, ACTION, mi)
+	action := s.action(o, currentBal)
+	return s.CreateEvent(o, action, mi)
 }
 
 func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error {
-	log.Debugf("checks skews actions for ondemand")
+	log.Debugf("checks skews actions for quota (%s).", o.QuotaId)
 	actions := make(map[string]string, 0)
 	sk := make(map[string]*EventsSkews, 0)
 	// to get skews events for that particular cat_id/ asm_id
@@ -212,13 +237,11 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 	if err != nil {
 		return err
 	}
-	for _, v := range evts {
-		if v.Status == ACTIVE {
-			sk[v.Inputs.Match(constants.ACTION)] = &v
-			actions[v.Inputs.Match(constants.ACTION)] = ACTIVE
-		}
-	}
-	if len(sk) > 0 {
+
+	if len(evts) > 0 || evts[0].Status == ACTIVE {
+		action := evts[0].Inputs.Match(constants.ACTION)
+		sk[action] = evts[0]
+		actions[action] = ACTIVE
 		switch true {
 		case actions[HARDSKEWS] == ACTIVE && sk[HARDSKEWS].isExpired():
 			return sk[HARDSKEWS].CreateEvent(o, HARDSKEWS, mi)
@@ -229,7 +252,6 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 		}
 		return nil
 	}
-
 	return s.CreateEvent(o, WARNING, mi)
 }
 
