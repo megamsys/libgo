@@ -39,8 +39,8 @@ const (
 )
 
 type ApiSkewsEvents struct {
-	JsonClaz string        `json:"json_claz"`
-	Results  []EventsSkews `json:"results"`
+	JsonClaz string         `json:"json_claz"`
+	Results  []*EventsSkews `json:"results"`
 }
 type EventsSkews struct {
 	Id        string          `json:"id"`
@@ -54,7 +54,7 @@ type EventsSkews struct {
 	EventType string          `json:"event_type"`
 }
 
-func NewEventsSkews(email, cat_id string, mi map[string]string) ([]EventsSkews, error) {
+func NewEventsSkews(email, cat_id string, mi map[string]string) ([]*EventsSkews, error) {
 
 	if email == "" {
 		return nil, fmt.Errorf("account_id should not be empty")
@@ -192,7 +192,7 @@ func (s *EventsSkews) DeactiveEvents(o *BillOpts, mi map[string]string) error {
 		for _, evt := range evts {
 			if evt != nil && evt.Status == ACTIVE {
 				evt.Status = "deactive"
-				evt.update()
+				evt.update(mi)
 			}
 		}
 
@@ -211,7 +211,7 @@ func (s *EventsSkews) ActionEvents(o *BillOpts, currentBal string, mi map[string
 
 	if len(evts) > 0 {
 		action := evts[0].Inputs.Match(constants.ACTION)
-		sk[action] = &evts[0]
+		sk[action] = evts[0]
 		if sk[action] != nil && sk[action].Status == ACTIVE {
 			switch true {
 			case action == HARDSKEWS && sk[HARDSKEWS].isExpired():
@@ -240,7 +240,7 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 
 	if len(evts) > 0 || evts[0].Status == ACTIVE {
 		action := evts[0].Inputs.Match(constants.ACTION)
-		sk[action] = &evts[0]
+		sk[action] = evts[0]
 		actions[action] = ACTIVE
 		switch true {
 		case actions[HARDSKEWS] == ACTIVE && sk[HARDSKEWS].isExpired():
