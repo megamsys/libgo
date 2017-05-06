@@ -238,7 +238,7 @@ func (s *EventsSkews) SkewsQuotaUnpaid(o *BillOpts, mi map[string]string) error 
 		return err
 	}
 
-	if len(evts) > 0 || evts[0].Status == ACTIVE {
+	if len(evts) > 0 && evts[0].Status == ACTIVE {
 		action := evts[0].Inputs.Match(constants.ACTION)
 		sk[action] = evts[0]
 		actions[action] = ACTIVE
