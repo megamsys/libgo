@@ -97,6 +97,9 @@ const (
 	ACTION_TRIGGERED_AT = "action_trigger_at"
 	NEXT_ACTION_DUE_AT  = "next_action_due_at"
 	NEXT_ACTION         = "next_action"
+	NILAVU_PASSWORD     = "nilavu_password"
+	PASSWORD_HASH       = "password_hash"
+	ALERT_MESSAGE       = "alert_message"
 
 	//args for notification
 	NILAVU       = "nilavu"
