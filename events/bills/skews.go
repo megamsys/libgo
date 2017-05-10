@@ -42,6 +42,7 @@ type ApiSkewsEvents struct {
 	JsonClaz string         `json:"json_claz"`
 	Results  []*EventsSkews `json:"results"`
 }
+
 type EventsSkews struct {
 	Id        string          `json:"id"`
 	AccountId string          `json:"account_id"`
@@ -52,6 +53,12 @@ type EventsSkews struct {
 	JsonClaz  string          `json:"json_claz"`
 	Status    string          `json:"status"`
 	EventType string          `json:"event_type"`
+}
+
+type updateSkews struct {
+	EventsSkews
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func NewEventsSkews(email, cat_id string, mi map[string]string) ([]*EventsSkews, error) {
@@ -80,8 +87,16 @@ func (s *EventsSkews) update(mi map[string]string) error {
 	args := api.NewArgs(mi)
 	args.Email = s.AccountId
 	cl := api.NewClient(args, EVENTSKEWS_UPDATE)
-	_, err := cl.Post(s)
+	_, err := cl.Post(s.updateData())
 	return err
+}
+
+func (s *EventsSkews) updateData() *updateSkews {
+	return &updateSkews{
+		EventsSkews: *s,
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	}
 }
 
 func (s *EventsSkews) CreateEvent(o *BillOpts, ACTION string, mi map[string]string) error {

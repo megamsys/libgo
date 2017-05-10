@@ -32,5 +32,10 @@ import (
 //     c.Assert(nil, check.NotNil)
 // }
 
-func (s *S) TestCreateEvent(c *check.C) {
+func (s *S) TestUpdateEvent(c *check.C) {
+	// email := "vino.v@megam.io"
+	// cat_id := "ASM7805386297957110462"
+	// res, err := NewEventsSkews(email, cat_id, s.m)
+	// err = res[0].update(s.m)
+	// c.Assert(err, check.IsNil)
 }
