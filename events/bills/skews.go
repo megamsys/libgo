@@ -36,6 +36,7 @@ const (
 	SOFTSKEWS           = "suspend"
 	WARNING             = "warning"
 	ACTIVE              = "active"
+	RESUME              = "start"
 )
 
 type ApiSkewsEvents struct {
@@ -151,7 +152,7 @@ func (s *EventsSkews) Create(mi map[string]string, o *BillOpts) error {
 	if err != nil {
 		return err
 	}
-	err = s.PushSkews(mi)
+	err = s.PushSkews(mi, s.Inputs.Match(constants.ACTION))
 	if err != nil {
 		return err
 	}
@@ -178,10 +179,9 @@ func (sk *EventsSkews) skewsMailer(o *BillOpts) error {
 	return notifier.Notify(alerts.SKEWS_WARNING, alerts.EventData{M: mm})
 }
 
-func (s *EventsSkews) PushSkews(mi map[string]string) error {
+func (s *EventsSkews) PushSkews(mi map[string]string, skew_action string) error {
 	req := api.NewRequest(s.AccountId)
 	req.CatId = s.Inputs.Match(constants.ASSEMBLIESID)
-	skew_action := s.Inputs.Match(constants.ACTION)
 	switch skew_action {
 	case HARDSKEWS:
 		req.Action = constants.DESTROY
@@ -189,6 +189,10 @@ func (s *EventsSkews) PushSkews(mi map[string]string) error {
 		req.CatType = "torpedo"
 	case SOFTSKEWS:
 		req.Action = constants.SUSPEND
+		req.Category = constants.CONTROL
+		req.CatType = "torpedo"
+	case RESUME:
+		req.Action = constants.START
 		req.Category = constants.CONTROL
 		req.CatType = "torpedo"
 	case WARNING:
@@ -207,7 +211,12 @@ func (s *EventsSkews) DeactiveEvents(o *BillOpts, mi map[string]string) error {
 		for _, evt := range evts {
 			if evt != nil && evt.Status == ACTIVE {
 				evt.Status = "deactive"
-				evt.update(mi)
+				if err = evt.update(mi); err != nil {
+					log.Debugf("checks skews actions for ondemand")
+				}
+				if evt.currentSkew() == SOFTSKEWS {
+					return evt.PushSkews(mi, constants.START)
+				}
 			}
 		}
 
@@ -287,4 +296,8 @@ func (s *EventsSkews) isExpired() bool {
 	t2, _ := time.Parse(time.RFC3339, s.Inputs.Match(constants.NEXT_ACTION_DUE_AT))
 	duration := t2.Sub(t1)
 	return t1.Add(duration).Sub(time.Now()) < time.Minute
+}
+
+func (s *EventsSkews) currentSkew() string {
+	return s.Inputs.Match(constants.ACTION)
 }
