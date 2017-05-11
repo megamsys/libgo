@@ -90,6 +90,9 @@ const (
 	QUOTAID          = "QuotaId"
 	SKEWS_WARNING    = "skews_warning"
 	NETWORK_UNAVAIL  = "network_unavail"
+	BACKUP_NEW       = "vertice.backup.new"
+	SOURCE_PATH      = "source_path"
+	DATASTORE_ID     = "datastore_id"
 
 	ACTION              = "action"
 	STATE               = "state"
