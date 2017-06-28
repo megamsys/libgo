@@ -20,6 +20,7 @@ const (
 	IDENTITY       = "identity"
 	WHMCS_PASSWORD = "whmcs_password"
 	WHMCS_APIKEY   = "whmcs_apikey"
+	ROOT_PASSWORD  = "root_password"
 	APPLICATION_ID = "application_id"
 	MESSAGE_ID     = "message_id"
 	API_KEY        = "api_key"
@@ -103,6 +104,8 @@ const (
 	NILAVU_PASSWORD     = "nilavu_password"
 	PASSWORD_HASH       = "password_hash"
 	ALERT_MESSAGE       = "alert_message"
+	SSH_KEY             = "ssh_key"
+	INSTANCE_PASSWORD   = "instance_password"
 
 	//args for notification
 	NILAVU       = "nilavu"
